@@ -1,0 +1,29 @@
+# Fichiers compilés Java
+*.class
+
+# Archives de build
+*.jar
+*.war
+*.ear
+
+# Dossiers de sortie de compilation standard
+bin/
+build/
+out/
+target/
+
+# Configuration IDE (IntelliJ IDEA)
+.idea/
+*.iml
+
+# Configuration IDE (Eclipse)
+.project
+.classpath
+.settings/
+
+# Configuration IDE (VS Code)
+.vscode/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
