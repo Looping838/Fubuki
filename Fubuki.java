@@ -91,4 +91,11 @@ public class Fubuki
         }
         System.out.println("\n");
     }
+
+    public static void main(String[] args) 
+    {
+        Fubuki jeu = new Fubuki();
+        jeu.initPlateau();
+        jeu.afficherPlateau();
+    }
 }
