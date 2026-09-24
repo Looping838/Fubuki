@@ -17,9 +17,10 @@ public class Case
     public int get_y      () { return this.y ;}
     public int get_nombre () {return this.nombre ;}
 
-    public void set_x       (int x)      { this.x = x ;}
-    public void set_y       (int y)      { this.y = y ;}
-    public void set_nombre  (int nombre) { this.nombre = nombre ;}
+    public void set_x         (int x)      { this.x = x ;}
+    public void set_y         (int y)      { this.y = y ;}
+    public void set_nombre    (int nombre) { this.nombre = nombre ;}
+    public void setModifiable ()           { this.estModifiable = ! this.estModifiable ;}
 
     public boolean estModifiable () { return this.estModifiable ;}
     public boolean estVide       () { return this.nombre == 0   ;}
