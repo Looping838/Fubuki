@@ -1,3 +1,5 @@
+package metier;
+
 public class Plateau 
 {
     private Case[][] plateau ;

@@ -1,3 +1,5 @@
+package metier;
+
 import java.util.Random;
 
 public class Fubuki 
