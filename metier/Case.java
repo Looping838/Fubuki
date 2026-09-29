@@ -1,3 +1,5 @@
+package metier;
+
 public class Case 
 {
     private int x;

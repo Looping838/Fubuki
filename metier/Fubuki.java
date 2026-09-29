@@ -2,14 +2,19 @@ package metier;
 
 import java.util.Random;
 
+import controleur.Controleur;
+
 public class Fubuki 
 {
     private Plateau plateau ;
     private int[]   nbrPossible = { 1,2,3,4,5,6,7,8,9 };
 
-    public Fubuki ()
+    private Controleur ctrl;
+
+    public Fubuki (Controleur ctrl)
     {
-        this.plateau = new Plateau() ;
+        this.plateau = new Plateau(ctrl) ;
+        this.ctrl = ctrl;
     }
 
     public Plateau initPlateau()
@@ -94,10 +99,10 @@ public class Fubuki
         System.out.println("\n");
     }
 
-    public static void main(String[] args) 
+    /*public static void main(String[] args) 
     {
         Fubuki jeu = new Fubuki();
         jeu.initPlateau();
         jeu.afficherPlateau();
-    }
+    }*/
 }

@@ -1,15 +1,23 @@
 package metier;
 
+import controleur.Controleur;
+
 public class Plateau 
 {
+    private int      nbLigne;
+    private int      nbColonne;
+    
     private Case[][] plateau ;
     private int []   totauxLignes;
     private int []   totauxColonnes;
 
+    private Controleur ctrl;
 
-    public Plateau ()
+    public Plateau (Controleur ctrl)
     {
-        this.plateau = new Case[3][3] ;
+        this.nbLigne = this.nbColonne = 3;
+        
+        this.plateau = new Case[this.nbLigne][this.nbColonne] ;
 
         for (int i = 0 ; i < 3 ; i++)
         {
@@ -27,6 +35,8 @@ public class Plateau
 
     public Case     getCasePlateau     (int x , int y )  { return this.plateau        [x][y] ;}
     public Case[][] getPlateau         ()                { return this.plateau               ;}
+    public int      getNbLigne         ()                { return this.nbLigne               ;}
+    public int      getNbColonne       ()                { return this.nbColonne             ;}
     public int      getTotauxLignes    (int x )          { return this.totauxLignes   [x]    ;}
     public int      getTotauxColonnes  (int y )          { return this.totauxColonnes [y]    ;}
 
