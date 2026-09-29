@@ -13,16 +13,14 @@ public class Controleur
 
     public Controleur()
 	{	
-		initPlateau();
-        
-        this.plateau    = new Plateau(this);
+		this.initPlateau();
         this.frameJeu   = new FrameJeu (this);
     }
 
-    public void    initPlateau()
+    public void initPlateau()
     {
-        this.metier = new Fubuki(this);
-        metier.initPlateau();
+        this.metier  = new Fubuki(this);
+        this.plateau = this.metier.getPlateau();
     }
 
     public int getNbLigne()     { return this.plateau.getNbLigne();}
