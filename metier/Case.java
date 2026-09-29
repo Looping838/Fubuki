@@ -15,9 +15,9 @@ public class Case
         this.estModifiable = true ;
     }
 
-    public int get_x      () { return this.x ;}
-    public int get_y      () { return this.y ;}
-    public int get_nombre () {return this.nombre ;}
+    public int  get_x      () { return this.x ;}
+    public int  get_y      () { return this.y ;}
+    public int  get_nombre () { return this.nombre ;}
 
     public void set_x         (int     x)      { this.x = x ;}
     public void set_y         (int     y)      { this.y = y ;}

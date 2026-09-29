@@ -47,8 +47,10 @@ public class Plateau
     public int      getNbColonne         ()                { return this.plateau[0].length     ;}
     public int      getTotauxColonnes    (int y )          { return this.totauxColonnes [y]    ;}
 
-    public void setTotauxLignes   (int x   , int nbr)     { this.totauxLignes  [x] = nbr  ;}
-    public void setTotauxColonnes (int y   , int nbr)     { this.totauxColonnes[y] = nbr  ;}
+    public void setTotauxLignes   (int x   , int nbr)      { this.totauxLignes  [x] = nbr  ;}
+    public void setTotauxColonnes (int y   , int nbr)      { this.totauxColonnes[y] = nbr  ;}
+
+    public void setCase           (int x , int y , int nbr)   { this.plateau[x][y].set_nombre(nbr) ; }
 
     public void initPlateau()
     {
