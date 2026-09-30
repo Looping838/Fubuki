@@ -20,7 +20,4 @@ public class Fubuki
         return this.plateau; 
     }
 
-    
-
-
 }
