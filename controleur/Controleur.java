@@ -23,8 +23,11 @@ public class Controleur
         this.plateau = this.metier.getPlateau();
     }
 
-    public int getNbLigne()     { return this.plateau.getNbLigne();}
-    public int getNbColonne()   { return this.plateau.getNbColonne();}
+    public int getNbLigne()                 { return this.plateau.getNbLigne();}
+    public int getNbColonne()               { return this.plateau.getNbColonne();}
+    public int getTotauxLignes(int i)       { return this.plateau.getTotauxLignes(i);}
+    public int getTotauxColonnes(int i)     { return this.plateau.getTotauxColonnes(i);}
+
 
 
     public static void main (String[] args) { new Controleur(); }
