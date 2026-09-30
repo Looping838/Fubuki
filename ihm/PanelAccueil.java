@@ -23,48 +23,59 @@ public class PanelAccueil extends JPanel implements ActionListener
 
     public PanelAccueil(Controleur ctrl, FrameJeu frame, int indice)
     {
-        this.setLayout(new GridLayout(5, 1));
+        this.setLayout(new GridLayout(7, 1));
+        this.setBackground(new Color(200, 219, 250));
 
         /*-------------------------------*/
 		/*   Création des composants     */
 		/*-------------------------------*/
 
-        this.ctrl = ctrl;
-        this.frame = frame;
+        this.ctrl   = ctrl;
+        this.frame  = frame;
         this.indice = indice;
         
         JPanel pnlCentre        = new JPanel();
-        pnlCentre               .setLayout(new GridLayout(2,1));
+        pnlCentre               .setLayout(new GridLayout(3,1));
         pnlCentre               .setOpaque(false);
         
+        JPanel pnlTitre         = new JPanel();
+        pnlTitre                .setLayout(new FlowLayout(FlowLayout.CENTER, 5, 20));
+        pnlTitre                .setOpaque(false);
+        
         JPanel pnlBtnJouer      = new JPanel();
-        pnlBtnJouer             .setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        pnlBtnJouer             .setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
         pnlBtnJouer             .setOpaque(false);
 
         JPanel pnlBtnQuitter    = new JPanel();
-        pnlBtnQuitter           .setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        pnlBtnQuitter           .setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
         pnlBtnQuitter           .setOpaque(false);
 
 
+        JLabel lblTitre         = new JLabel("Fubuki");
+        lblTitre                .setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
+        lblTitre                .setFont(new Font("Sans-Serif", Font.BOLD, 60));
+
         this.btnJouer           = new JButton("Jouer !");
+        this.btnJouer           .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnJouer           .setOpaque(false);
 
         this.btnQuitter         = new JButton("Quitter");
+        this.btnQuitter         .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnQuitter         .setOpaque(false);
 
         /*-------------------------------*/
 		/* Positionnement des composants */
 		/*-------------------------------*/
         
+        pnlTitre        .add(lblTitre);
         pnlBtnJouer     .add(this.btnJouer);
         pnlBtnQuitter   .add(this.btnQuitter);
 
-        pnlCentre       .add(pnlBtnJouer);
-        pnlCentre       .add(pnlBtnQuitter);
-
         this.add(new JLabel(""));
+        this.add(pnlTitre);
         this.add(new JLabel(""));
-        this.add(pnlCentre, BorderLayout.CENTER);
+        this.add(pnlBtnJouer);
+        this.add(pnlBtnQuitter);
         this.add(new JLabel(""));
         this.add(new JLabel(""));
 
