@@ -52,7 +52,7 @@ public class PanelJeu extends JPanel
 
         // Panel qui contiendra le JLabel du bandeau
         JPanel pnlBandeau = new JPanel();
-        pnlBandeau.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        pnlBandeau.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 10));
         pnlBandeau.setOpaque(false);
 
         // Panel qui contiendra pnlPlateau
