@@ -17,7 +17,6 @@ public class PanelJeu extends JPanel
     private Controleur          ctrl;
     
     private FrameJeu            frame;
-    private int                 indice;
 
     private int                 nbLigne;          // Permet de stocker le nombre de lignes   du plateau
     private int                 nbColonne;        // Permet de stocker le nombre de colonnes du plateau
@@ -128,7 +127,7 @@ public class PanelJeu extends JPanel
         /* Positionnement des composants */
         /*-------------------------------*/
 
-        pnlBandeau.add(new JLabel("Fubuki Game :"));
+        pnlBandeau.add(new JLabel("*Texte si besoin* :"));
         
         pnlHaut.add(pnlBandeau, BorderLayout.CENTER);
         pnlHaut.add(separateur, BorderLayout.SOUTH);
