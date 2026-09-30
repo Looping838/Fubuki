@@ -14,7 +14,7 @@ public class FrameJeu extends JFrame
 	{
 		this.ctrl = ctrl;
 		this.setTitle("Acte de Présence");
-		this.setSize(600, 700);
+		this.setSize(700, 700);
 		this.setLayout(new BorderLayout());
 
         this.panelActif = new PanelJeu(ctrl);
