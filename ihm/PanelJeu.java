@@ -13,6 +13,8 @@ import javax.swing.*;
 
 public class PanelJeu extends JPanel 
 {
+    public final Color COULEUR_FOND = new Color(200, 219, 250);
+    
     private final JPanel[][]    tabPnlCases;
     private Controleur          ctrl;
     
@@ -31,6 +33,8 @@ public class PanelJeu extends JPanel
     public PanelJeu(Controleur ctrl)
     {
         this.setLayout(new BorderLayout());
+        this.setBackground(COULEUR_FOND);
+
         
         /*-------------------------------*/
         /*   Création des composants     */
@@ -39,6 +43,7 @@ public class PanelJeu extends JPanel
         this.ctrl           = ctrl;
         this.nbLigne        = this.ctrl.getNbLigne();
         this.nbColonne      = this.ctrl.getNbColonne();
+
         this.tabPnlCases    = new JPanel[this.nbLigne][this.nbColonne];
         
         this.ligSelectionne = -1;
@@ -64,6 +69,7 @@ public class PanelJeu extends JPanel
         this.pnlPlateau.setLayout(new GridLayout(this.nbLigne + 1, this.nbColonne + 1, 2, 2));
         //pnlPlateau              .setBackground(new Color(60, 60, 75));
         this.pnlPlateau.setPreferredSize(new Dimension(450, 450));
+        this.pnlPlateau.setBackground(COULEUR_FOND);
 
         // Crée une ligne séparatrice à l'aide de JSeparator
         JSeparator separateur = new JSeparator(SwingConstants.HORIZONTAL);
@@ -96,8 +102,9 @@ public class PanelJeu extends JPanel
                     JLabel lblTtlLigne  = new JLabel(String.valueOf(this.ctrl.getTotauxLignes(lig)));
                     lblTtlLigne         .setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
                     lblTtlLigne         .setFont(new Font("Sans-Serif", Font.BOLD, 18));
+                    lblTtlLigne         .setBackground(COULEUR_FOND);
 
-                    pnlCellule         .setBackground(null);
+                    pnlCellule          .setBackground(COULEUR_FOND);
                     
                     pnlCellule.add(lblTtlLigne);
                     pnlCellule.setBorder(null);
@@ -107,8 +114,9 @@ public class PanelJeu extends JPanel
                     JLabel lblTtlColonne = new JLabel(String.valueOf(this.ctrl.getTotauxColonnes(col)));
                     lblTtlColonne        .setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
                     lblTtlColonne        .setFont(new Font("Sans-Serif", Font.BOLD, 18));
+                    lblTtlColonne        .setBackground(COULEUR_FOND);
 
-                    pnlCellule         .setBackground(null);
+                    pnlCellule           .setBackground(COULEUR_FOND);
                     
                     pnlCellule.add(lblTtlColonne);
                     pnlCellule.setBorder(null);
@@ -162,20 +170,20 @@ public class PanelJeu extends JPanel
             PanelJeu.this.colSelectionne = this.colSouris;
 
             // On récupère le JPanel qui a été cliqué
-            JPanel panelClique = tabPnlCases[this.ligSouris][this.colSouris];
+            JPanel pnlClique = tabPnlCases[this.ligSouris][this.colSouris];
             
             // On récupère le premier composant de ce panel (le JLabel)
-            JLabel labelContenu = (JLabel) panelClique.getComponent(0);
+            JLabel lblContenu = (JLabel) pnlClique.getComponent(0);
 
-            if (panelClique.getBackground().equals(Color.WHITE))
+            if (pnlClique.getBackground().equals(Color.WHITE))
             {
-                panelClique.setBackground(Color.BLUE);
-                labelContenu.setForeground(Color.WHITE); // On passe le texte en blanc
+                pnlClique.setBackground(new Color(177, 206, 252));
+                lblContenu.setForeground(Color.WHITE); // On passe le texte en blanc
             }
             else
             {
-                panelClique.setBackground(Color.WHITE);
-                labelContenu.setForeground(Color.BLACK); // On remet le texte en noir
+                pnlClique.setBackground(Color.WHITE);
+                lblContenu.setForeground(Color.BLACK); // On remet le texte en noir
             }
 
             PanelJeu.this.repaint();
