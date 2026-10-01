@@ -10,7 +10,7 @@ public class Fubuki
 
     public Fubuki (Controleur ctrl)
     {
-        this.plateau       = new Plateau(ctrl);
+        this.plateau = new Plateau(ctrl);
         this.plateau.initPlateau();
         this.ctrl = ctrl;
     }

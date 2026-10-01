@@ -38,6 +38,8 @@ public class Plateau
 
     }
 
+    public int      getNombreCase        (int x , int y )  { return getCasePlateau(x,y).get_nombre()  ;}
+
     public Case     getCasePlateau       (int x , int y )  { return this.plateau        [x][y] ;}
     public Case[][] getPlateau           ()                { return this.plateau               ;}
     public int[]    getEnsTotauxLignes   ()                { return this.totauxLignes          ;}

@@ -87,7 +87,7 @@ public class PanelJeu extends JPanel
                 
                 if (lig < this.nbLigne && col < this.nbColonne)
                 {    
-                    JLabel lblNombre = new JLabel("0");
+                    JLabel lblNombre = new JLabel("" + this.ctrl.getNombreCasePlateau(lig , col ));
                     lblNombre        .setOpaque(false);   // Transparent par défaut
                     lblNombre        .setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
                     lblNombre.setFont(new Font("Sans-Serif", Font.BOLD, 18));

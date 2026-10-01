@@ -27,6 +27,7 @@ public class Controleur
     public int getNbColonne()               { return this.plateau.getNbColonne();}
     public int getTotauxLignes(int i)       { return this.plateau.getTotauxLignes(i);}
     public int getTotauxColonnes(int i)     { return this.plateau.getTotauxColonnes(i);}
+    public int getNombreCasePlateau (int lig , int col ) { return this.plateau.getNombreCase(lig , col ) ; }
 
 
 
