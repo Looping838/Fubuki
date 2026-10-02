@@ -11,7 +11,7 @@ import java.awt.GridLayout;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class PanelJeu extends JPanel 
+public class PanelJeu extends JPanel implements ActionListener
 {
     public final Color COULEUR_FOND = new Color(200, 219, 250);
     
@@ -28,7 +28,9 @@ public class PanelJeu extends JPanel
 
     private JPanel              pnlPlateau;
     private JPanel              pnlCentre;
-    private JPanel              pnlTotal;
+    private JPanel              pnlNbres;
+
+    private JToggleButton       btnActif;
 
     public PanelJeu(Controleur ctrl)
     {
@@ -68,13 +70,27 @@ public class PanelJeu extends JPanel
         this.pnlPlateau = new JPanel();
         this.pnlPlateau.setLayout(new GridLayout(this.nbLigne + 1, this.nbColonne + 1, 2, 2));
         //pnlPlateau              .setBackground(new Color(60, 60, 75));
-        this.pnlPlateau.setPreferredSize(new Dimension(450, 450));
+        this.pnlPlateau.setPreferredSize(new Dimension(375, 375));
         this.pnlPlateau.setBackground(COULEUR_FOND);
 
+        // Panel qui contiendra pnlNbres
+        JPanel pnlBas   = new JPanel();
+        pnlBas.setLayout(new BorderLayout());
+        pnlBas.setOpaque(false);
+
+        // Panel qui affichera les nombres à placer
+        this.pnlNbres   = new JPanel();
+        this.pnlNbres   .setLayout(new FlowLayout(FlowLayout.CENTER, 30, 30));
+        this.pnlNbres   .setBackground(COULEUR_FOND);
+
         // Crée une ligne séparatrice à l'aide de JSeparator
-        JSeparator separateur = new JSeparator(SwingConstants.HORIZONTAL);
-        separateur.setForeground(new Color(150, 150, 150));
-        separateur.setBackground(new Color(0, 0, 0, 0));
+        JSeparator separateurHaut = new JSeparator(SwingConstants.HORIZONTAL);
+        separateurHaut.setForeground(new Color(150, 150, 150));
+        separateurHaut.setBackground(new Color(0, 0, 0, 0));
+
+        JSeparator separateurBas = new JSeparator(SwingConstants.HORIZONTAL);
+        separateurBas.setForeground(new Color(150, 150, 150));
+        separateurBas.setBackground(new Color(0, 0, 0, 0));
 
         // Parcours pour dessiner le plateau
         for (int lig = 0; lig <= this.nbLigne; lig++)
@@ -131,25 +147,56 @@ public class PanelJeu extends JPanel
             }
         }   
 
+        ButtonGroup groupeBoutons = new ButtonGroup(); // Pour qu'un seul bouton soit actif
+
+        for (int lig = 0; lig < this.nbLigne; lig++)
+        {
+            for (int col = 0; col < this.nbColonne; col++)
+            {
+                if (this.ctrl.getNombreCasePlateau(lig, col) == 0)
+                {
+                    JToggleButton btnTmp = new JToggleButton("...");
+                    btnTmp.setFont(new Font("Sans-Serif", Font.BOLD, 18));
+                    groupeBoutons.add(btnTmp);
+                    this.pnlNbres.add(btnTmp);
+
+                    btnTmp.addActionListener(this);
+                }
+            }
+        }
+            
+
         /*-------------------------------*/
         /* Positionnement des composants */
         /*-------------------------------*/
 
-        pnlBandeau.add(new JLabel("*Texte si besoin* :"));
+        pnlBandeau  .add(new JLabel("Score :"));
         
-        pnlHaut.add(pnlBandeau, BorderLayout.CENTER);
-        pnlHaut.add(separateur, BorderLayout.SOUTH);
+        pnlHaut     .add(pnlBandeau , BorderLayout.CENTER);
+        pnlHaut     .add(separateurHaut , BorderLayout.SOUTH);
+
+        pnlBas      .add(separateurBas , BorderLayout.NORTH);
+        pnlBas      .add(pnlNbres   , BorderLayout.CENTER);
 
         this.pnlCentre.add(this.pnlPlateau, BorderLayout.CENTER);
 
         this.add(pnlHaut, BorderLayout.NORTH);
         this.add(this.pnlCentre, BorderLayout.CENTER);
+        this.add(pnlBas, BorderLayout.SOUTH);
         
         /* ----------------------------- */
         /* Activation des Composants     */
         /* ----------------------------- */
         
         this.setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource() instanceof JToggleButton)
+        {
+            this.btnActif = (JToggleButton) e.getSource();
+        }
     }
 
     // Classe interne permettant de gérer le clic de la souris pendant le Jeu
@@ -175,6 +222,8 @@ public class PanelJeu extends JPanel
             // On récupère le premier composant de ce panel (le JLabel)
             JLabel lblContenu = (JLabel) pnlClique.getComponent(0);
 
+
+            // Changement de couleur de la case si sélectionné ou pas
             if (pnlClique.getBackground().equals(Color.WHITE))
             {
                 pnlClique.setBackground(new Color(177, 206, 252));
@@ -183,7 +232,37 @@ public class PanelJeu extends JPanel
             else
             {
                 pnlClique.setBackground(Color.WHITE);
-                lblContenu.setForeground(Color.BLACK); // On remet le texte en noir
+                lblContenu.setForeground(null); // On remet le texte en noir
+            }
+            
+
+            // Gestion des couleurs des cases pour qu'il y en ait qu'une de sélectionné
+            for (int lig = 0; lig < PanelJeu.this.nbLigne; lig++)
+            {
+                for (int col = 0; col < PanelJeu.this.nbLigne; col++)
+                {
+                    if (tabPnlCases[lig][col].getBackground().equals(new Color(177, 206, 252)) && tabPnlCases[lig][col] != tabPnlCases[this.ligSouris][this.colSouris])
+                    {
+                        tabPnlCases[lig][col].setBackground(Color.WHITE);
+                        lblContenu.setForeground(null);
+                    }
+                    else
+                    {
+                        lblContenu.setForeground(null);
+                    }
+                }
+            }
+
+
+            // Gestion du changement des chiffres sur la grille avec ceux à mettre
+            if (PanelJeu.this.btnActif != null && PanelJeu.this.ctrl.getNombreCasePlateau(this.ligSouris, this.colSouris) == 0)
+            {
+                // On met le texte du bouton cliqué dans le JLabel
+                lblContenu.setText(PanelJeu.this.btnActif.getText());
+                
+                PanelJeu.this.btnActif.setSelected(false);  // On déselectionne le bouton
+                PanelJeu.this.btnActif.setEnabled(false);   // On verrouille    le bouton
+                PanelJeu.this.btnActif = null;              // On réinitialise  le bouton
             }
 
             PanelJeu.this.repaint();
