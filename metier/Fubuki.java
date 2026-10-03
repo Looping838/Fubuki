@@ -1,7 +1,6 @@
 package metier;
 
 import controleur.Controleur;
-
 import java.util.Random;
 
 public class Fubuki 
@@ -67,7 +66,7 @@ public class Fubuki
         return false ;
     }
 
-    public boolean estGagner ()
+    public boolean estGagne ()
     {
 
         for (int cpt = 0; cpt < this.plateau.getNbLigne(); cpt++)
@@ -94,5 +93,7 @@ public class Fubuki
 
         return true;
     }
+
+    public void effacerChiffre(int ligne, int colonne)  { this.plateau.setCase(ligne, colonne, 0);}
 
 }
