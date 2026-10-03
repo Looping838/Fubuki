@@ -24,19 +24,33 @@ Structure du projet
 Plaintext
 
 Fubuki/
+
 ├── .gitignore
+
 ├── compile.list
+
 ├── README.md
+
 ├── controleur/
+
 │   └── Controleur.java
+
 ├── ihm/
+
 │   ├── FrameJeu.java
+
 │   ├── PanelAccueil.java
+
 │   └── PanelJeu.java
+
 └── metier/
-    ├── Case.java
-    ├── Fubuki.java
-    └── Plateau.java
+
+   ├── Case.java
+    
+   ├── Fubuki.java
+    
+   └── Plateau.java
+    
 
 Fonctionnalités
 
