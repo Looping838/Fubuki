@@ -1,8 +1,7 @@
 package metier;
 
-import java.util.Random;
-
 import controleur.Controleur;
+import java.util.Random;
 
 public class Plateau 
 {
@@ -48,6 +47,7 @@ public class Plateau
     public int[]    getEnsTotauxColonnes ()                { return this.totauxColonnes        ;}
     public int      getNbColonne         ()                { return this.plateau[0].length     ;}
     public int      getTotauxColonnes    (int y )          { return this.totauxColonnes [y]    ;}
+    public int[]    getNbrPossible       ()                { return this.nbrPossible           ;}
 
     public void setTotauxLignes   (int x   , int nbr)      { this.totauxLignes  [x] = nbr  ;}
     public void setTotauxColonnes (int y   , int nbr)      { this.totauxColonnes[y] = nbr  ;}
