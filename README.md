@@ -20,37 +20,6 @@ Règles du jeu
 
   La partie est gagnée lorsque toutes les cases sont renseignées, chaque chiffre de 1 à 9 est utilisé une seule fois, et l'ensemble des totaux de lignes et colonnes est respecté.
 
-Structure du projet
-Plaintext
-
-Fubuki/
-
-├── .gitignore
-
-├── compile.list
-
-├── README.md
-
-├── controleur/
-
-│   └── Controleur.java
-
-├── ihm/
-
-│   ├── FrameJeu.java
-
-│   ├── PanelAccueil.java
-
-│   └── PanelJeu.java
-
-└── metier/
-
-   ├── Case.java
-    
-   ├── Fubuki.java
-    
-   └── Plateau.java
-    
 
 Fonctionnalités
 
