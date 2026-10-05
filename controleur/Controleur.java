@@ -32,6 +32,8 @@ public class Controleur
     public int      getNombreCasePlateau (int lig , int col )   { return this.plateau.getNombreCase(lig , col ) ; }
     public int[]    getNbrPossible()                            { return this.plateau.getNbrPossible(); }
 
+    public void     setNbrCase ( int lig , int col , int num )  {  this.plateau.getCasePlateau(lig , col ).set_nombre(num) ;}
+
     public boolean estPresent(int nbr)                          { return this.metier.estPresent(nbr); }
     public boolean estGagne()                                   { return this.metier.estGagne(); }
 
@@ -40,4 +42,6 @@ public class Controleur
 
 
     public static void main (String[] args) { new Controleur(); }
+
+    public void afficherPlateauteste () { this.metier.afficherPlateau () ;}
 }

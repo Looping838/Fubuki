@@ -200,7 +200,7 @@ public class PanelJeu extends JPanel implements ActionListener
         /* Positionnement des composants */
         /*-------------------------------*/
 
-        pnlBandeau  .add(new JLabel("Score :"));
+        pnlBandeau  .add(new JLabel("Score :" ));
 
         pnlBouton   .add(this.btnGomme        );
         
@@ -339,10 +339,17 @@ public class PanelJeu extends JPanel implements ActionListener
             {
                 // On met le texte du bouton cliqué dans le JLabel
                 lblContenu.setText(PanelJeu.this.btnActif.getText());
+
+                PanelJeu.this.ctrl.setNbrCase(ligSelectionne, colSelectionne, Integer.parseInt(PanelJeu.this.btnActif.getText()) ) ;
                 
                 PanelJeu.this.btnActif.setSelected(false);  // On déselectionne le bouton
                 PanelJeu.this.btnActif.setEnabled(false);   // On verrouille    le bouton
                 PanelJeu.this.btnActif = null;              // On réinitialise  le bouton
+
+                ctrl.afficherPlateauteste();
+
+                if (PanelJeu.this.ctrl.estGagne())
+                    System.out.println("VICTOIRE !");
             }
 
             PanelJeu.this.repaint();
