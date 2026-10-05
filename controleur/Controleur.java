@@ -43,5 +43,4 @@ public class Controleur
 
     public static void main (String[] args) { new Controleur(); }
 
-    public void afficherPlateauteste () { this.metier.afficherPlateau () ;}
 }

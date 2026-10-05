@@ -346,8 +346,6 @@ public class PanelJeu extends JPanel implements ActionListener
                 PanelJeu.this.btnActif.setEnabled(false);   // On verrouille    le bouton
                 PanelJeu.this.btnActif = null;              // On réinitialise  le bouton
 
-                ctrl.afficherPlateauteste();
-
                 if (PanelJeu.this.ctrl.estGagne())
                     System.out.println("VICTOIRE !");
             }
