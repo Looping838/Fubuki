@@ -245,7 +245,6 @@ public class PanelJeu extends JPanel implements ActionListener
                 this.ctrl.effacerChiffre(this.ligSelectionne, this.colSelectionne);
             
                 lblContenu.setText("0"); 
-                PanelJeu.this.ctrl.setNbrCase( this.ligSelectionne, this.colSelectionne, 0  ) ;
                 lblContenu.setForeground(null);
 
                 if (!chiffreEfface.equals("0") && this.grpBtn != null) 
