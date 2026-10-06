@@ -48,7 +48,7 @@ public class PanelJeu extends JPanel implements ActionListener
 
     private boolean             modeValidation = false;
 
-    public PanelJeu(Controleur ctrl)
+    public PanelJeu(Controleur ctrl, FrameJeu frame)
     {
         this.setLayout(new BorderLayout());
         this.setBackground(COULEUR_FOND);
@@ -59,6 +59,8 @@ public class PanelJeu extends JPanel implements ActionListener
         /*-------------------------------*/
 
         this.ctrl           = ctrl;
+        this.frame          = frame;
+
         this.nbLigne        = this.ctrl.getNbLigne();
         this.nbColonne      = this.ctrl.getNbColonne();
 
@@ -306,8 +308,6 @@ public class PanelJeu extends JPanel implements ActionListener
 
             if (this.ctrl.estGagne()) 
             {
-                System.out.println("VICTOIRE !");
-
                 this.btnGomme.setEnabled(false);
 
                 java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
@@ -316,6 +316,11 @@ public class PanelJeu extends JPanel implements ActionListener
                     AbstractButton btn = elements.nextElement();
 
                     btn.setEnabled(false);
+                }
+
+                if (this.ctrl.estGagne()) 
+                {
+                    this.frame.afficherPanelVictoire();
                 }
             }
         }
