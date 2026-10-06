@@ -36,6 +36,26 @@ public class Controleur
 
     public boolean estPresent(int nbr)                          { return this.metier.estPresent(nbr); }
     public boolean estGagne()                                   { return this.metier.estGagne(); }
+    
+    public boolean estLigneValide(int ligne) 
+    {
+        int somme = 0;
+        for (int col = 0; col < getNbColonne(); col++) 
+            somme += getNombreCasePlateau(ligne, col);
+
+        return somme == getTotauxLignes(ligne);
+    }
+
+    public boolean estColonneValide(int col) 
+    {
+        int somme = 0;
+        for (int lig = 0; lig < getNbLigne(); lig++) 
+            somme += getNombreCasePlateau(lig, col);
+
+        return somme == getTotauxColonnes(col);
+    }
+
+    public void resetJeu() { this.initPlateau();}
 
     public void    effacerChiffre(int ligne, int colonne)       { this.metier.effacerChiffre(ligne, colonne);}
 
