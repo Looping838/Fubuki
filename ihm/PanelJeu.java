@@ -106,7 +106,7 @@ public class PanelJeu extends JPanel implements ActionListener
         pnlBas.setOpaque(false);
 
         JPanel pnlBoutons   = new JPanel();
-        pnlBoutons.setLayout(new FlowLayout(FlowLayout.CENTER,5,5));
+        pnlBoutons.setLayout(new FlowLayout(FlowLayout.CENTER,20,5));
         pnlBoutons.setOpaque(false);
 
         /*// Panel qui affichera les nombres à placer
@@ -134,27 +134,32 @@ public class PanelJeu extends JPanel implements ActionListener
         //this.btnGomme   .setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
         // Ajout de l'icône gomme.png au bouton btnGomme en redimensionnant l'image au préalable
-		ImageIcon iconeOriginale  = new ImageIcon("./images/icones/gomme.png");
-		Image imageRedimensionnee = iconeOriginale.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		this.btnGomme.setIcon(new ImageIcon(imageRedimensionnee));
+		this.btnGomme.setIcon(new ImageIcon(this.creerImages("./images/icones/gomme.png", 30, 30)));
 
         this.chGomme    = new JRadioButton("Tout Gommer", false);
         this.chGomme    .setOpaque(false);
+        this.chGomme    .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
 
         // Parcours pour dessiner le plateau
         this.dessinerPlateau();   
 
         this.btnValide      = new JButton("Valider");
         this.btnValide      .setOpaque(false);
+        this.btnValide      .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnValide      .setIcon(new ImageIcon(this.creerImages("./images/icones/valide.png", 30, 30)));
 
         this.btnReset       = new JButton("Recommencer");
         this.btnReset       .setOpaque(false);
+        this.btnReset       .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnReset       .setIcon(new ImageIcon(this.creerImages("./images/icones/reset.png", 30, 25)));
 
         this.btn3           = new JButton("Bouton 3");
         this.btn3           .setOpaque(false);
+        this.btn3           .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
 
         this.btn4           = new JButton("Bouton 4");
         this.btn4           .setOpaque(false);
+        this.btn4           .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
 
         pnlBoutons.add(this.btnValide);
         pnlBoutons.add(this.btnReset );
@@ -168,7 +173,10 @@ public class PanelJeu extends JPanel implements ActionListener
         /* Positionnement des composants */
         /*-------------------------------*/
 
-        pnlBandeau  .add(new JLabel("Score :" ));
+        JLabel lblScore     = new JLabel("Score : ");
+        lblScore            .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+
+        pnlBandeau  .add(lblScore);
 
         pnlGomme    .add(this.chGomme);
         pnlGomme    .add(this.btnGomme        );
@@ -210,41 +218,81 @@ public class PanelJeu extends JPanel implements ActionListener
 
         if (e.getSource() == this.btnGomme)
         {
-            // On vérifie qu'une case est bien sélectionnée avant de faire quoi que ce soit
-            if (this.ligSelectionne != -1 && this.colSelectionne != -1)
+            // --- MODE TOUT GOMMER ---
+            if (this.chGomme.isSelected())
             {
-                // On récupère le premier composant de ce panel (le JLabel)
-                JLabel lblContenu = (JLabel) tabPnlCases[this.ligSelectionne][this.colSelectionne].getComponent(0);
-
-                // On mémorise le chiffre avant de l'effacer
-                String chiffreEfface = lblContenu.getText();
-                
-                if (this.ctrl.getCasePlateau(this.ligSelectionne, this.colSelectionne).estModifiable())
+                for (int lig = 0; lig < this.nbLigne; lig++)
                 {
-                    this.ctrl.effacerChiffre(this.ligSelectionne, this.colSelectionne);
-                
-                    lblContenu.setText("0"); 
-                    lblContenu.setForeground(null);
-
-                    if (!chiffreEfface.equals("0") && this.grpBtn != null) 
+                    for (int col = 0; col < this.nbColonne; col++)
                     {
-                        // Parcours tous les boutons dans ButtonGroup
-                        java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
-                        while (elements.hasMoreElements()) 
+                        // On vérifie si la case est modifiable (on ne touche pas aux chiffres de départ)
+                        if (this.ctrl.getCasePlateau(lig, col).estModifiable())
                         {
-                            AbstractButton btn = elements.nextElement();
-                            if (btn.getText().equals(chiffreEfface)) 
+                            JLabel lblContenu = (JLabel) tabPnlCases[lig][col].getComponent(0);
+                            String chiffreEfface = lblContenu.getText();
+
+                            // Si la case n'est pas déjà vide
+                            if (!chiffreEfface.equals("") && !chiffreEfface.equals("0"))
                             {
-                                btn.setEnabled(true);
-                                break; // Bouton trouvé et réactivé, on arrête de chercher
+                                this.ctrl.effacerChiffre(lig, col);
+                                
+                                lblContenu.setText(""); // Chaîne vide pour masquer le chiffre
+                                lblContenu.setForeground(null);
+
+                                // On réactive le bouton correspondant dans le pavé numérique
+                                if (this.grpBtn != null) 
+                                {
+                                    java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
+                                    while (elements.hasMoreElements()) 
+                                    {
+                                        AbstractButton btn = elements.nextElement();
+                                        if (btn.getText().equals(chiffreEfface)) 
+                                        {
+                                            btn.setEnabled(true);
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
-
-                this.modeValidation = false; // On annule l'affichage rouge/vert car la grille a changé
-
+                this.modeValidation = false;
                 this.majPlateau();
+            }
+            // --- MODE GOMME CLASSIQUE (Une seule case) ---
+            else
+            {
+                if (this.ligSelectionne != -1 && this.colSelectionne != -1)
+                {
+                    JLabel lblContenu = (JLabel) tabPnlCases[this.ligSelectionne][this.colSelectionne].getComponent(0);
+                    String chiffreEfface = lblContenu.getText();
+                    
+                    if (this.ctrl.getCasePlateau(this.ligSelectionne, this.colSelectionne).estModifiable())
+                    {
+                        this.ctrl.effacerChiffre(this.ligSelectionne, this.colSelectionne);
+                    
+                        lblContenu.setText(""); // J'ai remplacé votre "0" par une chaîne vide pour que la case soit vierge
+                        lblContenu.setForeground(null);
+
+                        if (!chiffreEfface.equals("") && !chiffreEfface.equals("0") && this.grpBtn != null) 
+                        {
+                            java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
+                            while (elements.hasMoreElements()) 
+                            {
+                                AbstractButton btn = elements.nextElement();
+                                if (btn.getText().equals(chiffreEfface)) 
+                                {
+                                    btn.setEnabled(true);
+                                    break; 
+                                }
+                            }
+                        }
+                    }
+
+                    this.modeValidation = false; 
+                    this.majPlateau();
+                }
             }
         }
 
@@ -307,7 +355,7 @@ public class PanelJeu extends JPanel implements ActionListener
                     }
                     else
                     {
-                        lblNombre = new JLabel("" + this.ctrl.getNombreCasePlateau(lig , col ));
+                        lblNombre = new JLabel(""/* + this.ctrl.getNombreCasePlateau(lig , col )*/);
                         lblNombre.setFont(new Font("Sans-Serif", Font.PLAIN, 18));
                     }
 
@@ -459,6 +507,17 @@ public class PanelJeu extends JPanel implements ActionListener
         this.dessinerBoutons();
 
         this.majPlateau();
+    }
+
+    public Image creerImages (String chemin, int longueur, int largeur)
+    {
+        ImageIcon   imgOriginale;
+        Image       imgRedimensionnee;
+
+        imgOriginale        = new ImageIcon(chemin);
+        imgRedimensionnee   = imgOriginale.getImage().getScaledInstance(longueur, largeur, Image.SCALE_SMOOTH);
+		
+        return imgRedimensionnee;
     }
 
     // Classe interne permettant de gérer le clic de la souris pendant le Jeu
