@@ -15,7 +15,7 @@ public class FrameJeu extends JFrame
 	{
 		this.ctrl = ctrl;
 		this.setTitle("Fubuki");
-		this.setSize(700, 700);
+		this.setSize(800, 800);
 		this.setLayout(new BorderLayout());
 
         this.tabPanel = new JPanel[3];
