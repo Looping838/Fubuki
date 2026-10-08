@@ -96,7 +96,7 @@ public class Fubuki
 
     public void effacerChiffre(int ligne, int colonne)  { this.plateau.setCase(ligne, colonne, 0);}
 
-    public void echangernbr   ( int lig1 , int col1 ,
+    public void echangerNbr   ( int lig1 , int col1 ,
                                 int lig2 , int col2 )
     {
         int tmp = 0 ;
