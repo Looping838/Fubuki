@@ -9,6 +9,7 @@ Le projet suit une architecture de type MVC (Modèle-Vue-Contrôleur) :
   - Controleur : fait le lien entre l'interface utilisateur et le moteur métier.
 
   - IHM : gère l'interface graphique conçue avec Java Swing.
+  - 
 
 ## Règles du jeu
 
@@ -33,22 +34,27 @@ Le projet suit une architecture de type MVC (Modèle-Vue-Contrôleur) :
 
   - Contrôle de validité des sommes et détection de victoire.
 
+
 ## Prérequis
 
   - Java JDK 8 ou supérieur.
 
   - Un terminal ou un IDE (VS Code, IntelliJ, Eclipse) configuré pour Java.
 
+
 ## Lancement du jeu
 
 Depuis la racine du projet dans un terminal :
 Bash
 
+
 ## Compilation de l'ensemble du projet
 javac @compile.list
 
+
 ## Exécution de l'application
 java controleur.Controleur
+
 
 ## Rôle des classes principales
 
