@@ -71,7 +71,7 @@ public class Controleur
 
     public void effacerChiffre(int ligne, int colonne)       { this.metier.effacerChiffre(ligne, colonne);}
 
-
+    public void echangerNbr (int lig1, int col1, int lig2, int col2) { this.metier.echangerNbr(lig1, col1, lig2, col2);}
 
     public static void main (String[] args) { new Controleur(); }
 
