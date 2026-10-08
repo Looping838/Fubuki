@@ -96,4 +96,15 @@ public class Fubuki
 
     public void effacerChiffre(int ligne, int colonne)  { this.plateau.setCase(ligne, colonne, 0);}
 
+    public void echangernbr   ( int lig1 , int col1 ,
+                                int lig2 , int col2 )
+    {
+        int tmp = 0 ;
+        tmp = this.plateau.getNombreCase(lig1, col1) ;
+
+        this.plateau.getCasePlateau(lig1, col1).set_nombre( this.plateau.getNombreCase(lig2, col2) );
+
+        this.plateau.getCasePlateau(lig1, col1).set_nombre(tmp) ;
+    }
+
 }
