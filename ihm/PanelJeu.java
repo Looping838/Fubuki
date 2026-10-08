@@ -105,7 +105,7 @@ public class PanelJeu extends JPanel implements ActionListener
 
         // Panel qui contiendra pnlPlateau
         this.pnlCentre = new JPanel();
-        this.pnlCentre.setLayout(new FlowLayout(FlowLayout.CENTER, 200, 100));
+        this.pnlCentre.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 100));
         this.pnlCentre.setOpaque(false);
         
         // Panel qui affichera le Plateau
@@ -115,7 +115,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.pnlPlateau.setBackground(COULEUR_FOND);
 
         JPanel pnlDroit     = new JPanel();
-        pnlDroit.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 140));
+        pnlDroit.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 140));
         pnlDroit.setOpaque(false);
 
         // Panel qui contiendra pnlNbres
@@ -124,7 +124,7 @@ public class PanelJeu extends JPanel implements ActionListener
         pnlBas.setOpaque(false);
 
         JPanel pnlBoutons   = new JPanel();
-        pnlBoutons.setLayout(new FlowLayout(FlowLayout.CENTER , 20, 5));
+        pnlBoutons.setLayout(new FlowLayout(FlowLayout.CENTER , 20, 20));
         pnlBoutons.setOpaque(false);
 
         // Panel qui affichera les nombres à placer
@@ -637,8 +637,40 @@ public class PanelJeu extends JPanel implements ActionListener
             {
                 return; // Stoppe l'exécution de la méthode ici
             }
+
+            // Interception d'un échange
+            // Si une case est déjà sélectionnée ET qu'on n'a pas de bouton pavé actif
+            if (PanelJeu.this.ligSelectionne != -1 && PanelJeu.this.btnActif == null)
+            {
+                int valCliquee = PanelJeu.this.ctrl.getNombreCasePlateau(this.ligSouris, this.colSouris);
+                
+                // Si la case cliquée a un chiffre, est modifiable, et n'est pas la case déjà sélectionnée
+                if (valCliquee != 0 && 
+                    PanelJeu.this.ctrl.getCasePlateau(this.ligSouris, this.colSouris).estModifiable() && 
+                    (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris))
+                {
+                    // Action Métier
+                    PanelJeu.this.ctrl.echangerNbr(PanelJeu.this.ligSelectionne, PanelJeu.this.colSelectionne, this.ligSouris, this.colSouris);
+
+                    // Action Graphique
+                    JLabel lblContenu1 = (JLabel) tabPnlCases[PanelJeu.this.ligSelectionne][PanelJeu.this.colSelectionne].getComponent(0);
+                    JLabel lblContenu2 = (JLabel) tabPnlCases[this.ligSouris][this.colSouris].getComponent(0);
+
+                    String tmp = lblContenu1.getText();
+                    lblContenu1.setText(lblContenu2.getText());
+                    lblContenu2.setText(tmp);
+
+                    // Fin de l'échange
+                    PanelJeu.this.ligSelectionne = -1;
+                    PanelJeu.this.colSelectionne = -1;
+                    PanelJeu.this.modeValidation = false;
+                    
+                    PanelJeu.this.majPlateau();
+                    return; // ON S'ARRÊTE LÀ POUR NE PAS CASSER LA SUITE
+                }
+            }
             
-            // Si on reclique sur la case déjà bleue, on la désélectionne (on met à -1)
+            // Sélection classique
             if (PanelJeu.this.ligSelectionne == this.ligSouris && PanelJeu.this.colSelectionne == this.colSouris) 
             {
                 PanelJeu.this.ligSelectionne = -1;
@@ -650,7 +682,7 @@ public class PanelJeu extends JPanel implements ActionListener
                 PanelJeu.this.colSelectionne = this.colSouris;
             }
 
-            // Gestion du changement des chiffres sur la grille avec ceux à mettre
+            // Placement d'un chiffre sur le plateau
             if (PanelJeu.this.btnActif != null 
                 && PanelJeu.this.ctrl.getNombreCasePlateau(this.ligSouris, this.colSouris) == 0
                 && PanelJeu.this.ctrl.getCasePlateau(this.ligSouris, this.colSouris).estModifiable())
@@ -672,14 +704,10 @@ public class PanelJeu extends JPanel implements ActionListener
 
                     PanelJeu.this.ctrl.setNbrCase(this.ligSouris, this.colSouris, valeur);
                     
-                    // 1. On applique ta couleur de bouton placé
                     PanelJeu.this.btnActif.setBackground(COULEUR_GRIS_PLACE);
-                    
-                    // 2. LA SOLUTION : On vide le groupe entier pour forcer le "désenfoncement"
                     PanelJeu.this.grpBtn.clearSelection(); 
                     PanelJeu.this.btnActif = null;
 
-                    // 3. On désélectionne la case du plateau instantanément
                     PanelJeu.this.ligSelectionne = -1;
                     PanelJeu.this.colSelectionne = -1;
 
@@ -688,7 +716,6 @@ public class PanelJeu extends JPanel implements ActionListener
             }
 
             PanelJeu.this.majPlateau();
-        
         }
     }
 }
