@@ -43,7 +43,7 @@ public class FrameJeu extends JFrame
 		this.revalidate();
 	}
 
-    public void creerPanelJeu()   { this.tabPanel[1] = new PanelJeu   (ctrl , this ); }
+    public void creerPanelJeu()   { this.tabPanel[1] = new PanelJeu   (ctrl , this, 1); }
 
     public void afficherPanelVictoire()
     {

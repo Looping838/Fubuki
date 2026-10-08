@@ -1,20 +1,32 @@
 package controleur;
 
 import ihm.FrameJeu;
+import java.awt.Dimension;
 import metier.Case;
 import metier.Fubuki;
 import metier.Plateau;
 
 public class Controleur
 {
-	private FrameJeu      frameJeu;
-    private Fubuki        metier;
-    private Plateau       plateau;
+	private FrameJeu        frameJeu;
+    private Fubuki          metier;
+    private Plateau         plateau;
+
+    private Dimension       tailleEcran;
+
+    int hJeu, lJeu;
 
     public Controleur()
 	{	
 		this.initPlateau();
         this.frameJeu   = new FrameJeu (this);
+
+        tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+
+        hJeu = (int) tailleEcran.getHeight();
+		lJeu = (int) tailleEcran.getWidth ();
+
+        this.frameJeu.setSize(tailleEcran);
     }
 
     public void initPlateau()
@@ -57,7 +69,7 @@ public class Controleur
 
     public void resetJeu() { this.initPlateau();}
 
-    public void    effacerChiffre(int ligne, int colonne)       { this.metier.effacerChiffre(ligne, colonne);}
+    public void effacerChiffre(int ligne, int colonne)       { this.metier.effacerChiffre(ligne, colonne);}
 
 
 
