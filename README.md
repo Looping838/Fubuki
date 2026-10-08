@@ -8,8 +8,8 @@ Le projet suit une architecture de type MVC (Modèle-Vue-Contrôleur) :
 
   - Controleur : fait le lien entre l'interface utilisateur et le moteur métier.
 
-  - IHM : gère l'interface graphique conçue avec Java Swing.
-  - 
+  - IHM : gère l'interface graphique conçue avec Java Swing. 
+
 
 ## Règles du jeu
 
