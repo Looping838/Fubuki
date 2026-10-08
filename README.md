@@ -1,16 +1,16 @@
-Fubuki
+## Fubuki
 
 Fubuki est un jeu de réflexion développé en Java Swing, inspiré des grilles logiques de nombres. L'objectif est de remplir les cases vides d'une grille de 3x3 avec les chiffres de 1 à 9 sans doublon, de manière à ce que la somme de chaque ligne et de chaque colonne corresponde exactement aux totaux indiqués.
 
 Le projet suit une architecture de type MVC (Modèle-Vue-Contrôleur) :
 
-  metier : contient les règles du jeu, les cases et la gestion du plateau.
+  Metier : contient les règles du jeu, les cases et la gestion du plateau.
 
-  controleur : fait le lien entre l'interface utilisateur et le moteur métier.
+  Controleur : fait le lien entre l'interface utilisateur et le moteur métier.
 
-  ihm : gère l'interface graphique conçue avec Java Swing.
+  IHM : gère l'interface graphique conçue avec Java Swing.
 
-Règles du jeu
+# Règles du jeu
 
   Une grille de 3x3 est générée aléatoirement, accompagnée des sommes cibles pour chaque ligne et chaque colonne.
 
@@ -21,7 +21,7 @@ Règles du jeu
   La partie est gagnée lorsque toutes les cases sont renseignées, chaque chiffre de 1 à 9 est utilisé une seule fois, et l'ensemble des totaux de lignes et colonnes est respecté.
 
 
-Fonctionnalités
+# Fonctionnalités
 
   Interface graphique fluide sous Java Swing (menu d'accueil et plateau de jeu).
 
@@ -33,13 +33,13 @@ Fonctionnalités
 
   Contrôle de validité des sommes et détection de victoire.
 
-Prérequis
+# Prérequis
 
   Java JDK 8 ou supérieur.
 
   Un terminal ou un IDE (VS Code, IntelliJ, Eclipse) configuré pour Java.
 
-Lancement du jeu
+# Lancement du jeu
 
 Depuis la racine du projet dans un terminal :
 Bash
