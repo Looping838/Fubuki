@@ -6,9 +6,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -24,6 +26,10 @@ public class PanelJeu extends JPanel implements ActionListener
     private Controleur          ctrl;
     private FrameJeu            frame;
     private int                 indice;
+
+    private Dimension           tailleEcran;
+    private int                 taillePlateau;
+    private int                 tailleBoutonPave;
 
     private int                 nbLigne;          // Permet de stocker le nombre de lignes   du plateau
     private int                 nbColonne;        // Permet de stocker le nombre de colonnes du plateau
@@ -74,6 +80,15 @@ public class PanelJeu extends JPanel implements ActionListener
         javax.swing.border.Border marge         = BorderFactory.createEmptyBorder(10, 25, 10, 25);
         javax.swing.border.Border margeGomme    = BorderFactory.createEmptyBorder(0, 10, 0, 10);
 
+        // Récupère la taille de l'écran de l'utilisateur
+        this.tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+
+        // On décide que le plateau prendra par exemple 55% de la hauteur de l'écran
+        this.taillePlateau = (int) (tailleEcran.height * 0.55);
+
+        // On calcule la taille des boutons du pavé numérique proportionnellement
+        this.tailleBoutonPave = (int) (taillePlateau * 0.15);
+
         this.ctrl           = ctrl;
         this.frame          = frame;
         this.indice         = indice;
@@ -104,9 +119,11 @@ public class PanelJeu extends JPanel implements ActionListener
         pnlGomme.setOpaque(false);
 
         // Panel qui contiendra pnlPlateau
-        this.pnlCentre = new JPanel();
-        this.pnlCentre.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 100));
+        this.pnlCentre = new JPanel(new GridBagLayout());
         this.pnlCentre.setOpaque(false);
+
+        // Création des règles de placement
+        GridBagConstraints gbc = new GridBagConstraints();
         
         // Panel qui affichera le Plateau
         this.pnlPlateau = new JPanel();
@@ -115,8 +132,9 @@ public class PanelJeu extends JPanel implements ActionListener
         this.pnlPlateau.setBackground(COULEUR_FOND);
 
         JPanel pnlDroit     = new JPanel();
-        pnlDroit.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 140));
+        pnlDroit.setLayout(new GridBagLayout());
         pnlDroit.setOpaque(false);
+        pnlDroit.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 50));
 
         // Panel qui contiendra pnlNbres
         JPanel pnlBas       = new JPanel();
@@ -155,6 +173,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.chGomme    .setOpaque(false);
         this.chGomme    .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.chGomme    .setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        this.chGomme    .setFocusPainted(false);
 
         // Parcours pour dessiner le plateau
         this.dessinerPlateau();   
@@ -212,11 +231,19 @@ public class PanelJeu extends JPanel implements ActionListener
         pnlBas      .add(separateurBas  , BorderLayout.NORTH );
         pnlBas      .add(pnlBoutons       , BorderLayout.CENTER);
 
-        pnlDroit    .add(pnlNbres   , BorderLayout.CENTER);
-        //pnlDroit    .add(pnlBoutons , BorderLayout.SOUTH );
+        gbc.anchor = GridBagConstraints.NORTH;
+        
+        // 1ère règle : Le plateau (Colonne 0)
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 0, 0, 100); // Ajoute une marge de 60 pixels à droite du plateau
+        this.pnlCentre.add(this.pnlPlateau, gbc);
 
-        this.pnlCentre.add(this.pnlPlateau);
-        //this.pnlCentre.add(pnlNbres);
+        // 2ème règle : Le pavé numérique (Colonne 1)
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 0, 0, 0); // Pas de marge supplémentaire
+        this.pnlCentre.add(this.pnlNbres, gbc);
 
         this.add(pnlHaut        , BorderLayout.NORTH );
         this.add(this.pnlCentre , BorderLayout.CENTER);
@@ -413,8 +440,13 @@ public class PanelJeu extends JPanel implements ActionListener
 
                     pnlCellule       .add(lblNombre);
                     
-                    this.tabPnlCases[lig][col] = pnlCellule;    // On ajoute pnlCellule au tableau de JPanel
+                    this.tabPnlCases[lig][col] = pnlCellule;    
                     pnlCellule       .addMouseListener(new GereSouris(lig, col));
+
+                    // L'ASTUCE : On donne le droit de recevoir au panneau ET au texte
+                    GereDepot depot = new GereDepot(lig, col);
+                    pnlCellule.setTransferHandler(depot);
+                    lblNombre.setTransferHandler(depot);
                 }
                 else if (lig < this.nbLigne && col == this.nbColonne)
                 {
@@ -440,7 +472,7 @@ public class PanelJeu extends JPanel implements ActionListener
                     // NOUVEAU : On sauvegarde ce label
                     this.tabLblTotauxColonnes[col] = lblTtlColonne;
 
-                    pnlCellule           .setBackground(COULEUR_FOND);
+                    pnlCellule.setBackground(COULEUR_FOND);
                     pnlCellule.add(lblTtlColonne);
                     pnlCellule.setBorder(null);
                 }
@@ -466,10 +498,31 @@ public class PanelJeu extends JPanel implements ActionListener
         {   
             JToggleButton btnTmp = new JToggleButton(String.valueOf(valeurBouton));
             btnTmp.setFont(new Font("Sans-Serif", Font.BOLD, 18));
-            btnTmp.setPreferredSize(new Dimension(100, 90));
+            btnTmp.setPreferredSize(new Dimension(tailleBoutonPave, tailleBoutonPave));
             btnTmp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-
             btnTmp.setFocusPainted(false);
+
+            // Le nouveau TransferHandler 100% sécurisé
+            btnTmp.setTransferHandler(new TransferHandler() {
+                @Override
+                public int getSourceActions(JComponent c) {
+                    return TransferHandler.COPY; // On autorise la copie
+                }
+                @Override
+                protected java.awt.datatransfer.Transferable createTransferable(JComponent c) {
+                    // On fabrique un colis de type texte pur contenant le chiffre du bouton
+                    return new java.awt.datatransfer.StringSelection(((JToggleButton) c).getText());
+                }
+            });
+
+            btnTmp.addMouseMotionListener(new MouseMotionAdapter() 
+            {
+                public void mouseDragged(MouseEvent e)
+                {
+                    JComponent composant = (JComponent) e.getSource();
+                    composant.getTransferHandler().exportAsDrag(composant, e, TransferHandler.COPY);
+                }
+            });
 
             // Si le nombre n'est pas déjà placé sur le plateau
             if (!this.ctrl.estPresent(valeurBouton))
@@ -716,6 +769,109 @@ public class PanelJeu extends JPanel implements ActionListener
             }
 
             PanelJeu.this.majPlateau();
+        }
+    }
+
+    private class GereDepot extends TransferHandler
+    {
+        private int ligCible;
+        private int colCible;
+
+        public GereDepot(int lig, int col)
+        {
+            this.ligCible = lig;
+            this.colCible = col;
+        }
+
+        // Cette méthode vérifie si la case accepte le chiffre qui la survole
+        @Override
+        public boolean canImport(TransferSupport support)
+        {
+            // On vérifie que c'est bien une action de "déposer"
+            if (!support.isDrop()) {
+                return false;
+            }
+            // On vérifie que l'étiquette du colis est bien du texte
+            if (!support.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) {
+                return false;
+            }
+            // On accepte si la case cible est modifiable
+            return PanelJeu.this.ctrl.getCasePlateau(ligCible, colCible).estModifiable();
+        }
+
+        // Cette méthode est appelée quand le joueur lâche le clic sur la case
+        @Override
+        public boolean importData(TransferSupport support)
+        {
+            if (!canImport(support)) return false;
+
+            try 
+            {
+                // 1. On récupère le texte transporté
+                String donnees = (String) support.getTransferable().getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
+                int valeurAjoutee = Integer.parseInt(donnees);
+
+                // 2. Si le chiffre est d'origine, on refuse
+                if (PanelJeu.this.ctrl.estPresent(valeurAjoutee)) return false;
+
+                // 3. Logique de placement classique (similaire à GereSouris)
+                // Si la case cible contenait déjà un chiffre, on réactive son ancien bouton
+                JLabel lblContenu = (JLabel) tabPnlCases[ligCible][colCible].getComponent(0);
+                String chiffreEcrase = lblContenu.getText();
+                
+                if (!chiffreEcrase.equals("") && !chiffreEcrase.equals("0")) 
+                {
+                    if (PanelJeu.this.grpBtn != null) 
+                    {
+                        java.util.Enumeration<AbstractButton> elements = PanelJeu.this.grpBtn.getElements();
+                        while (elements.hasMoreElements()) 
+                        {
+                            AbstractButton btn = elements.nextElement();
+                            if (btn.getText().equals(chiffreEcrase)) 
+                            {
+                                btn.setBackground(Color.WHITE);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // On met à jour le métier et l'interface
+                PanelJeu.this.ctrl.setNbrCase(ligCible, colCible, valeurAjoutee);
+                lblContenu.setText(String.valueOf(valeurAjoutee));
+                lblContenu.setForeground(Color.BLACK);
+
+                // On grise le bouton qu'on vient de glisser
+                if (PanelJeu.this.grpBtn != null) 
+                {
+                    java.util.Enumeration<AbstractButton> elements = PanelJeu.this.grpBtn.getElements();
+                    while (elements.hasMoreElements()) 
+                    {
+                        AbstractButton btn = elements.nextElement();
+                        if (btn.getText().equals(String.valueOf(valeurAjoutee))) 
+                        {
+                            btn.setBackground(COULEUR_GRIS_PLACE);
+                            PanelJeu.this.grpBtn.clearSelection();
+                            break;
+                        }
+                    }
+                }
+
+                // Nettoyage de fin
+                PanelJeu.this.ligSelectionne = -1;
+                PanelJeu.this.colSelectionne = -1;
+                PanelJeu.this.modeValidation = false;
+                PanelJeu.this.btnActif = null;
+                
+                PanelJeu.this.majPlateau();
+                
+                return true;
+            } 
+            catch (Exception e) 
+            {
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 }
