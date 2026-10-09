@@ -96,15 +96,16 @@ public class Fubuki
 
     public void effacerChiffre(int ligne, int colonne)  { this.plateau.setCase(ligne, colonne, 0);}
 
-    public void echangerNbr   ( int lig1 , int col1 ,
-                                int lig2 , int col2 )
+    public void echangerNbr(int lig1, int col1, int lig2, int col2) 
     {
-        int tmp = 0 ;
-        tmp = this.plateau.getNombreCase(lig1, col1) ;
-
-        this.plateau.getCasePlateau(lig1, col1).set_nombre( this.plateau.getNombreCase(lig2, col2) );
-
-        this.plateau.getCasePlateau(lig1, col1).set_nombre(tmp) ;
+        // On récupère les deux objets Case via le Plateau
+        Case case1 = this.plateau.getCasePlateau(lig1, col1);
+        Case case2 = this.plateau.getCasePlateau(lig2, col2);
+        
+        // On échange physiquement leurs nombres en mémoire
+        int memoire = case1.get_nombre();
+        case1.set_nombre(case2.get_nombre());
+        case2.set_nombre(memoire);
     }
 
 }
