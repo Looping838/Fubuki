@@ -18,6 +18,9 @@ public class FrameJeu extends JFrame
 		this.setSize(800, 800);
 		this.setLayout(new BorderLayout());
 
+        ImageIcon icone = new ImageIcon("./images/icones/fubuki.png");
+        this.setIconImage(icone.getImage());
+
         this.tabPanel = new JPanel[3];
         this.tabPanel[0] = new PanelAccueil(ctrl, this, 0);
         
