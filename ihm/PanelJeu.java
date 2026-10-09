@@ -13,13 +13,16 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.*;
 
 public class PanelJeu extends JPanel implements ActionListener
 {
-    public static final Color          COULEUR_FOND        = new Color(245, 245, 220);
-    public static final Color          COULEUR_SELECTION   = new Color(168, 168, 168);
-    public static final Color          COULEUR_VERT_VALIDE = new Color(0  , 150  , 0);
-    public static final Color          COULEUR_GRIS_PLACE  = new Color(110, 110, 110);
+    public static final Color          COULEUR_FOND         = new Color(245, 245, 220);
+    public static final Color          COULEUR_SELECTION    = new Color(168, 168, 168);
+    public static final Color          COULEUR_VERT_VALIDE  = new Color(0  , 150  , 0);
+    public static final Color          COULEUR_GRIS_PLACE   = new Color(110, 110, 110);
+
+    public static final Border         MARGE_GOMME          = BorderFactory.createEmptyBorder(2, 15, 2, 15);  // Marge invisible (H, G, B, D)
     
     private JPanel[][]          tabPnlCases;
 
@@ -45,6 +48,7 @@ public class PanelJeu extends JPanel implements ActionListener
     private JLabel[]            tabLblTotauxColonnes;
 
     private JButton             btnValide;
+    private JButton             btnReset;
     private JButton             btnRestart;
     private JButton             btnAccueil;
     private JButton             btnAnnuler;
@@ -54,7 +58,7 @@ public class PanelJeu extends JPanel implements ActionListener
     private JToggleButton       btnActif;
     private JButton             btnGomme;
 
-    private JRadioButton        chGomme;
+    //private JRadioButton        chGomme;
 
     private boolean             modeValidation = false;
 
@@ -72,13 +76,6 @@ public class PanelJeu extends JPanel implements ActionListener
         /*-------------------------------*/
         /*   Création des composants     */
         /*-------------------------------*/
-
-        // 1. On crée le relief 3D
-        javax.swing.border.Border relief = BorderFactory.createRaisedBevelBorder();
-
-        // 2. On crée une marge invisible (Haut, Gauche, Bas, Droite)
-        javax.swing.border.Border marge         = BorderFactory.createEmptyBorder(10, 25, 10, 25);
-        javax.swing.border.Border margeGomme    = BorderFactory.createEmptyBorder(0, 10, 0, 10);
 
         // Récupère la taille de l'écran de l'utilisateur
         this.tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
@@ -163,17 +160,17 @@ public class PanelJeu extends JPanel implements ActionListener
 
         this.btnGomme   = new JButton("");
         this.btnGomme   .setBackground(Color.WHITE);
-        this.btnGomme   .setBorder(BorderFactory.createCompoundBorder(relief, margeGomme));
+        this.btnGomme   .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, MARGE_GOMME));
         this.btnGomme   .setFocusPainted(false);
 
         // Ajout de l'icône gomme.png au bouton btnGomme en redimensionnant l'image au préalable
 		this.btnGomme.setIcon(new ImageIcon(this.creerImages("./images/icones/gomme.png", 30, 30)));
 
-        this.chGomme    = new JRadioButton("Tout Gommer", false);
+        /*this.chGomme    = new JRadioButton("Tout Gommer", false);
         this.chGomme    .setOpaque(false);
         this.chGomme    .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.chGomme    .setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        this.chGomme    .setFocusPainted(false);
+        this.chGomme    .setFocusPainted(false);*/
 
         // Parcours pour dessiner le plateau
         this.dessinerPlateau();   
@@ -181,40 +178,48 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnValide      = new JButton("Valider");
         this.btnValide      .setBackground(Color.WHITE);
         this.btnValide      .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnValide      .setPreferredSize(new Dimension(250, 50));
+        this.btnValide      .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
         this.btnValide      .setIcon(new ImageIcon(this.creerImages("./images/icones/valide.png", 30, 30)));
-        this.btnValide      .setBorder(BorderFactory.createCompoundBorder(relief, marge));
+        this.btnValide      .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
         this.btnValide      .setFocusPainted(false);
 
-        this.btnRestart     = new JButton("Recommencer");
-        this.btnRestart     .setBackground(Color.WHITE);
-        this.btnRestart     .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnRestart     .setPreferredSize(new Dimension(250, 50));
-        this.btnRestart     .setIcon(new ImageIcon(this.creerImages("./images/icones/restart.png", 30, 25)));
-        this.btnRestart     .setBorder(BorderFactory.createCompoundBorder(relief, marge));
-        this.btnRestart     .setFocusPainted(false);
+        this.btnReset       = new JButton("Réintialiser le plateau");
+        this.btnReset       .setBackground(Color.WHITE);
+        this.btnReset       .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnReset       .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
+        this.btnReset       .setIcon(new ImageIcon(this.creerImages("./images/icones/reset.png", 30, 25)));
+        this.btnReset       .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
+        this.btnReset       .setFocusPainted(false);
+
+        this.btnRestart       = new JButton("Recommencer une partie");
+        this.btnRestart       .setBackground(Color.WHITE);
+        this.btnRestart       .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnRestart       .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
+        this.btnRestart       .setIcon(new ImageIcon(this.creerImages("./images/icones/restart.png", 30, 25)));
+        this.btnRestart       .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
+        this.btnRestart       .setFocusPainted(false);
 
         this.btnAnnuler     = new JButton("Annuler");
         this.btnAnnuler     .setBackground(Color.WHITE);
         this.btnAnnuler     .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnAnnuler     .setPreferredSize(new Dimension(250, 50));
+        this.btnAnnuler     .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
         this.btnAnnuler     .setIcon(new ImageIcon(this.creerImages("./images/icones/annuler.png", 30, 25)));
-        this.btnAnnuler     .setBorder(BorderFactory.createCompoundBorder(relief, marge));
+        this.btnAnnuler     .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
         this.btnAnnuler     .setFocusPainted(false);
 
         this.btnAccueil     = new JButton("Retourner à l'accueil");
         this.btnAccueil     .setBackground(Color.WHITE);
         this.btnAccueil     .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnAccueil     .setPreferredSize(new Dimension(250, 50));
+        this.btnAccueil     .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
         this.btnAccueil     .setIcon(new ImageIcon(this.creerImages("./images/icones/accueil.png", 30, 25)));
-        this.btnAccueil     .setBorder(BorderFactory.createCompoundBorder(relief, marge));
+        this.btnAccueil     .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
         this.btnAccueil     .setFocusPainted(false);
 
         pnlBoutons.add(this.btnValide );
+        pnlBoutons.add(this.btnReset);
         pnlBoutons.add(this.btnRestart);
         pnlBoutons.add(this.btnAnnuler);
         pnlBoutons.add(this.btnAccueil);
-
 
         this.dessinerBoutons();    
 
@@ -222,7 +227,7 @@ public class PanelJeu extends JPanel implements ActionListener
         /* Positionnement des composants */
         /*-------------------------------*/
 
-        pnlGomme    .add(this.chGomme);
+        //pnlGomme    .add(this.chGomme);
         pnlGomme    .add(this.btnGomme        );
         
         pnlHaut     .add(pnlGomme      , BorderLayout.EAST  );
@@ -236,13 +241,13 @@ public class PanelJeu extends JPanel implements ActionListener
         // 1ère règle : Le plateau (Colonne 0)
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.insets = new Insets(0, 0, 0, 100); // Ajoute une marge de 60 pixels à droite du plateau
+        gbc.insets = new Insets(0, 0, 0, 100); // Ajoute une PanelAccueil.MARGE de 60 pixels à droite du plateau
         this.pnlCentre.add(this.pnlPlateau, gbc);
 
         // 2ème règle : Le pavé numérique (Colonne 1)
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.insets = new Insets(0, 0, 0, 0); // Pas de marge supplémentaire
+        gbc.insets = new Insets(0, 0, 0, 0); // Pas de PanelAccueil.MARGE supplémentaire
         this.pnlCentre.add(this.pnlNbres, gbc);
 
         this.add(pnlHaut        , BorderLayout.NORTH );
@@ -255,6 +260,7 @@ public class PanelJeu extends JPanel implements ActionListener
         /* ----------------------------- */
         this.btnGomme   .addActionListener(this);
         this.btnValide  .addActionListener(this);
+        this.btnReset .addActionListener(this);
         this.btnRestart .addActionListener(this);
         this.btnAnnuler .addActionListener(this);
         this.btnAccueil .addActionListener(this);
@@ -286,7 +292,7 @@ public class PanelJeu extends JPanel implements ActionListener
 
         if (e.getSource() == this.btnGomme)
         {
-            // --- MODE TOUT GOMMER ---
+           /*// --- MODE TOUT GOMMER ---
             if (this.chGomme.isSelected())
             {
                 for (int lig = 0; lig < this.nbLigne; lig++)
@@ -331,7 +337,7 @@ public class PanelJeu extends JPanel implements ActionListener
             // --- MODE GOMME CLASSIQUE (Une seule case) ---
             else
             {
-                if (this.ligSelectionne != -1 && this.colSelectionne != -1)
+                */if (this.ligSelectionne != -1 && this.colSelectionne != -1)
                 {
                     JLabel lblContenu = (JLabel) tabPnlCases[this.ligSelectionne][this.colSelectionne].getComponent(0);
                     String chiffreEfface = lblContenu.getText();
@@ -361,7 +367,7 @@ public class PanelJeu extends JPanel implements ActionListener
                     this.modeValidation = false; 
                     this.majPlateau();
                 }
-            }
+            //}
         }
 
         if (e.getSource() == this.btnValide)
@@ -394,6 +400,11 @@ public class PanelJeu extends JPanel implements ActionListener
         if (e.getSource() == this.btnAccueil)
         {
             this.frame.setPnl(this.frame.getPnl(this.indice-1));
+        }
+
+        if (e.getSource() == this.btnReset)
+        {
+            this.reset();
         }
 
         if (e.getSource() == this.btnRestart)
@@ -548,6 +559,7 @@ public class PanelJeu extends JPanel implements ActionListener
     public void majPlateau()
     {
         // 1. Remettre les cases de jeu de la bonne couleur (Blanc ou Bleu)
+        // 1. Remettre les cases de jeu de la bonne couleur et ACTUALISER LE TEXTE
         for (int lig = 0; lig < this.nbLigne; lig++)
         {
             for (int col = 0; col < this.nbColonne; col++)
@@ -562,9 +574,16 @@ public class PanelJeu extends JPanel implements ActionListener
 
                 this.tabPnlCases[lig][col].setBackground(couleurCase);
 
-                // Ajuste la couleur du texte (blanc sur fond bleu, noir sinon)
+                // On récupère le Label de la case
                 JLabel lbl = (JLabel) this.tabPnlCases[lig][col].getComponent(0);
-                //lbl.setForeground(null);
+                
+                // LA CORRECTION MVC : On force l'interface à afficher la vraie valeur du Métier
+                int vraiChiffre = this.ctrl.getNombreCasePlateau(lig, col);
+                if (vraiChiffre == 0) {
+                    lbl.setText(""); // Si la case est vide dans le métier, on efface l'écran
+                } else {
+                    lbl.setText(String.valueOf(vraiChiffre)); // Sinon, on affiche le chiffre métier
+                }
             }
         }
 
@@ -577,6 +596,8 @@ public class PanelJeu extends JPanel implements ActionListener
             {
                 if (this.ctrl.estLigneValide(lig)) { this.tabLblTotauxLignes[lig].setForeground(vertFonce); } 
                 else                               { this.tabLblTotauxLignes[lig].setForeground(Color.RED); }
+
+                System.out.println("Somme avec this.tabLblTotauxLignes : " + this.tabLblTotauxLignes[lig].getText());
             } 
             else { this.tabLblTotauxLignes[lig].setForeground(null); } // Remet en noir si on annule la validation
         }
@@ -587,6 +608,8 @@ public class PanelJeu extends JPanel implements ActionListener
             {
                 if (this.ctrl.estColonneValide(col)) { this.tabLblTotauxColonnes[col].setForeground(vertFonce); } 
                 else                                 { this.tabLblTotauxColonnes[col].setForeground(Color.RED); }
+
+                System.out.println("Somme avec this.tabLblTotauxColonnes : " + this.tabLblTotauxColonnes[col].getText());
             } 
             else { this.tabLblTotauxColonnes[col].setForeground(null); } // Remet en noir si on annule la validation
         }
@@ -595,25 +618,6 @@ public class PanelJeu extends JPanel implements ActionListener
     }
 
     public void reset()
-    {
-        // On demande un tout nouveau plateau au métier via le contrôleur
-        this.ctrl.resetJeu();
-
-        // On remet nos variables de sélection à zéro
-        this.ligSelectionne = -1;
-        this.colSelectionne = -1;
-        this.modeValidation = false;
-        this.btnActif = null;
-        this.btnGomme.setEnabled(true);
-        
-        // On redessine nos deux panneaux graphiques (qui vont s'auto-nettoyer)
-        this.dessinerPlateau();
-        this.dessinerBoutons();
-
-        this.majPlateau();
-    }
-
-    public void restart()
     {
         this.ligSelectionne = -1;
         this.colSelectionne = -1;
@@ -661,6 +665,25 @@ public class PanelJeu extends JPanel implements ActionListener
         this.majPlateau();
     }
 
+    public void restart()
+    {
+        // On demande un tout nouveau plateau au métier via le contrôleur
+        this.ctrl.resetJeu();
+
+        // On remet nos variables de sélection à zéro
+        this.ligSelectionne = -1;
+        this.colSelectionne = -1;
+        this.modeValidation = false;
+        this.btnActif = null;
+        this.btnGomme.setEnabled(true);
+        
+        // On redessine nos deux panneaux graphiques (qui vont s'auto-nettoyer)
+        this.dessinerPlateau();
+        this.dessinerBoutons();
+
+        this.majPlateau();
+    }
+
     public Image creerImages (String chemin, int longueur, int largeur)
     {
         ImageIcon   imgOriginale;
@@ -692,32 +715,25 @@ public class PanelJeu extends JPanel implements ActionListener
             }
 
             // Interception d'un échange
-            // Si une case est déjà sélectionnée ET qu'on n'a pas de bouton pavé actif
             if (PanelJeu.this.ligSelectionne != -1 && PanelJeu.this.btnActif == null)
             {
+                // Deuxième chiffre qu'on veut échanger
                 int valCliquee = PanelJeu.this.ctrl.getNombreCasePlateau(this.ligSouris, this.colSouris);
+                // Premier chiffre qu'on veut échanger
+                int valPremiereCase = PanelJeu.this.ctrl.getNombreCasePlateau(PanelJeu.this.ligSelectionne, PanelJeu.this.colSelectionne);
                 
-                // Si la case cliquée a un chiffre, est modifiable, et n'est pas la case déjà sélectionnée
-                if (valCliquee != 0 && 
-                    PanelJeu.this.ctrl.getCasePlateau(this.ligSouris, this.colSouris).estModifiable() && 
+                boolean cibleModifiable = PanelJeu.this.ctrl.getCasePlateau(this.ligSouris, this.colSouris).estModifiable();
+                boolean sourceModifiable = PanelJeu.this.ctrl.getCasePlateau(PanelJeu.this.ligSelectionne, PanelJeu.this.colSelectionne).estModifiable();
+
+                // On exige que la case ait un chiffre (!= 0) et soit modifiables
+                if (/*valCliquee != 0 &&*/ valPremiereCase != 0 && cibleModifiable && sourceModifiable && 
                     (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris))
                 {
                     // Action Métier
                     PanelJeu.this.ctrl.echangerNbr(PanelJeu.this.ligSelectionne, PanelJeu.this.colSelectionne, this.ligSouris, this.colSouris);
-
-                    // Action Graphique
-                    JLabel lblContenu1 = (JLabel) tabPnlCases[PanelJeu.this.ligSelectionne][PanelJeu.this.colSelectionne].getComponent(0);
-                    JLabel lblContenu2 = (JLabel) tabPnlCases[this.ligSouris][this.colSouris].getComponent(0);
-
-                    String tmp = lblContenu1.getText();
-                    lblContenu1.setText(lblContenu2.getText());
-                    lblContenu2.setText(tmp);
-
-                    // Fin de l'échange
-                    PanelJeu.this.ligSelectionne = -1;
-                    PanelJeu.this.colSelectionne = -1;
-                    PanelJeu.this.modeValidation = false;
                     
+                    PanelJeu.this.modeValidation = false;
+
                     PanelJeu.this.majPlateau();
                     return; // ON S'ARRÊTE LÀ POUR NE PAS CASSER LA SUITE
                 }
@@ -752,7 +768,7 @@ public class PanelJeu extends JPanel implements ActionListener
                 else 
                 {
                     JLabel lblContenu = (JLabel) tabPnlCases[this.ligSouris][this.colSouris].getComponent(0);
-                    lblContenu.setText(String.valueOf(valeur));
+                    //lblContenu.setText(String.valueOf(valeur));
                     lblContenu.setForeground(Color.BLACK); 
 
                     PanelJeu.this.ctrl.setNbrCase(this.ligSouris, this.colSouris, valeur);
@@ -788,13 +804,11 @@ public class PanelJeu extends JPanel implements ActionListener
         public boolean canImport(TransferSupport support)
         {
             // On vérifie que c'est bien une action de "déposer"
-            if (!support.isDrop()) {
-                return false;
-            }
+            if (!support.isDrop()) return false;
+
             // On vérifie que l'étiquette du colis est bien du texte
-            if (!support.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) {
-                return false;
-            }
+            if (!support.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor)) return false;
+
             // On accepte si la case cible est modifiable
             return PanelJeu.this.ctrl.getCasePlateau(ligCible, colCible).estModifiable();
         }
@@ -807,14 +821,14 @@ public class PanelJeu extends JPanel implements ActionListener
 
             try 
             {
-                // 1. On récupère le texte transporté
+                // On récupère le texte transporté
                 String donnees = (String) support.getTransferable().getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
                 int valeurAjoutee = Integer.parseInt(donnees);
 
-                // 2. Si le chiffre est d'origine, on refuse
+                // Si le chiffre est d'origine, on refuse
                 if (PanelJeu.this.ctrl.estPresent(valeurAjoutee)) return false;
 
-                // 3. Logique de placement classique (similaire à GereSouris)
+                // Logique de placement classique (similaire à GereSouris)
                 // Si la case cible contenait déjà un chiffre, on réactive son ancien bouton
                 JLabel lblContenu = (JLabel) tabPnlCases[ligCible][colCible].getComponent(0);
                 String chiffreEcrase = lblContenu.getText();
@@ -838,7 +852,6 @@ public class PanelJeu extends JPanel implements ActionListener
 
                 // On met à jour le métier et l'interface
                 PanelJeu.this.ctrl.setNbrCase(ligCible, colCible, valeurAjoutee);
-                lblContenu.setText(String.valueOf(valeurAjoutee));
                 lblContenu.setForeground(Color.BLACK);
 
                 // On grise le bouton qu'on vient de glisser

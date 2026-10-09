@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.*;
 
 public class PanelAccueil extends JPanel implements ActionListener
 {
@@ -18,8 +19,10 @@ public class PanelAccueil extends JPanel implements ActionListener
     private JButton    btnJouer;
     private JButton    btnQuitter;
 
-    public static final Color LUMIERE    = Color.WHITE;
-    public static final Color OMBRE      = Color.LIGHT_GRAY;
+    public static final Color   LUMIERE         = Color.WHITE;
+    public static final Color   OMBRE           = Color.LIGHT_GRAY;
+    public static final Border  RELIEF          = BorderFactory.createRaisedBevelBorder();          // Relief 3D
+    public static final Border  MARGE           = BorderFactory.createEmptyBorder(10, 25, 10, 25);  // Marge invisible (H, G, B, D)
 
     public PanelAccueil(Controleur ctrl, FrameJeu frame, int indice)
     {
@@ -33,12 +36,6 @@ public class PanelAccueil extends JPanel implements ActionListener
         this.ctrl   = ctrl;
         this.frame  = frame;
         this.indice = indice;
-
-        // 1. On crée le relief 3D
-        javax.swing.border.Border relief = BorderFactory.createRaisedBevelBorder();
-
-        // 2. On crée une marge invisible (Haut, Gauche, Bas, Droite)
-        javax.swing.border.Border marge  = BorderFactory.createEmptyBorder(10, 25, 10, 25);
                 
         JPanel pnlCentre        = new JPanel();
         pnlCentre               .setLayout(new GridLayout(3,1));
@@ -69,13 +66,13 @@ public class PanelAccueil extends JPanel implements ActionListener
         this.btnJouer           = new JButton("Jouer !");
         this.btnJouer           .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnJouer           .setBackground(Color.WHITE);
-        this.btnJouer           .setBorder(BorderFactory.createCompoundBorder(relief, marge));
+        this.btnJouer           .setBorder(BorderFactory.createCompoundBorder(RELIEF, MARGE));
         this.btnJouer           .setFocusPainted(false);
 
         this.btnQuitter         = new JButton("Quitter");
         this.btnQuitter         .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnQuitter         .setBackground(Color.WHITE);
-        this.btnQuitter         .setBorder(BorderFactory.createCompoundBorder(relief, marge));
+        this.btnQuitter         .setBorder(BorderFactory.createCompoundBorder(RELIEF, MARGE));
         this.btnQuitter         .setFocusPainted(false);
 
         /*-------------------------------*/

@@ -17,8 +17,8 @@ public class PanelVictoire extends JPanel implements ActionListener
 
         /*-------------------------------*/
 		/*   Création des composants     */
-		/*-------------------------------*/        
-
+		/*-------------------------------*/       
+        
         this.frame = frame;
 
         JLabel lblVictoire = new JLabel("VICTOIRE !", SwingConstants.CENTER);
@@ -28,10 +28,14 @@ public class PanelVictoire extends JPanel implements ActionListener
         this.btnAccueil = new JButton("Retourner à l'accueil");
         this.btnAccueil.setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnAccueil.setBackground(Color.WHITE);
+        this.btnAccueil.setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
+        this.btnAccueil.setFocusPainted(false);
 
         this.btnQuitter = new JButton("Quitter");
         this.btnQuitter.setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnQuitter.setBackground(Color.WHITE);
+        this.btnQuitter.setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
+        this.btnQuitter.setFocusPainted(false);
 
         JPanel pnlBtnAccueil = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pnlBtnAccueil.setOpaque(false);
