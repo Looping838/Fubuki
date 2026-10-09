@@ -30,6 +30,8 @@ public class Fubuki
         this.difficulter = difficulter ;
     }
 
+    public int getDifficulter () { return this.difficulter ;}
+    
     public void plateauJeu ()
     {
         if ( this.difficulter == 0 )
