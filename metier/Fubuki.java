@@ -10,9 +10,9 @@ public class Fubuki
 
     private Controleur ctrl;
 
-    public Fubuki (Controleur ctrl)
+    public Fubuki (Controleur ctrl , int difficulter )
     {
-        this.difficulter        = 0 ; 
+        this.difficulter        = difficulter ; 
         this.plateau            = new Plateau(ctrl);
         this.plateau.initPlateau();
         this.plateauJeu() ;
@@ -122,7 +122,10 @@ public class Fubuki
         return true;
     }
 
-    public void effacerChiffre(int ligne, int colonne)  { this.plateau.setCase(ligne, colonne, 0);}
+    public void effacerChiffre(int ligne, int colonne)  
+    { 
+        this.plateau.setCase(ligne, colonne, 0);
+    }
 
     public void echangerNbr(int lig1, int col1, int lig2, int col2) 
     {

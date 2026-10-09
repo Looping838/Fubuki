@@ -18,7 +18,6 @@ public class Controleur
 
     public Controleur()
 	{	
-		this.initPlateau();
         this.frameJeu   = new FrameJeu (this);
 
         tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
@@ -29,9 +28,9 @@ public class Controleur
         this.frameJeu.setSize(tailleEcran);
     }
 
-    public void initPlateau()
+    public void initPlateau( int difficulter )
     {
-        this.metier  = new Fubuki(this);
+        this.metier  = new Fubuki(this , difficulter );
         this.plateau = this.metier.getPlateau();
     }
 
@@ -67,11 +66,12 @@ public class Controleur
         return somme == getTotauxColonnes(col);
     }
 
-    public void resetJeu() { this.initPlateau();}
+    // TODO: a modif la difficulter plus tard 
+    public void    resetJeu() { this.initPlateau(0);} 
 
-    public void effacerChiffre(int ligne, int colonne)       { this.metier.effacerChiffre(ligne, colonne);}
+    public void    effacerChiffre(int ligne, int colonne)               { this.metier.effacerChiffre(ligne, colonne);}
 
-    public void echangerNbr (int lig1, int col1, int lig2, int col2) { this.metier.echangerNbr(lig1, col1, lig2, col2);}
+    public void    echangerNbr (int lig1, int col1, int lig2, int col2) { this.metier.echangerNbr(lig1, col1, lig2, col2);}
 
     public static void main (String[] args) { new Controleur(); }
 
