@@ -1,6 +1,6 @@
-- changement de difficulter 
+- changement de difficulter   ( metier fait Fubuki.plateauJeu() )
 - fonction annuler 
 
-- drag and drop dans tableau 
+- drag and drop dans tableau   ( metier fait Fubuki.echangerNbr() )
 
 - petit numeros ( numeros possible )
