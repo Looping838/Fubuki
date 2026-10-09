@@ -16,7 +16,6 @@ public class Plateau
 
     private Controleur ctrl;
     
-
     public Plateau (Controleur ctrl)
     {
         this.nbLigne = this.nbColonne = 3;
@@ -34,7 +33,6 @@ public class Plateau
         this.totauxColonnes = new int [3];
         this.totauxLignes   = new int [3];
 
-
     }
 
     public int      getNombreCase        (int x , int y )  { return getCasePlateau(x,y).get_nombre()  ;}
@@ -49,10 +47,9 @@ public class Plateau
     public int      getTotauxColonnes    (int y )          { return this.totauxColonnes [y]    ;}
     public int[]    getNbrPossible       ()                { return this.nbrPossible           ;}
 
-    public void setTotauxLignes   (int x   , int nbr)      { this.totauxLignes  [x] = nbr  ;}
-    public void setTotauxColonnes (int y   , int nbr)      { this.totauxColonnes[y] = nbr  ;}
-
-    public void setCase           (int x , int y , int nbr)   { this.plateau[x][y].set_nombre(nbr) ; }
+    public void     setTotauxLignes   (int x   , int nbr)      { this.totauxLignes  [x] = nbr  ;}
+    public void     setTotauxColonnes (int y   , int nbr)      { this.totauxColonnes[y] = nbr  ;}
+    public void     setCase           (int x , int y , int nbr)   { this.plateau[x][y].set_nombre(nbr) ; }
 
     public void initPlateau()
     {
@@ -97,7 +94,4 @@ public class Plateau
             this.nbrPossible[j] = temp;
         }
     }
-
-
-
 }

@@ -6,12 +6,14 @@ import java.util.Random;
 public class Fubuki 
 {
     private Plateau plateau;
+    private int     difficulter ;
 
     private Controleur ctrl;
 
     public Fubuki (Controleur ctrl)
     {
-        this.plateau = new Plateau(ctrl);
+        this.difficulter        = 0 ; 
+        this.plateau            = new Plateau(ctrl);
         this.plateau.initPlateau();
         this.plateauJeu() ;
         this.plateauVide() ;
@@ -23,22 +25,49 @@ public class Fubuki
         return this.plateau; 
     }
 
+    public void setDifficulter(int difficulter)
+    {
+        this.difficulter = difficulter ;
+    }
+
     public void plateauJeu ()
     {
-        Random rand = new Random();
-        int x = 4 ;
-        int y = 4 ;
-
-        for ( int cpt = 0 ; cpt < 2 ; cpt ++ )
+        if ( this.difficulter == 0 )
         {
-            x = rand.nextInt(this.plateau.getNbLigne());
-            y = rand.nextInt(this.plateau.getNbColonne());
-             
-            if (this.plateau.getCasePlateau(x , y).estModifiable() == true )
+            Random rand = new Random();
+            int x = 4 ;
+            int y = 4 ;
+
+            int cpt = 0 ;
+
+            while ( cpt < 2 )
             {
-                this.plateau.getCasePlateau(x , y).setModifiable(false) ;
+                x = rand.nextInt(this.plateau.getNbLigne());
+                y = rand.nextInt(this.plateau.getNbColonne());
+                
+                if (this.plateau.getCasePlateau(x , y).estModifiable() == true )
+                {
+                    this.plateau.getCasePlateau(x , y).setModifiable(false) ;
+                    cpt ++ ;
+                }
             }
         }
+        else 
+            if ( this.difficulter == 1 )
+            {
+                Random rand = new Random();
+                int x = 4 ;
+                int y = 4 ;
+
+                x = rand.nextInt(this.plateau.getNbLigne());
+                y = rand.nextInt(this.plateau.getNbColonne());
+
+                this.plateau.getCasePlateau(x , y).setModifiable(false) ; 
+            }
+            else 
+            {
+
+            }
     }
 
     public void plateauVide ()
@@ -47,7 +76,6 @@ public class Fubuki
         {
             for ( int cpt2 = 0 ; cpt2 < this.plateau.getNbColonne() ; cpt2 ++ )
             {
-                    
                 if (this.plateau.getCasePlateau(cpt , cpt2).estModifiable() == true )
                 {
                     this.plateau.getCasePlateau(cpt , cpt2).set_nombre(0) ;
