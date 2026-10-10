@@ -260,7 +260,7 @@ public class PanelJeu extends JPanel implements ActionListener
         /* ----------------------------- */
         this.btnGomme   .addActionListener(this);
         this.btnValide  .addActionListener(this);
-        this.btnReset .addActionListener(this);
+        this.btnReset   .addActionListener(this);
         this.btnRestart .addActionListener(this);
         this.btnAnnuler .addActionListener(this);
         this.btnAccueil .addActionListener(this);
@@ -365,6 +365,9 @@ public class PanelJeu extends JPanel implements ActionListener
                     }
 
                     this.modeValidation = false; 
+                    this.ligSelectionne = -1;
+                    this.colSelectionne = -1;
+                    
                     this.majPlateau();
                 }
             //}
@@ -399,7 +402,7 @@ public class PanelJeu extends JPanel implements ActionListener
 
         if (e.getSource() == this.btnAccueil)
         {
-            this.frame.setPnl(this.frame.getPnl(this.indice-1));
+            this.frame.setPnl(this.frame.getPnl(0));
         }
 
         if (e.getSource() == this.btnReset)
@@ -596,8 +599,6 @@ public class PanelJeu extends JPanel implements ActionListener
             {
                 if (this.ctrl.estLigneValide(lig)) { this.tabLblTotauxLignes[lig].setForeground(vertFonce); } 
                 else                               { this.tabLblTotauxLignes[lig].setForeground(Color.RED); }
-
-                System.out.println("Somme avec this.tabLblTotauxLignes : " + this.tabLblTotauxLignes[lig].getText());
             } 
             else { this.tabLblTotauxLignes[lig].setForeground(null); } // Remet en noir si on annule la validation
         }
@@ -608,8 +609,6 @@ public class PanelJeu extends JPanel implements ActionListener
             {
                 if (this.ctrl.estColonneValide(col)) { this.tabLblTotauxColonnes[col].setForeground(vertFonce); } 
                 else                                 { this.tabLblTotauxColonnes[col].setForeground(Color.RED); }
-
-                System.out.println("Somme avec this.tabLblTotauxColonnes : " + this.tabLblTotauxColonnes[col].getText());
             } 
             else { this.tabLblTotauxColonnes[col].setForeground(null); } // Remet en noir si on annule la validation
         }
@@ -733,6 +732,12 @@ public class PanelJeu extends JPanel implements ActionListener
                     PanelJeu.this.ctrl.echangerNbr(PanelJeu.this.ligSelectionne, PanelJeu.this.colSelectionne, this.ligSouris, this.colSouris);
                     
                     PanelJeu.this.modeValidation = false;
+                    
+                    PanelJeu.this.ligSelectionne = -1;
+                    PanelJeu.this.colSelectionne = -1;
+
+                    /*this.ligSouris = -1;
+                    this.colSouris = -1;*/
 
                     PanelJeu.this.majPlateau();
                     return; // ON S'ARRÊTE LÀ POUR NE PAS CASSER LA SUITE
