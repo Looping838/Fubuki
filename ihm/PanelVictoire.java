@@ -110,8 +110,7 @@ public class PanelVictoire extends JPanel implements ActionListener
 
         else if (e.getSource() == this.btnRecommencer)
         {
-            this.ctrl.resetJeu();
-            this.ctrl.initPlateau(this.ctrl.getDifficulte());
+            this.frame.restartJeu();
             this.frame.setPnl(this.frame.getPnl(this.indice - 1));
         }
 
