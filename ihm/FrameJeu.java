@@ -21,7 +21,7 @@ public class FrameJeu extends JFrame
         ImageIcon icone = new ImageIcon("./images/icones/fubuki.png");
         this.setIconImage(icone.getImage());
 
-        this.tabPanel = new JPanel[3];
+        this.tabPanel = new JPanel[4];
         this.tabPanel[0] = new PanelAccueil(ctrl, this, 0);
         
         this.panelActif = this.tabPanel[0];
@@ -46,13 +46,12 @@ public class FrameJeu extends JFrame
 		this.revalidate();
 	}
 
-    public void creerPanelJeu()   { this.tabPanel[1] = new PanelJeu   (ctrl , this, 1); }
-
+    public void creerPanelChoixDiff()   { this.tabPanel[1] = new PanelChoixDiff     (ctrl , this, 1); }
+    public void creerPanelJeu()         { this.tabPanel[2] = new PanelJeu           (ctrl , this, 2); }
+    
     public void afficherPanelVictoire()
     {
-        this.tabPanel[2] = new PanelVictoire(this);
-        this.setPnl(this.tabPanel[2]); // Bascule l'écran[cite: 1]
+        this.tabPanel[3] = new PanelVictoire(ctrl, this, 3);
+        this.setPnl(this.tabPanel[3]);
     }
-
-    public Controleur getCtrl() { return this.ctrl; }
 }
