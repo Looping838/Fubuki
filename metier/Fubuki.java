@@ -6,13 +6,13 @@ import java.util.Random;
 public class Fubuki 
 {
     private Plateau plateau;
-    private int     difficulter ;
+    private int     difficulte ;
 
     private Controleur ctrl;
 
-    public Fubuki (Controleur ctrl , int difficulter )
+    public Fubuki (Controleur ctrl , int difficulte )
     {
-        this.difficulter        = difficulter ; 
+        this.difficulte        = difficulte ; 
         this.plateau            = new Plateau(ctrl);
         this.plateau.initPlateau();
         this.plateauJeu() ;
@@ -25,16 +25,16 @@ public class Fubuki
         return this.plateau; 
     }
 
-    public void setDifficulter(int difficulter)
+    public void setDifficulte(int difficulte)
     {
-        this.difficulter = difficulter ;
+        this.difficulte = difficulte ;
     }
 
-    public int getDifficulter () { return this.difficulter ;}
+    public int getDifficulte () { return this.difficulte ;}
     
     public void plateauJeu ()
     {
-        if ( this.difficulter == 0 )
+        if ( this.difficulte == 0 )
         {
             Random rand = new Random();
             int x = 4 ;
@@ -55,7 +55,7 @@ public class Fubuki
             }
         }
         else 
-            if ( this.difficulter == 1 )
+            if ( this.difficulte == 1 )
             {
                 Random rand = new Random();
                 int x = 4 ;
