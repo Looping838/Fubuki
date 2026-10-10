@@ -5,3 +5,7 @@
 - touche clavier fonctionnel 
 
 - bouton indice (voir jeu sur site)
+
+- faire limite de validation (au bout de n validations -> défaite) :
+    - soit pour toutes les difficultés (ex. 10 validations pour "Facile", 5 validations pour "Moyen", 1 pour "Difficile"), 
+    - soit pour "moyen" et "difficile" (et facile on a une infinité de validations possibles)
