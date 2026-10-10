@@ -367,7 +367,7 @@ public class PanelJeu extends JPanel implements ActionListener
                     this.modeValidation = false; 
                     this.ligSelectionne = -1;
                     this.colSelectionne = -1;
-                    
+
                     this.majPlateau();
                 }
             //}
