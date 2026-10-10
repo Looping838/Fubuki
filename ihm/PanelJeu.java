@@ -13,17 +13,9 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
 
 public class PanelJeu extends JPanel implements ActionListener
-{
-    public static final Color          COULEUR_FOND         = new Color(245, 245, 220);
-    public static final Color          COULEUR_SELECTION    = new Color(168, 168, 168);
-    public static final Color          COULEUR_VERT_VALIDE  = new Color(0  , 150  , 0);
-    public static final Color          COULEUR_GRIS_PLACE   = new Color(110, 110, 110);
-
-    public static final Border         MARGE_GOMME          = BorderFactory.createEmptyBorder(2, 15, 2, 15);  // Marge invisible (H, G, B, D)
-    
+{   
     private JPanel[][]          tabPnlCases;
 
     private Controleur          ctrl;
@@ -65,12 +57,12 @@ public class PanelJeu extends JPanel implements ActionListener
     public PanelJeu(Controleur ctrl, FrameJeu frame, int indice)
     {
         // Forcer la couleur grise quand on sélectionne un bouton de pnlNbres
-        UIManager.put("ToggleButton.select", COULEUR_SELECTION);
+        UIManager.put("ToggleButton.select", ConstantesIHM.COULEUR_SELECTION);
         // Forcer la couleur noire du lbl quand le bouton est désactivé pour être plus lisible
         UIManager.put("ToggleButton.disabledText", Color.BLACK);
         
         this.setLayout(new BorderLayout());
-        this.setBackground(COULEUR_FOND);
+        this.setBackground(ConstantesIHM.COULEUR_FOND);
 
         
         /*-------------------------------*/
@@ -126,7 +118,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.pnlPlateau = new JPanel();
         this.pnlPlateau.setLayout(new GridLayout(this.nbLigne + 1, this.nbColonne + 1, 2, 2));
         this.pnlPlateau.setPreferredSize(new Dimension(600, 600));
-        this.pnlPlateau.setBackground(COULEUR_FOND);
+        this.pnlPlateau.setBackground(ConstantesIHM.COULEUR_FOND);
 
         JPanel pnlDroit     = new JPanel();
         pnlDroit.setLayout(new GridBagLayout());
@@ -145,7 +137,7 @@ public class PanelJeu extends JPanel implements ActionListener
         // Panel qui affichera les nombres à placer
         this.pnlNbres   = new JPanel();
         this.pnlNbres   .setLayout(new GridLayout(3, 3, 10, 10));
-        this.pnlNbres   .setBackground(COULEUR_FOND);
+        this.pnlNbres   .setBackground(ConstantesIHM.COULEUR_FOND);
 
         // Crée une ligne séparatrice à l'aide de JSeparator
         JSeparator separateurHaut = new JSeparator(SwingConstants.HORIZONTAL);
@@ -160,7 +152,7 @@ public class PanelJeu extends JPanel implements ActionListener
 
         this.btnGomme   = new JButton("");
         this.btnGomme   .setBackground(Color.WHITE);
-        this.btnGomme   .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, MARGE_GOMME));
+        this.btnGomme   .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE_GOMME));
         this.btnGomme   .setFocusPainted(false);
 
         // Ajout de l'icône gomme.png au bouton btnGomme en redimensionnant l'image au préalable
@@ -175,44 +167,44 @@ public class PanelJeu extends JPanel implements ActionListener
         // Parcours pour dessiner le plateau
         this.dessinerPlateau();   
 
-        this.btnValide      = new JButton("Valider");
+        this.btnValide      = new JButton("  Valider");
         this.btnValide      .setBackground(Color.WHITE);
         this.btnValide      .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnValide      .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
         this.btnValide      .setIcon(new ImageIcon(this.creerImages("./images/icones/valide.png", 30, 30)));
-        this.btnValide      .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
+        this.btnValide      .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnValide      .setFocusPainted(false);
 
-        this.btnReset       = new JButton("Réintialiser le plateau");
+        this.btnReset       = new JButton("  Réintialiser le plateau");
         this.btnReset       .setBackground(Color.WHITE);
         this.btnReset       .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnReset       .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
         this.btnReset       .setIcon(new ImageIcon(this.creerImages("./images/icones/reset.png", 30, 25)));
-        this.btnReset       .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
+        this.btnReset       .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnReset       .setFocusPainted(false);
 
-        this.btnRestart       = new JButton("Recommencer une partie");
+        this.btnRestart       = new JButton("  Recommencer une partie");
         this.btnRestart       .setBackground(Color.WHITE);
         this.btnRestart       .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnRestart       .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
         this.btnRestart       .setIcon(new ImageIcon(this.creerImages("./images/icones/restart.png", 30, 25)));
-        this.btnRestart       .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
+        this.btnRestart       .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnRestart       .setFocusPainted(false);
 
-        this.btnAnnuler     = new JButton("Annuler");
+        this.btnAnnuler     = new JButton("  Annuler");
         this.btnAnnuler     .setBackground(Color.WHITE);
         this.btnAnnuler     .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnAnnuler     .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
         this.btnAnnuler     .setIcon(new ImageIcon(this.creerImages("./images/icones/annuler.png", 30, 25)));
-        this.btnAnnuler     .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
+        this.btnAnnuler     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnAnnuler     .setFocusPainted(false);
 
-        this.btnAccueil     = new JButton("Retourner à l'accueil");
+        this.btnAccueil     = new JButton("  Retourner à l'accueil");
         this.btnAccueil     .setBackground(Color.WHITE);
         this.btnAccueil     .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnAccueil     .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
         this.btnAccueil     .setIcon(new ImageIcon(this.creerImages("./images/icones/accueil.png", 30, 25)));
-        this.btnAccueil     .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
+        this.btnAccueil     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnAccueil     .setFocusPainted(false);
 
         pnlBoutons.add(this.btnValide );
@@ -259,11 +251,113 @@ public class PanelJeu extends JPanel implements ActionListener
         /* Activation des Composants     */
         /* ----------------------------- */
         this.btnGomme   .addActionListener(this);
+        this.btnGomme      .addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnGomme.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnGomme.setForeground(Color.WHITE); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnGomme.setBackground(Color.WHITE);
+                btnGomme.setForeground(Color.BLACK);
+            }
+        });
+        
         this.btnValide  .addActionListener(this);
+        this.btnValide      .addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnValide.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnValide.setForeground(Color.WHITE); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnValide.setBackground(Color.WHITE);
+                btnValide.setForeground(Color.BLACK);
+            }
+        });
+        
         this.btnReset   .addActionListener(this);
+        this.btnReset      .addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnReset.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnReset.setForeground(Color.WHITE); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnReset.setBackground(Color.WHITE);
+                btnReset.setForeground(Color.BLACK);
+            }
+        });
+        
         this.btnRestart .addActionListener(this);
+        this.btnRestart      .addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnRestart.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnRestart.setForeground(Color.WHITE); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnRestart.setBackground(Color.WHITE);
+                btnRestart.setForeground(Color.BLACK);
+            }
+        });
+        
         this.btnAnnuler .addActionListener(this);
+        this.btnAnnuler      .addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnAnnuler.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnAnnuler.setForeground(Color.WHITE); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnAnnuler.setBackground(Color.WHITE);
+                btnAnnuler.setForeground(Color.BLACK);
+            }
+        });
+        
         this.btnAccueil .addActionListener(this);
+        this.btnAccueil      .addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnAccueil.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnAccueil.setForeground(Color.WHITE); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnAccueil.setBackground(Color.WHITE);
+                btnAccueil.setForeground(Color.BLACK);
+            }
+        });
+        
 
         // Pour le clic dans le vide (désélectionne la case en cours)
         MouseAdapter clicDansLeVide = new MouseAdapter() 
@@ -434,6 +528,7 @@ public class PanelJeu extends JPanel implements ActionListener
                 JPanel pnlCellule = new JPanel(new GridBagLayout());
                 pnlCellule.setBorder(BorderFactory.createLineBorder(Color.BLACK));        
                 pnlCellule.setBackground(Color.WHITE);
+
                 if (lig < this.nbLigne && col < this.nbColonne)
                 {    
                     JLabel lblNombre;
@@ -467,12 +562,12 @@ public class PanelJeu extends JPanel implements ActionListener
                     JLabel lblTtlLigne  = new JLabel(String.valueOf(this.ctrl.getTotauxLignes(lig)));
                     lblTtlLigne         .setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
                     lblTtlLigne         .setFont(new Font("Sans-Serif", Font.BOLD, 24));
-                    lblTtlLigne         .setBackground(COULEUR_FOND);
+                    lblTtlLigne         .setBackground(ConstantesIHM.COULEUR_FOND);
                     
                     // On sauvegarde le label dans le tableau 
                     this.tabLblTotauxLignes[lig] = lblTtlLigne; 
 
-                    pnlCellule          .setBackground(COULEUR_FOND);
+                    pnlCellule          .setBackground(ConstantesIHM.COULEUR_FOND);
                     pnlCellule          .add(lblTtlLigne);
                     pnlCellule          .setBorder(null);
                 }
@@ -481,12 +576,12 @@ public class PanelJeu extends JPanel implements ActionListener
                     JLabel lblTtlColonne = new JLabel(String.valueOf(this.ctrl.getTotauxColonnes(col)));
                     lblTtlColonne        .setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
                     lblTtlColonne        .setFont(new Font("Sans-Serif", Font.BOLD, 24));
-                    lblTtlColonne        .setBackground(COULEUR_FOND);
+                    lblTtlColonne        .setBackground(ConstantesIHM.COULEUR_FOND);
 
                     // NOUVEAU : On sauvegarde ce label
                     this.tabLblTotauxColonnes[col] = lblTtlColonne;
 
-                    pnlCellule.setBackground(COULEUR_FOND);
+                    pnlCellule.setBackground(ConstantesIHM.COULEUR_FOND);
                     pnlCellule.add(lblTtlColonne);
                     pnlCellule.setBorder(null);
                 }
@@ -538,6 +633,29 @@ public class PanelJeu extends JPanel implements ActionListener
                 }
             });
 
+            btnTmp.addMouseListener(new MouseAdapter() 
+            {
+                @Override
+                public void mouseEntered(MouseEvent e) 
+                {
+                    // On n'applique le survol que si le bouton n'est pas grisé (déjà placé) et n'est pas sélectionné
+                    if (btnTmp.getBackground() != ConstantesIHM.COULEUR_GRIS_PLACE && !btnTmp.isSelected()) 
+                    {
+                        btnTmp.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                    }
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) 
+                {
+                    // Pareil pour le retour au blanc
+                    if (btnTmp.getBackground() != ConstantesIHM.COULEUR_GRIS_PLACE && !btnTmp.isSelected()) 
+                    {
+                        btnTmp.setBackground(Color.WHITE);
+                    }
+                }
+            });
+
             // Si le nombre n'est pas déjà placé sur le plateau
             if (!this.ctrl.estPresent(valeurBouton))
             {    
@@ -545,7 +663,7 @@ public class PanelJeu extends JPanel implements ActionListener
             }
             else // S'il est déjà sur le plateau d'origine
             {
-                btnTmp.setBackground(COULEUR_GRIS_PLACE); // GRIS
+                btnTmp.setBackground(ConstantesIHM.COULEUR_GRIS_PLACE); // GRIS
             }
             
             // On ajoute le bouton au groupe et aux actions dans tous les cas
@@ -572,7 +690,7 @@ public class PanelJeu extends JPanel implements ActionListener
                 // Si c'est la case cliquée par la souris, on l'affiche en bleu
                 if (lig == this.ligSelectionne && col == this.colSelectionne) 
                 {
-                    couleurCase = COULEUR_SELECTION;
+                    couleurCase = ConstantesIHM.COULEUR_SELECTION;
                 }
 
                 this.tabPnlCases[lig][col].setBackground(couleurCase);
@@ -591,7 +709,7 @@ public class PanelJeu extends JPanel implements ActionListener
         }
 
         // 2. Gestion de la coloration des Labels de totaux en mode Validation
-        Color vertFonce = COULEUR_VERT_VALIDE; 
+        Color vertFonce = ConstantesIHM.COULEUR_VERT_VALIDE; 
 
         for (int lig = 0; lig < this.nbLigne; lig++)
         {
@@ -767,7 +885,7 @@ public class PanelJeu extends JPanel implements ActionListener
                 if (PanelJeu.this.ctrl.estPresent(valeur)) 
                 {
                     PanelJeu.this.btnActif.setSelected(false);
-                    PanelJeu.this.btnActif.setBackground(COULEUR_GRIS_PLACE);
+                    PanelJeu.this.btnActif.setBackground(ConstantesIHM.COULEUR_GRIS_PLACE);
                     PanelJeu.this.btnActif = null;
                 }
                 else 
@@ -778,7 +896,7 @@ public class PanelJeu extends JPanel implements ActionListener
 
                     PanelJeu.this.ctrl.setNbrCase(this.ligSouris, this.colSouris, valeur);
                     
-                    PanelJeu.this.btnActif.setBackground(COULEUR_GRIS_PLACE);
+                    PanelJeu.this.btnActif.setBackground(ConstantesIHM.COULEUR_GRIS_PLACE);
                     PanelJeu.this.grpBtn.clearSelection(); 
                     PanelJeu.this.btnActif = null;
 
@@ -790,6 +908,26 @@ public class PanelJeu extends JPanel implements ActionListener
             }
 
             PanelJeu.this.majPlateau();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) 
+        {
+            // On ne met la couleur de survol que si la case n'est pas celle actuellement sélectionnée
+            if (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris) 
+            {
+                PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+            }
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) 
+        {
+            // Quand la souris part, on remet en blanc QUE si la case n'est pas sélectionnée
+            if (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris) 
+            {
+                PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setBackground(Color.WHITE);
+            }
         }
     }
 
@@ -868,7 +1006,7 @@ public class PanelJeu extends JPanel implements ActionListener
                         AbstractButton btn = elements.nextElement();
                         if (btn.getText().equals(String.valueOf(valeurAjoutee))) 
                         {
-                            btn.setBackground(COULEUR_GRIS_PLACE);
+                            btn.setBackground(ConstantesIHM.COULEUR_GRIS_PLACE);
                             PanelJeu.this.grpBtn.clearSelection();
                             break;
                         }

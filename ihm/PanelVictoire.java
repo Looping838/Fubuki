@@ -20,7 +20,7 @@ public class PanelVictoire extends JPanel implements ActionListener
     public PanelVictoire(Controleur ctrl, FrameJeu frame, int indice)
     {
         this.setLayout(new GridBagLayout());
-        this.setBackground(PanelJeu.COULEUR_FOND);
+        this.setBackground(ConstantesIHM.COULEUR_FOND);
 
         this.ctrl   = ctrl;
         this.frame  = frame;
@@ -35,25 +35,25 @@ public class PanelVictoire extends JPanel implements ActionListener
         lblVictoire.setForeground(new Color(0, 150, 0));
 
         this.btnAccueil     = new JButton("Retourner à l'accueil");
-        this.btnAccueil     .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnAccueil     .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
         this.btnAccueil     .setBackground(Color.WHITE);
-        this.btnAccueil     .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
+        this.btnAccueil     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnAccueil     .setFocusPainted(false);
-        this.btnAccueil     .setPreferredSize(new Dimension(300, 60));
+        this.btnAccueil     .setPreferredSize(new Dimension(350, 60));
 
         this.btnRecommencer = new JButton("Recommencer une partie");
-        this.btnRecommencer .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnRecommencer .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
         this.btnRecommencer .setBackground(Color.WHITE);
-        this.btnRecommencer .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
+        this.btnRecommencer .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnRecommencer .setFocusPainted(false);
-        this.btnRecommencer .setPreferredSize(new Dimension(300, 60));
+        this.btnRecommencer .setPreferredSize(new Dimension(350, 60));
         
         this.btnQuitter     = new JButton("Quitter");
-        this.btnQuitter     .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnQuitter     .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
         this.btnQuitter     .setBackground(Color.WHITE);
-        this.btnQuitter     .setBorder(BorderFactory.createCompoundBorder(PanelAccueil.RELIEF, PanelAccueil.MARGE));
+        this.btnQuitter     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnQuitter     .setFocusPainted(false);
-        this.btnQuitter     .setPreferredSize(new Dimension(300, 60));
+        this.btnQuitter     .setPreferredSize(new Dimension(350, 60));
 
         /*-------------------------------*/
 		/* Positionnement des composants */
@@ -94,8 +94,58 @@ public class PanelVictoire extends JPanel implements ActionListener
 		/* ----------------------------- */        
 
         this.btnAccueil     .addActionListener(this);
+        this.btnAccueil      .addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnAccueil.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnAccueil.setForeground(Color.WHITE); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnAccueil.setBackground(Color.WHITE);
+                btnAccueil.setForeground(Color.BLACK);
+            }
+        });
+
         this.btnRecommencer .addActionListener(this);
+        this.btnRecommencer      .addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnRecommencer.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnRecommencer.setForeground(Color.WHITE); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnRecommencer.setBackground(Color.WHITE);
+                btnRecommencer.setForeground(Color.BLACK);
+            }
+        });
+
         this.btnQuitter     .addActionListener(this);
+        this.btnQuitter      .addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnQuitter.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnQuitter.setForeground(Color.WHITE); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnQuitter.setBackground(Color.WHITE);
+                btnQuitter.setForeground(Color.BLACK);
+            }
+        });
 
         this.setVisible(true);
     }
