@@ -68,7 +68,10 @@ public class Controleur
     }
 
     // TODO: a modif la difficulter plus tard 
-    public void    resetJeu() { this.initPlateau( this.metier.getDifficulte() ) ; } 
+    public void    resetJeu() 
+    {
+         this.initPlateau( this.metier.getDifficulte() ) ; 
+    } 
 
     public void    effacerChiffre(int ligne, int colonne)               { this.metier.effacerChiffre(ligne, colonne);}
 
