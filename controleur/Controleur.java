@@ -28,14 +28,15 @@ public class Controleur
         this.frameJeu.setSize(tailleEcran);
     }
 
-    public void initPlateau( int difficulter )
+    public void initPlateau( int difficulte )
     {
-        this.metier  = new Fubuki(this , difficulter );
+        this.metier  = new Fubuki(this , difficulte );
         this.plateau = this.metier.getPlateau();
     }
 
     public Case     getCasePlateau(int lig, int col)            { return this.plateau.getCasePlateau(lig, col); }
     
+    public int      getDifficulte()                             { return this.metier.getDifficulte(); }
     public int      getNbLigne()                                { return this.plateau.getNbLigne();}
     public int      getNbColonne()                              { return this.plateau.getNbColonne();}
     public int      getTotauxLignes(int i)                      { return this.plateau.getTotauxLignes(i);}
@@ -45,10 +46,10 @@ public class Controleur
 
     public void     setNbrCase ( int lig , int col , int num )  {  this.plateau.getCasePlateau(lig , col ).set_nombre(num) ;}
 
-    public boolean estPresent(int nbr)                          { return this.metier.estPresent(nbr); }
-    public boolean estGagne()                                   { return this.metier.estGagne(); }
+    public boolean  estPresent(int nbr)                          { return this.metier.estPresent(nbr); }
+    public boolean  estGagne()                                   { return this.metier.estGagne(); }
     
-    public boolean estLigneValide(int ligne) 
+    public boolean  estLigneValide(int ligne) 
     {
         int somme = 0;
         for (int col = 0; col < getNbColonne(); col++) 
@@ -57,7 +58,7 @@ public class Controleur
         return somme == getTotauxLignes(ligne);
     }
 
-    public boolean estColonneValide(int col) 
+    public boolean  estColonneValide(int col) 
     {
         int somme = 0;
         for (int lig = 0; lig < getNbLigne(); lig++) 
@@ -67,7 +68,7 @@ public class Controleur
     }
 
     // TODO: a modif la difficulter plus tard 
-    public void    resetJeu() { this.initPlateau( this.metier.getDifficulter() ) ; } 
+    public void    resetJeu() { this.initPlateau( this.metier.getDifficulte() ) ; } 
 
     public void    effacerChiffre(int ligne, int colonne)               { this.metier.effacerChiffre(ligne, colonne);}
 
