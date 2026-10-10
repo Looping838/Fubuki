@@ -54,4 +54,10 @@ public class FrameJeu extends JFrame
         this.tabPanel[3] = new PanelVictoire(ctrl, this, 3);
         this.setPnl(this.tabPanel[3]);
     }
+
+    public void restartJeu() 
+    { 
+        PanelJeu pnlJeu = (PanelJeu) this.tabPanel[2];
+        pnlJeu.restart(); 
+    }
 }
