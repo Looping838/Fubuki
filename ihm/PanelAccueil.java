@@ -92,13 +92,13 @@ public class PanelAccueil extends JPanel implements ActionListener
         /* ----------------------------- */
 
         this.btnJouer.addActionListener(this);
-        this.btnJouer      .addMouseListener(new MouseAdapter() 
+        this.btnJouer.addMouseListener(new MouseAdapter() 
         {
             @Override
             public void mouseEntered(MouseEvent e) 
             {
                 btnJouer.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnJouer.setForeground(Color.WHITE); // Pour que le texte reste lisible
+                btnJouer.setForeground(Color.BLACK); // Pour que le texte reste lisible
             }
 
             @Override
@@ -107,20 +107,34 @@ public class PanelAccueil extends JPanel implements ActionListener
                 btnJouer.setBackground(Color.WHITE);
                 btnJouer.setForeground(Color.BLACK);
             }
+
+            @Override
+            public void mousePressed(MouseEvent e) 
+            {
+                btnJouer.setBackground(Color.WHITE);
+                btnJouer.setForeground(Color.BLACK);
+            }
         });
         
         this.btnQuitter.addActionListener(this);
-        this.btnQuitter      .addMouseListener(new MouseAdapter() 
+        this.btnQuitter.addMouseListener(new MouseAdapter() 
         {
             @Override
             public void mouseEntered(MouseEvent e) 
             {
                 btnQuitter.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnQuitter.setForeground(Color.WHITE); // Pour que le texte reste lisible
+                btnQuitter.setForeground(Color.BLACK); // Pour que le texte reste lisible
             }
 
             @Override
             public void mouseExited(MouseEvent e) 
+            {
+                btnQuitter.setBackground(Color.WHITE);
+                btnQuitter.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) 
             {
                 btnQuitter.setBackground(Color.WHITE);
                 btnQuitter.setForeground(Color.BLACK);
