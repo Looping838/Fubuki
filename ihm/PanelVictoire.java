@@ -34,26 +34,29 @@ public class PanelVictoire extends JPanel implements ActionListener
         lblVictoire.setFont(new Font("Sans-Serif", Font.BOLD, 70));
         lblVictoire.setForeground(new Color(0, 150, 0));
 
-        this.btnAccueil     = new JButton("Retourner à l'accueil");
+        this.btnAccueil     = new JButton("  Retourner à l'accueil");
         this.btnAccueil     .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
         this.btnAccueil     .setBackground(Color.WHITE);
         this.btnAccueil     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnAccueil     .setFocusPainted(false);
-        this.btnAccueil     .setPreferredSize(new Dimension(350, 60));
+        this.btnAccueil     .setPreferredSize(new Dimension(400, 60));
+        this.btnAccueil     .setIcon(new ImageIcon(this.creerImages("./images/icones/accueil.png", 30, 30)));
 
-        this.btnRecommencer = new JButton("Recommencer une partie");
+        this.btnRecommencer = new JButton("  Recommencer une partie");
         this.btnRecommencer .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
         this.btnRecommencer .setBackground(Color.WHITE);
         this.btnRecommencer .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnRecommencer .setFocusPainted(false);
-        this.btnRecommencer .setPreferredSize(new Dimension(350, 60));
+        this.btnRecommencer .setPreferredSize(new Dimension(400, 60));
+        this.btnRecommencer .setIcon(new ImageIcon(this.creerImages("./images/icones/restart.png", 35, 35)));
         
-        this.btnQuitter     = new JButton("Quitter");
+        this.btnQuitter     = new JButton("  Quitter");
         this.btnQuitter     .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
         this.btnQuitter     .setBackground(Color.WHITE);
         this.btnQuitter     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnQuitter     .setFocusPainted(false);
-        this.btnQuitter     .setPreferredSize(new Dimension(350, 60));
+        this.btnQuitter     .setPreferredSize(new Dimension(400, 60));
+        this.btnQuitter     .setIcon(new ImageIcon(this.creerImages("./images/icones/quitter.png", 30, 30)));
 
         /*-------------------------------*/
 		/* Positionnement des composants */
@@ -118,7 +121,7 @@ public class PanelVictoire extends JPanel implements ActionListener
             public void mouseEntered(MouseEvent e) 
             {
                 btnRecommencer.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnRecommencer.setForeground(Color.WHITE); // Pour que le texte reste lisible
+                btnRecommencer.setForeground(Color.BLACK); // Pour que le texte reste lisible
             }
 
             @Override
@@ -136,7 +139,7 @@ public class PanelVictoire extends JPanel implements ActionListener
             public void mouseEntered(MouseEvent e) 
             {
                 btnQuitter.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnQuitter.setForeground(Color.WHITE); // Pour que le texte reste lisible
+                btnQuitter.setForeground(Color.BLACK); // Pour que le texte reste lisible
             }
 
             @Override
@@ -168,5 +171,16 @@ public class PanelVictoire extends JPanel implements ActionListener
         {
             System.exit(0);
         }
+    }
+
+    public Image creerImages (String chemin, int longueur, int largeur)
+    {
+        ImageIcon   imgOriginale;
+        Image       imgRedimensionnee;
+
+        imgOriginale        = new ImageIcon(chemin);
+        imgRedimensionnee   = imgOriginale.getImage().getScaledInstance(longueur, largeur, Image.SCALE_SMOOTH);
+		
+        return imgRedimensionnee;
     }
 }
