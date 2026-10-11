@@ -40,6 +40,8 @@ public class PanelJeu extends JPanel implements ActionListener
 
     private JLabel[]            tabLblTotauxLignes;
     private JLabel[]            tabLblTotauxColonnes;
+    private JLabel              lblValidation;
+    private JLabel              lblValidationCoul;
 
     private JButton             btnValide;
     private JButton             btnReset;
@@ -60,6 +62,8 @@ public class PanelJeu extends JPanel implements ActionListener
     private boolean             modeBrouillon   = false;
 
     private int                 nbIndicesRestants;
+    private int                 nbValidationsRestantes;
+    private int                 nbValidationsMax;
 
     public PanelJeu(Controleur ctrl, FrameJeu frame, int indice)
     {
@@ -111,6 +115,14 @@ public class PanelJeu extends JPanel implements ActionListener
         JPanel pnlBandeau = new JPanel();
         pnlBandeau.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 15));
         pnlBandeau.setOpaque(false);
+
+        this.lblValidation  = new JLabel();
+        this.lblValidation  .setOpaque(false);
+        this.lblValidation  .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.lblValidation  .setLayout(new FlowLayout(FlowLayout.CENTER, 10, 15));
+
+        this.initNbValidations();
+
 
         /*JPanel pnlGomme = new JPanel();
         pnlGomme.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
@@ -244,6 +256,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnBrouillon   .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnBrouillon   .setFocusPainted(false);
 
+
         /*-------------------------------*/
         /* Positionnement des composants */
         /*-------------------------------*/
@@ -258,12 +271,7 @@ public class PanelJeu extends JPanel implements ActionListener
         /*pnlGomme    .add(this.btnBrouillon);
         pnlGomme    .add(this.btnGomme        );*/
 
-        JLabel  lblBandeau  = new JLabel("Nombre de validations effectuées : ");
-        lblBandeau          .setOpaque(false);
-        lblBandeau          .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        lblBandeau          .setLayout(new FlowLayout(FlowLayout.CENTER, 10, 15));
-
-        pnlBandeau  .add(lblBandeau);
+        pnlBandeau  .add(lblValidation);
         
         pnlHaut     .add(pnlBandeau     , BorderLayout.CENTER  );
         pnlHaut     .add(separateurHaut , BorderLayout.SOUTH );
@@ -658,24 +666,34 @@ public class PanelJeu extends JPanel implements ActionListener
 
         if (e.getSource() == this.btnValide)
         {
-            this.modeValidation = true; // On active l'affichage rouge/vert
-            this.ligSelectionne = -1;   // On enlève la sélection 
+            this.modeValidation = true; 
+            this.ligSelectionne = -1;   
             this.colSelectionne = -1;
 
             this.majPlateau();
 
-            if (this.ctrl.estGagne()) 
+            // Si le joueur n'a pas gagné, on consomme une tentative de validation
+            if (!this.ctrl.estGagne())
+            {
+                this.nbValidationsRestantes--;
+                this.majAffichageValidation(); // <--- C'ELLE-CI MET À JOUR LE TEXTE ET LA COULEUR
+
+                if (this.nbValidationsRestantes <= 0)
+                {
+                    JOptionPane.showMessageDialog(this, "Nombre de validations dépassé ! Partie perdue.", "Défaite", JOptionPane.ERROR_MESSAGE);
+                    this.frame.setPnl(this.frame.getPnl(0)); // Retour à l'accueil
+                    this.ctrl.resetJeu();
+                    return;
+                }
+            }
+            else // SI C'ÉTAIT LA BONNE RÉPONSE : VICTOIRE !
             {
                 this.btnGomme.setEnabled(false);
-
                 java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
                 while (elements.hasMoreElements()) 
                 {
-                    AbstractButton btn = elements.nextElement();
-
-                    btn.setEnabled(false);
+                    elements.nextElement().setEnabled(false);
                 }
-
                 this.frame.afficherPanelVictoire();
             }
         }
@@ -949,16 +967,13 @@ public class PanelJeu extends JPanel implements ActionListener
 
     private void initBoutonIndice()
     {
-        // On définit le nombre d'indices selon la difficulté (0=Facile, 1=Moyen, 2=Difficile)
         int difficulte = this.ctrl.getDifficulte();
         if      (difficulte == 0) this.nbIndicesRestants = 2;
         else if (difficulte == 1) this.nbIndicesRestants = 1;
         else                      this.nbIndicesRestants = 0;
 
-        // On met à jour le texte du bouton pour montrer combien il en reste
-        this.btnIndice.setText("  " + this.nbIndicesRestants);
-
-        // On gère la couleur et l'activation
+        // On gère la couleur et l'activation du bouton Indice
+        this.btnIndice.setText("  " + this.nbIndicesRestants); // Optionnel : met à jour le chiffre sur le bouton
         if (this.nbIndicesRestants > 0)
         {
             this.btnIndice.setBackground(ConstantesIHM.COULEUR_INDICE_ACTIVE);
@@ -967,7 +982,37 @@ public class PanelJeu extends JPanel implements ActionListener
         else
         {
             this.btnIndice.setBackground(Color.WHITE);
-            this.btnIndice.setEnabled(false); // Désactivé si on est en Difficile
+            this.btnIndice.setEnabled(false); 
+        }
+    }
+
+    private void initNbValidations()
+    {
+        int difficulte = this.ctrl.getDifficulte();
+        if      (difficulte == 0) this.nbValidationsMax = 5; // Facile
+        else if (difficulte == 1) this.nbValidationsMax = 3;  // Moyen
+        else                      this.nbValidationsMax = 1;  // Difficile
+
+        this.nbValidationsRestantes = this.nbValidationsMax;
+        this.majAffichageValidation();
+    }
+
+    private void majAffichageValidation()
+    {
+        this.lblValidation.setText("Nombre de validations restantes : " + this.nbValidationsRestantes);
+
+        // Calcul du ratio pour les couleurs
+        if (this.nbValidationsRestantes > (int) (this.nbValidationsMax / 2)) 
+        {
+            this.lblValidation.setForeground(new Color(0, 150, 0)); // VERT (loin de la défaite)
+        } 
+        else if (this.nbValidationsRestantes > 1) 
+        {
+            this.lblValidation.setForeground(new Color(255, 140, 0)); // ORANGE (attention)
+        } 
+        else 
+        {
+            this.lblValidation.setForeground(Color.RED); // ROUGE (au bord de la défaite)
         }
     }
 
@@ -979,7 +1024,6 @@ public class PanelJeu extends JPanel implements ActionListener
         this.modeBrouillon  = false;
 
         this.btnBrouillon.setBackground(Color.WHITE);
-        this.initBoutonIndice();
         this.btnActif = null;
         this.btnGomme.setEnabled(true);
         
@@ -1044,6 +1088,7 @@ public class PanelJeu extends JPanel implements ActionListener
 
         this.btnBrouillon.setBackground(Color.WHITE);
         this.initBoutonIndice();
+        this.initNbValidations();
         this.btnActif = null;
         this.btnGomme.setEnabled(true);
         
