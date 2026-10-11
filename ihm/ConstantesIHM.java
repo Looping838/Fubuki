@@ -10,11 +10,14 @@ import javax.swing.border.Border;
 public class ConstantesIHM
 {
     // Couleurs de Jeu
-    public static final Color COULEUR_FOND          = new Color(245, 245, 220);
-    public static final Color COULEUR_SELECTION     = new Color(168, 168, 168);
-    public static final Color COULEUR_VERT_VALIDE   = new Color(0  , 150, 0  );
-    public static final Color COULEUR_GRIS_PLACE    = new Color(110, 110, 110);
-    public static final Color COULEUR_GRIS_SURVOL   = new Color(200, 200, 200);
+    public static final Color COULEUR_FOND              = new Color(245, 245, 220);
+    public static final Color COULEUR_SELECTION         = new Color(168, 168, 168);
+    public static final Color COULEUR_VERT_VALIDE       = new Color(0  , 150, 0  );
+    public static final Color COULEUR_GRIS_PLACE        = new Color(110, 110, 110);
+    public static final Color COULEUR_GRIS_SURVOL       = new Color(200, 200, 200);
+    public static final Color COULEUR_BROUILLON_ACTIVE  = new Color(223, 242, 255);
+    public static final Color COULEUR_GRIS_BROUILLON    = new Color(121, 128, 129);
+    public static final Color COULEUR_INDICE_ACTIVE     = new Color(252, 220, 18 );
 
     public static final Color LUMIERE               = Color.WHITE;
     public static final Color OMBRE                 = Color.LIGHT_GRAY;
