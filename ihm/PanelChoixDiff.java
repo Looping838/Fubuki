@@ -6,8 +6,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -36,6 +36,9 @@ public class PanelChoixDiff extends JPanel implements ActionListener
 		/*   Création des composants     */
 		/*-------------------------------*/
 
+        // Bordure lumiere + ombre de couleur (haut, gauche, bas, droite)
+        Border lumiere = BorderFactory.createMatteBorder(2, 2, 0, 0, Color.WHITE);
+        
         JLabel lblTitre = new JLabel("Choisissez une difficulté :");
         lblTitre.setFont(new Font("Sans-Serif", Font.BOLD, 70));
 
@@ -47,9 +50,18 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnFacile.setPreferredSize(new Dimension(250, 60));
         this.btnFacile.setIcon(new ImageIcon(this.creerImages("./images/icones/facile.png", 30, 25))); 
         
-        // Ombre rouge : 0px en haut et à gauche, 3px en bas et à droite 
-        Border ombreF = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_FACILE);
-        this.btnFacile.setBorder(BorderFactory.createCompoundBorder(ombreF, ConstantesIHM.MARGE));
+        Border ombreF  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_FACILE);
+        
+        // Bordure normale (juste l'ombre + la marge interne)
+        Border bordureNormaleF = BorderFactory.createCompoundBorder(ombreF, ConstantesIHM.MARGE);
+        
+        // Bordure survol (l'ombre + la lumière + la marge interne)
+        Border bordure3DF = BorderFactory.createCompoundBorder(ombreF, lumiere);
+        Border bordureSurvolF = BorderFactory.createCompoundBorder(bordure3DF, ConstantesIHM.MARGE);
+
+        // Par défaut, on applique la bordure normale
+        this.btnFacile.setBorder(bordureNormaleF);
+
 
         // --- BOUTON MOYEN ---
         this.btnMoyen = new JButton("Moyen");
@@ -59,9 +71,17 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnMoyen.setPreferredSize(new Dimension(250, 60)); 
         this.btnMoyen.setIcon(new ImageIcon(this.creerImages("./images/icones/moyen.png", 30, 25)));
 
-        // Ombre jaune/orange
-        Border ombreM = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_MOYEN);
-        this.btnMoyen.setBorder(BorderFactory.createCompoundBorder(ombreM, ConstantesIHM.MARGE));
+        Border ombreM  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_MOYEN);
+        
+        // Bordure normale (juste l'ombre + la marge interne)
+        Border bordureNormaleM = BorderFactory.createCompoundBorder(ombreM, ConstantesIHM.MARGE);
+        
+        // Bordure survol (l'ombre + la lumière + la marge interne)
+        Border bordure3DM = BorderFactory.createCompoundBorder(ombreM, lumiere);
+        Border bordureSurvolM = BorderFactory.createCompoundBorder(bordure3DM, ConstantesIHM.MARGE);
+
+        this.btnMoyen.setBorder(bordureNormaleM);
+
 
         // --- BOUTON DIFFICILE ---
         this.btnDifficile = new JButton("Difficile");
@@ -71,9 +91,17 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnDifficile.setPreferredSize(new Dimension(250, 60)); 
         this.btnDifficile.setIcon(new ImageIcon(this.creerImages("./images/icones/difficile.png", 30, 25)));
 
-        // Ombre rouge
-        Border ombreD = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_DIFFICILE);
-        this.btnDifficile.setBorder(BorderFactory.createCompoundBorder(ombreD, ConstantesIHM.MARGE));
+        Border ombreD  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_DIFFICILE);
+        
+        // Bordure normale (juste l'ombre + la marge interne)
+        Border bordureNormaleD = BorderFactory.createCompoundBorder(ombreD, ConstantesIHM.MARGE);
+        
+        // Bordure survol (l'ombre + la lumière + la marge interne)
+        Border bordure3DD = BorderFactory.createCompoundBorder(ombreD, lumiere);
+        Border bordureSurvolD = BorderFactory.createCompoundBorder(bordure3DD, ConstantesIHM.MARGE);
+
+        this.btnDifficile.setBorder(bordureNormaleD);
+
 
         this.btnRetour      = new JButton("  Retour à l'accueil"   );
         this.btnRetour      .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
@@ -134,7 +162,9 @@ public class PanelChoixDiff extends JPanel implements ActionListener
             public void mouseEntered(MouseEvent e) 
             {
                 btnFacile.setBackground(ConstantesIHM.VERT_DIFFICULTE);
-                btnFacile.setForeground(Color.WHITE); // Pour que le texte reste lisible
+                btnFacile.setForeground(Color.BLACK); // Pour que le texte reste lisible
+
+                btnFacile.setBorder(bordure3DF);
             }
 
             @Override
@@ -142,6 +172,8 @@ public class PanelChoixDiff extends JPanel implements ActionListener
             {
                 btnFacile.setBackground(Color.WHITE);
                 btnFacile.setForeground(Color.BLACK);
+
+                btnFacile.setBorder(bordureNormaleF);
             }
         });
 
@@ -152,7 +184,9 @@ public class PanelChoixDiff extends JPanel implements ActionListener
             public void mouseEntered(MouseEvent e) 
             {
                 btnMoyen.setBackground(ConstantesIHM.ORANGE_DIFFICULTE);
-                btnMoyen.setForeground(Color.WHITE); // Pour que le texte reste lisible
+                btnMoyen.setForeground(Color.BLACK); // Pour que le texte reste lisible
+
+                btnMoyen.setBorder(bordure3DM);
             }
 
             @Override
@@ -160,6 +194,8 @@ public class PanelChoixDiff extends JPanel implements ActionListener
             {
                 btnMoyen.setBackground(Color.WHITE);
                 btnMoyen.setForeground(Color.BLACK);
+
+                btnMoyen.setBorder(bordureNormaleM);
             }
         });
 
@@ -170,7 +206,9 @@ public class PanelChoixDiff extends JPanel implements ActionListener
             public void mouseEntered(MouseEvent e) 
             {
                 btnDifficile.setBackground(ConstantesIHM.ROUGE_DIFFICULTE);
-                btnDifficile.setForeground(Color.WHITE); // Pour que le texte reste lisible
+                btnDifficile.setForeground(Color.BLACK); // Pour que le texte reste lisible
+
+                btnDifficile.setBorder(bordure3DD);
             }
 
             @Override
@@ -178,6 +216,8 @@ public class PanelChoixDiff extends JPanel implements ActionListener
             {
                 btnDifficile.setBackground(Color.WHITE);
                 btnDifficile.setForeground(Color.BLACK);
+
+                btnDifficile.setBorder(bordureNormaleD);
             }
         });
 
@@ -193,6 +233,13 @@ public class PanelChoixDiff extends JPanel implements ActionListener
 
             @Override
             public void mouseExited(MouseEvent e) 
+            {
+                btnRetour.setBackground(Color.WHITE);
+                btnRetour.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) 
             {
                 btnRetour.setBackground(Color.WHITE);
                 btnRetour.setForeground(Color.BLACK);
