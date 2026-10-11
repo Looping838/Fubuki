@@ -1,10 +1,10 @@
 - fonction annuler 
 
-- petit numeros ( numeros possible )
+- petit numeros ( numeros possible ) => FAIT
 
 - touche clavier fonctionnel 
 
-- bouton indice (voir jeu sur site)
+- bouton indice (voir jeu sur site) => Fait graphiquement 
 
 - faire limite de validation (au bout de n validations -> défaite) :
     - soit pour toutes les difficultés (ex. 10 validations pour "Facile", 5 validations pour "Moyen", 1 pour "Difficile"), 
