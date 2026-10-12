@@ -48,7 +48,6 @@ public class Controleur
     {  
         this.plateau.getCasePlateau(lig , col ).set_nombre(num) ;
         this.metier.getPile().empiler("setNbrCase " + num + " [" + lig + "," + col + "]");
-        System.out.println(this.metier.getPile().afficherPile() );
     }
 
     public boolean  estPresent(int nbr)                          { return this.metier.estPresent(nbr); }
@@ -79,17 +78,15 @@ public class Controleur
         int num = this.metier.getPlateau().getNombreCase(ligne, colonne) ;
         this.metier.effacerChiffre(ligne, colonne);
         this.metier.getPile().empiler("effacerChiffre " + num + " [" + ligne + "," + colonne + "]");
-        System.out.println(this.metier.getPile().afficherPile() );
-    
     }
 
     public void    echangerNbr (int lig1, int col1, int lig2, int col2) 
     { 
         this.metier.echangerNbr(lig1, col1, lig2, col2);
         this.metier.getPile().empiler("echangerNbr " + " [" + lig1 + "," + col1 + "]" + " [" + lig2 + "," + col2 + "]");
-        System.out.println(this.metier.getPile().afficherPile() );
-    
     }
+
+    public void    depilerCase() { this.metier.getPile().depiler(); }
 
     public static void main (String[] args) { new Controleur(); }
 
