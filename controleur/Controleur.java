@@ -87,6 +87,21 @@ public class Controleur
     }
 
     public void    depilerCase() { this.metier.getPile().depiler(); }
+    
+    public void setNbrCaseAnnulation(int lig, int col, int num)  
+    {  
+        this.plateau.getCasePlateau(lig, col).set_nombre(num);
+    }
+
+    public void effacerChiffreAnnulation(int ligne, int colonne)               
+    { 
+        this.metier.effacerChiffre(ligne, colonne);
+    }
+
+    public void echangerNbrAnnulation(int lig1, int col1, int lig2, int col2) 
+    { 
+        this.metier.echangerNbr(lig1, col1, lig2, col2);
+    }
 
     public static void main (String[] args) { new Controleur(); }
 
