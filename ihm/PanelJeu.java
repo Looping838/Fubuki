@@ -219,6 +219,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnAnnuler     .setIcon(new ImageIcon(this.creerImages("./images/icones/annuler.png", 30, 25)));
         this.btnAnnuler     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnAnnuler     .setFocusPainted(false);
+        this.btnAnnuler     .setEnabled(false);
 
         this.btnAccueil     = new JButton("  Retourner à l'accueil");
         this.btnAccueil     .setBackground(Color.WHITE);
@@ -975,6 +976,7 @@ public class PanelJeu extends JPanel implements ActionListener
             else { this.tabLblTotauxColonnes[col].setForeground(null); } // Remet en noir si on annule la validation
         }
 
+        this.btnAnnuler.setEnabled(this.ctrl.peutAnnuler());
         this.repaint();
     }
 
