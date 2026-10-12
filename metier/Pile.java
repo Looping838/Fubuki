@@ -21,7 +21,7 @@ public class Pile
     
     public String depiler()                
     { 
-        if ( this.numAction <= 1)
+        if ( this.numAction > 1)
         {
             this.numAction -- ;
             return this.pile[numAction + 1] ;

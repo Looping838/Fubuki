@@ -74,9 +74,22 @@ public class Controleur
 
     public void    resetJeu() { this.initPlateau( this.metier.getDifficulte() ) ; } 
 
-    public void    effacerChiffre(int ligne, int colonne)               { this.metier.effacerChiffre(ligne, colonne);}
+    public void    effacerChiffre(int ligne, int colonne)               
+    { 
+        int num = this.metier.getPlateau().getNombreCase(ligne, colonne) ;
+        this.metier.effacerChiffre(ligne, colonne);
+        this.metier.getPile().empiler("effacerChiffre " + num + " [" + ligne + "," + colonne + "]");
+        System.out.println(this.metier.getPile().afficherPile() );
+    
+    }
 
-    public void    echangerNbr (int lig1, int col1, int lig2, int col2) { this.metier.echangerNbr(lig1, col1, lig2, col2);}
+    public void    echangerNbr (int lig1, int col1, int lig2, int col2) 
+    { 
+        this.metier.echangerNbr(lig1, col1, lig2, col2);
+        this.metier.getPile().empiler("echangerNbr " + " [" + lig1 + "," + col1 + "]" + " [" + lig2 + "," + col2 + "]");
+        System.out.println(this.metier.getPile().afficherPile() );
+    
+    }
 
     public static void main (String[] args) { new Controleur(); }
 
