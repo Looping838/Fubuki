@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.*;
 import javax.swing.*;
@@ -23,6 +22,26 @@ public class PanelChoixDiff extends JPanel implements ActionListener
     private JButton     btnDifficile;
     private JButton     btnRetour;
 
+    public JLabel       lblTitre;
+
+    public Border       lumiere;
+
+    public Border       ombreF;
+    public Border       ombreM;
+    public Border       ombreD;
+
+    public Border       bordureNormaleF;
+    public Border       bordureNormaleM;
+    public Border       bordureNormaleD;
+
+    public Border       bordureSurvolF;
+    public Border       bordureSurvolM;
+    public Border       bordureSurvolD;
+
+    public Border       bordure3DF;
+    public Border       bordure3DM;
+    public Border       bordure3DD;
+
     public PanelChoixDiff(Controleur ctrl, FrameJeu frame, int indice)
     {
         this.setLayout(new GridBagLayout());
@@ -36,10 +55,63 @@ public class PanelChoixDiff extends JPanel implements ActionListener
 		/*   Création des composants     */
 		/*-------------------------------*/
 
+        this.creerComposants();
+
+        /*-------------------------------*/
+		/* Positionnement des composants */
+		/*-------------------------------*/
+
+        this.positionnerComposants();
+
+        /* ----------------------------- */
+		/* Activation des Composants     */
+		/* ----------------------------- */
+
+        this.activerComposants();
+
+        this.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed ( ActionEvent e )
+	{
+        if (e.getSource() == this.btnFacile)
+        {
+            this.ctrl.initPlateau(0); // changer 0 par difficulter quand boutton placer 
+            this.frame.creerPanelJeu();
+            this.frame.setPnl(this.frame.getPnl(this.indice + 1));
+        }
+
+        if (e.getSource() == this.btnMoyen)
+        {
+            this.ctrl.initPlateau(1); // changer 0 par difficulter quand boutton placer 
+            this.frame.creerPanelJeu();
+            this.frame.setPnl(this.frame.getPnl(this.indice + 1));
+        }
+
+        if (e.getSource() == this.btnDifficile)
+        {
+            this.ctrl.initPlateau(2); // changer 0 par difficulter quand boutton placer 
+            this.frame.creerPanelJeu();
+            this.frame.setPnl(this.frame.getPnl(this.indice + 1));
+        }
+
+        if (e.getSource() == this.btnRetour)
+        {
+            this.frame.setPnl(this.frame.getPnl(this.indice - 1));
+        }
+    }
+
+    /*-------------------------------*/
+    /*      Méthodes utilitaires     */
+    /*-------------------------------*/
+
+    private void creerComposants()
+    {
         // Bordure lumiere + ombre de couleur (haut, gauche, bas, droite)
-        Border lumiere = BorderFactory.createMatteBorder(2, 2, 0, 0, Color.WHITE);
+        this.lumiere = BorderFactory.createMatteBorder(2, 2, 0, 0, Color.WHITE);
         
-        JLabel lblTitre = new JLabel("Choisissez une difficulté :");
+        this.lblTitre = new JLabel("Choisissez une difficulté :");
         lblTitre.setFont(new Font("Sans-Serif", Font.BOLD, 70));
 
         // --- BOUTON FACILE ---
@@ -48,19 +120,19 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnFacile.setBackground(Color.WHITE); // Le bouton devient blanc
         this.btnFacile.setFocusPainted(false);
         this.btnFacile.setPreferredSize(new Dimension(250, 60));
-        this.btnFacile.setIcon(new ImageIcon(this.creerImages("./images/icones/facile.png", 30, 25))); 
+        this.btnFacile.setIcon(new ImageIcon(this.frame.creerImages("./images/icones/facile.png", 30, 25))); 
         
-        Border ombreF  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_FACILE);
+        this.ombreF  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_FACILE);
         
         // Bordure normale (juste l'ombre + la marge interne)
-        Border bordureNormaleF = BorderFactory.createCompoundBorder(ombreF, ConstantesIHM.MARGE);
+        this.bordureNormaleF = BorderFactory.createCompoundBorder(this.ombreF, ConstantesIHM.MARGE);
         
         // Bordure survol (l'ombre + la lumière + la marge interne)
-        Border bordure3DF = BorderFactory.createCompoundBorder(ombreF, lumiere);
-        Border bordureSurvolF = BorderFactory.createCompoundBorder(bordure3DF, ConstantesIHM.MARGE);
+        this.bordure3DF = BorderFactory.createCompoundBorder(this.ombreF, this.lumiere);
+        this.bordureSurvolF = BorderFactory.createCompoundBorder(this.bordure3DF, ConstantesIHM.MARGE);
 
         // Par défaut, on applique la bordure normale
-        this.btnFacile.setBorder(bordureNormaleF);
+        this.btnFacile.setBorder(this.bordureNormaleF);
 
 
         // --- BOUTON MOYEN ---
@@ -69,18 +141,18 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnMoyen.setBackground(Color.WHITE); // Le bouton devient blanc
         this.btnMoyen.setFocusPainted(false);
         this.btnMoyen.setPreferredSize(new Dimension(250, 60)); 
-        this.btnMoyen.setIcon(new ImageIcon(this.creerImages("./images/icones/moyen.png", 30, 25)));
+        this.btnMoyen.setIcon(new ImageIcon(this.frame.creerImages("./images/icones/moyen.png", 30, 25)));
 
-        Border ombreM  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_MOYEN);
+        this.ombreM  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_MOYEN);
         
         // Bordure normale (juste l'ombre + la marge interne)
-        Border bordureNormaleM = BorderFactory.createCompoundBorder(ombreM, ConstantesIHM.MARGE);
+        this.bordureNormaleM = BorderFactory.createCompoundBorder(this.ombreM, ConstantesIHM.MARGE);
         
         // Bordure survol (l'ombre + la lumière + la marge interne)
-        Border bordure3DM = BorderFactory.createCompoundBorder(ombreM, lumiere);
-        Border bordureSurvolM = BorderFactory.createCompoundBorder(bordure3DM, ConstantesIHM.MARGE);
+        this.bordure3DM = BorderFactory.createCompoundBorder(this.ombreM, this.lumiere);
+        this.bordureSurvolM = BorderFactory.createCompoundBorder(this.bordure3DM, ConstantesIHM.MARGE);
 
-        this.btnMoyen.setBorder(bordureNormaleM);
+        this.btnMoyen.setBorder(this.bordureNormaleM);
 
 
         // --- BOUTON DIFFICILE ---
@@ -89,18 +161,18 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnDifficile.setBackground(Color.WHITE); // Le bouton devient blanc
         this.btnDifficile.setFocusPainted(false);
         this.btnDifficile.setPreferredSize(new Dimension(250, 60)); 
-        this.btnDifficile.setIcon(new ImageIcon(this.creerImages("./images/icones/difficile.png", 30, 25)));
+        this.btnDifficile.setIcon(new ImageIcon(this.frame.creerImages("./images/icones/difficile.png", 30, 25)));
 
-        Border ombreD  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_DIFFICILE);
+        this.ombreD  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_DIFFICILE);
         
         // Bordure normale (juste l'ombre + la marge interne)
-        Border bordureNormaleD = BorderFactory.createCompoundBorder(ombreD, ConstantesIHM.MARGE);
+        this.bordureNormaleD = BorderFactory.createCompoundBorder(this.ombreD, ConstantesIHM.MARGE);
         
         // Bordure survol (l'ombre + la lumière + la marge interne)
-        Border bordure3DD = BorderFactory.createCompoundBorder(ombreD, lumiere);
-        Border bordureSurvolD = BorderFactory.createCompoundBorder(bordure3DD, ConstantesIHM.MARGE);
+        this.bordure3DD = BorderFactory.createCompoundBorder(this.ombreD, this.lumiere);
+        this.bordureSurvolD = BorderFactory.createCompoundBorder(this.bordure3DD, ConstantesIHM.MARGE);
 
-        this.btnDifficile.setBorder(bordureNormaleD);
+        this.btnDifficile.setBorder(this.bordureNormaleD);
 
 
         this.btnRetour      = new JButton("  Retour à l'accueil"   );
@@ -109,13 +181,11 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnRetour      .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnRetour      .setFocusPainted(false);
         this.btnRetour      .setPreferredSize(new Dimension(250, 60)); 
-        this.btnRetour      .setIcon(new ImageIcon(this.creerImages("./images/icones/accueil.png", 30, 25)));
+        this.btnRetour      .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/accueil.png", 30, 25)));
+    }
 
-
-        /*-------------------------------*/
-		/* Positionnement des composants */
-		/*-------------------------------*/
-
+    private void positionnerComposants()
+    {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0; // Tout sera empilé dans la même colonne
         gbc.anchor = GridBagConstraints.CENTER; // Centré horizontalement
@@ -150,11 +220,10 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         gbc.gridy = 5; // On le place sur une 4ème ligne
         gbc.weighty = 1.0; // Il aspire tout l'espace vertical restant !
         this.add(new JLabel(""), gbc); // On ajoute un texte vide
+    }
 
-        /* ----------------------------- */
-		/* Activation des Composants     */
-		/* ----------------------------- */
-
+    private void activerComposants()
+    {
         this.btnFacile      .addActionListener(this);
         this.btnFacile      .addMouseListener(new MouseAdapter() 
         {
@@ -228,14 +297,13 @@ public class PanelChoixDiff extends JPanel implements ActionListener
             public void mouseEntered(MouseEvent e) 
             {
                 btnRetour.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnRetour.setForeground(Color.WHITE); // Pour que le texte reste lisible
+                btnRetour.setForeground(Color.BLACK); // Pour que le texte reste lisible
             }
 
             @Override
             public void mouseExited(MouseEvent e) 
             {
                 btnRetour.setBackground(Color.WHITE);
-                btnRetour.setForeground(Color.BLACK);
             }
 
             @Override
@@ -245,47 +313,5 @@ public class PanelChoixDiff extends JPanel implements ActionListener
                 btnRetour.setForeground(Color.BLACK);
             }
         });
-
-        this.setVisible(true);
-    }
-
-    public void actionPerformed ( ActionEvent e )
-	{
-        if (e.getSource() == this.btnFacile)
-        {
-            this.ctrl.initPlateau(0); // changer 0 par difficulter quand boutton placer 
-            this.frame.creerPanelJeu();
-            this.frame.setPnl(this.frame.getPnl(this.indice + 1));
-        }
-
-        if (e.getSource() == this.btnMoyen)
-        {
-            this.ctrl.initPlateau(1); // changer 0 par difficulter quand boutton placer 
-            this.frame.creerPanelJeu();
-            this.frame.setPnl(this.frame.getPnl(this.indice + 1));
-        }
-
-        if (e.getSource() == this.btnDifficile)
-        {
-            this.ctrl.initPlateau(2); // changer 0 par difficulter quand boutton placer 
-            this.frame.creerPanelJeu();
-            this.frame.setPnl(this.frame.getPnl(this.indice + 1));
-        }
-
-        if (e.getSource() == this.btnRetour)
-        {
-            this.frame.setPnl(this.frame.getPnl(this.indice - 1));
-        }
-    }
-
-    public Image creerImages (String chemin, int longueur, int largeur)
-    {
-        ImageIcon   imgOriginale;
-        Image       imgRedimensionnee;
-
-        imgOriginale        = new ImageIcon(chemin);
-        imgRedimensionnee   = imgOriginale.getImage().getScaledInstance(longueur, largeur, Image.SCALE_SMOOTH);
-		
-        return imgRedimensionnee;
     }
 }

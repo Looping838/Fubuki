@@ -10,7 +10,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.*;
 import javax.swing.*;
@@ -34,9 +33,19 @@ public class PanelJeu extends JPanel implements ActionListener
     private int                 ligSelectionne;   // Permet de stocker la ligne   sélectionnée lors du jeu
     private int                 colSelectionne;   // Permet de stocker la colonne sélectionnée lors du jeu
 
-    private JPanel              pnlPlateau;
+    private JPanel              pnlHaut;
     private JPanel              pnlCentre;
+    private JPanel              pnlBas;
+    
+    private JPanel              pnlBandeau;
+    private JPanel              pnlPlateau;
     private JPanel              pnlNbres;
+    private JPanel              pnlBoutons;
+    private JPanel              pnlOutils;
+    private JPanel              pnlColonneDroite;
+
+    private JSeparator          separateurHaut;
+    private JSeparator          separateurBas;
 
     private JLabel[]            tabLblTotauxLignes;
     private JLabel[]            tabLblTotauxColonnes;
@@ -44,7 +53,7 @@ public class PanelJeu extends JPanel implements ActionListener
     private JLabel              lblValidationCoul;
 
     private JButton             btnValide;
-    private JButton             btnReset;
+private JButton             btnReset;
     private JButton             btnRestart;
     private JButton             btnAccueil;
     private JButton             btnAnnuler;
@@ -55,8 +64,6 @@ public class PanelJeu extends JPanel implements ActionListener
     private ButtonGroup         grpBtn;
 
     private JToggleButton       btnActif;
-
-    //private JRadioButton        chGomme;
 
     private boolean             modeValidation  = false;
     private boolean             modeBrouillon   = false;
@@ -75,439 +82,32 @@ public class PanelJeu extends JPanel implements ActionListener
         this.setLayout(new BorderLayout());
         this.setBackground(ConstantesIHM.COULEUR_FOND);
 
+        this.ctrl           = ctrl;
+        this.frame          = frame;
+        this.indice         = indice;
         
         /*-------------------------------*/
         /*   Création des composants     */
         /*-------------------------------*/
 
-        // Récupère la taille de l'écran de l'utilisateur
-        this.tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-
-        // Le plateau prendra 55% de la hauteur de l'écran
-        this.taillePlateau = (int) (tailleEcran.height * 0.55);
-
-        // On calcule la taille des boutons du pavé numérique proportionnellement
-        this.tailleBoutonPave = (int) (taillePlateau * 0.15);
-
-        this.tailleBoutonOutil = (int) (this.tailleBoutonPave * 3) + 20;
-
-        this.ctrl           = ctrl;
-        this.frame          = frame;
-        this.indice         = indice;
-
-        this.nbLigne        = this.ctrl.getNbLigne();
-        this.nbColonne      = this.ctrl.getNbColonne();
-
-        this.tabPnlCases    = new JPanel[this.nbLigne][this.nbColonne];
-
-        this.tabLblTotauxLignes     = new JLabel[this.nbLigne];
-        this.tabLblTotauxColonnes   = new JLabel[this.nbColonne];
-        
-        this.ligSelectionne = -1;
-        this.colSelectionne = -1;
-
-        // Panel qui contiendra pnlBandeau
-        JPanel pnlHaut = new JPanel();
-        pnlHaut.setLayout(new BorderLayout());
-        pnlHaut.setOpaque(false);
-
-        // Panel qui contiendra le JLabel du bandeau
-        JPanel pnlBandeau = new JPanel();
-        pnlBandeau.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 15));
-        pnlBandeau.setOpaque(false);
-
-        this.lblValidation  = new JLabel();
-        this.lblValidation  .setOpaque(false);
-        this.lblValidation  .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.lblValidation  .setLayout(new FlowLayout(FlowLayout.CENTER, 10, 15));
-
-        this.initNbValidations();
-
-
-        /*JPanel pnlGomme = new JPanel();
-        pnlGomme.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        pnlGomme.setOpaque(false);*/
-
-        // Panel qui contiendra pnlPlateau
-        this.pnlCentre = new JPanel(new GridBagLayout());
-        this.pnlCentre.setOpaque(false);
-
-        // Création des règles de placement
-        GridBagConstraints gbc = new GridBagConstraints();
-        
-        // Panel qui affichera le Plateau
-        this.pnlPlateau = new JPanel();
-        this.pnlPlateau.setLayout(new GridLayout(this.nbLigne + 1, this.nbColonne + 1, 2, 2));
-        this.pnlPlateau.setPreferredSize(new Dimension(600, 600));
-        this.pnlPlateau.setBackground(ConstantesIHM.COULEUR_FOND);
-
-        /*JPanel pnlDroit     = new JPanel();
-        pnlDroit.setLayout(new GridBagLayout());
-        pnlDroit.setOpaque(false);
-        pnlDroit.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 50));*/
-
-        // Panel qui contiendra pnlNbres
-        JPanel pnlBas       = new JPanel();
-        pnlBas.setLayout(new BorderLayout());
-        pnlBas.setOpaque(false);
-
-        JPanel pnlBoutons   = new JPanel();
-        pnlBoutons.setLayout(new FlowLayout(FlowLayout.CENTER , 20, 20));
-        pnlBoutons.setOpaque(false);
-
-        // Panel qui affichera les nombres à placer
-        this.pnlNbres   = new JPanel();
-        this.pnlNbres   .setLayout(new GridLayout(3, 3, 10, 10));
-        this.pnlNbres   .setBackground(ConstantesIHM.COULEUR_FOND);
-        
-        JPanel pnlOutils    = new JPanel();
-        pnlOutils           .setLayout(new GridBagLayout());
-        pnlOutils           .setOpaque(false);
-
-        JPanel pnlColonneDroite = new JPanel();
-        pnlColonneDroite        .setLayout(new GridBagLayout());
-        pnlColonneDroite        .setOpaque(false);
-
-        // Crée une ligne séparatrice à l'aide de JSeparator
-        JSeparator separateurHaut = new JSeparator(SwingConstants.HORIZONTAL);
-        separateurHaut.setForeground(new Color(150, 150, 150));
-        separateurHaut.setBackground(new Color(0, 0, 0, 0));
-
-        JSeparator separateurBas = new JSeparator(SwingConstants.HORIZONTAL);
-        separateurBas.setForeground(new Color(150, 150, 150));
-        separateurBas.setBackground(new Color(0, 0, 0, 0));
-
-        /*-----------------------------*/
-
-        /*this.chGomme    = new JRadioButton("Tout Gommer", false);
-        this.chGomme    .setOpaque(false);
-        this.chGomme    .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.chGomme    .setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        this.chGomme    .setFocusPainted(false);*/
-
-        // Parcours pour dessiner le plateau
-        this.dessinerPlateau();   
-
-        this.btnValide      = new JButton("  Valider");
-        this.btnValide      .setBackground(Color.WHITE);
-        this.btnValide      .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnValide      .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
-        this.btnValide      .setIcon(new ImageIcon(this.creerImages("./images/icones/valide.png", 30, 30)));
-        this.btnValide      .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
-        this.btnValide      .setFocusPainted(false);
-
-        this.btnReset       = new JButton("  Réintialiser le plateau");
-        this.btnReset       .setBackground(Color.WHITE);
-        this.btnReset       .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnReset       .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
-        this.btnReset       .setIcon(new ImageIcon(this.creerImages("./images/icones/reset.png", 30, 25)));
-        this.btnReset       .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
-        this.btnReset       .setFocusPainted(false);
-
-        this.btnRestart     = new JButton("  Recommencer une partie");
-        this.btnRestart     .setBackground(Color.WHITE);
-        this.btnRestart     .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnRestart     .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
-        this.btnRestart     .setIcon(new ImageIcon(this.creerImages("./images/icones/restart.png", 35, 35)));
-        this.btnRestart     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
-        this.btnRestart     .setFocusPainted(false);
-
-        this.btnAnnuler     = new JButton("  Annuler");
-        this.btnAnnuler     .setBackground(Color.WHITE);
-        this.btnAnnuler     .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnAnnuler     .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
-        this.btnAnnuler     .setIcon(new ImageIcon(this.creerImages("./images/icones/annuler.png", 30, 25)));
-        this.btnAnnuler     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
-        this.btnAnnuler     .setFocusPainted(false);
-        this.btnAnnuler     .setEnabled(false);
-
-        this.btnAccueil     = new JButton("  Retourner à l'accueil");
-        this.btnAccueil     .setBackground(Color.WHITE);
-        this.btnAccueil     .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnAccueil     .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
-        this.btnAccueil     .setIcon(new ImageIcon(this.creerImages("./images/icones/accueil.png", 30, 25)));
-        this.btnAccueil     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
-        this.btnAccueil     .setFocusPainted(false);
-
-
-        this.dessinerBoutons();    
-
-
-        this.btnGomme       = new JButton("");
-        this.btnGomme       .setBackground(Color.WHITE);
-        this.btnGomme       .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE_GOMME));
-        this.btnGomme       .setPreferredSize(new Dimension((this.tailleBoutonOutil - 10) / 2, 50));
-        this.btnGomme       .setIcon(new ImageIcon(this.creerImages("./images/icones/gomme.png", 30, 30)));
-        this.btnGomme       .setFocusPainted(false);
-
-        this.btnIndice      = new JButton("");
-        this                .initBoutonIndice();
-        this.btnIndice      .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnIndice      .setPreferredSize(new Dimension((this.tailleBoutonOutil - 10) / 2, 50));
-        this.btnIndice      .setIcon(new ImageIcon(this.creerImages("./images/icones/indice.png", 40, 35)));
-        this.btnIndice      .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
-        this.btnIndice      .setFocusPainted(false);
-
-        this.btnBrouillon   = new JButton("  Mode Brouillon");
-        this.btnBrouillon   .setBackground(Color.WHITE);
-        this.btnBrouillon   .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnBrouillon   .setPreferredSize(new Dimension(this.tailleBoutonOutil, 50));
-        this.btnBrouillon   .setIcon(new ImageIcon(this.creerImages("./images/icones/brouillon.png", 30, 25)));
-        this.btnBrouillon   .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
-        this.btnBrouillon   .setFocusPainted(false);
-
+        this.creerComposants();
 
         /*-------------------------------*/
         /* Positionnement des composants */
         /*-------------------------------*/
 
-        pnlBoutons.add(this.btnValide );
-        pnlBoutons.add(this.btnReset);
-        pnlBoutons.add(this.btnRestart);
-        pnlBoutons.add(this.btnAnnuler);
-        pnlBoutons.add(this.btnAccueil);
-        
-        //pnlGomme    .add(this.chGomme);
-        /*pnlGomme    .add(this.btnBrouillon);
-        pnlGomme    .add(this.btnGomme        );*/
-
-        pnlBandeau  .add(lblValidation);
-        
-        pnlHaut     .add(pnlBandeau     , BorderLayout.CENTER  );
-        pnlHaut     .add(separateurHaut , BorderLayout.SOUTH );
-
-        GridBagConstraints gbcOutils = new GridBagConstraints();
-        gbcOutils.fill = GridBagConstraints.BOTH; // Pour que les boutons s'étirent bien
-        gbcOutils.insets = new Insets(5, 5, 5, 5); // Un peu d'espace entre eux
-
-        // 1. La Gomme (colonne 0, ligne 0)
-        gbcOutils.gridx = 0; 
-        gbcOutils.gridy = 0;
-        gbcOutils.gridwidth = 1; // Prend 1 case
-        gbcOutils.insets = new Insets(15, 0, 0, 5);
-        pnlOutils.add(this.btnGomme, gbcOutils);
-
-        // 2. L'Indice (colonne 1, ligne 0)
-        gbcOutils.gridx = 1; 
-        gbcOutils.gridy = 0;
-        gbcOutils.insets = new Insets(15, 5, 0, 0);
-        pnlOutils.add(this.btnIndice, gbcOutils);
-
-        // 3. Le Mode Brouillon (colonne 0, ligne 1 sur 2 colonnes)
-        gbcOutils.gridx = 0; 
-        gbcOutils.gridy = 1;
-        gbcOutils.gridwidth = 2; // Ici que le bouton devient large de deux boutons
-        gbcOutils.insets = new Insets(10, 0, 0, 0);
-        pnlOutils.add(this.btnBrouillon, gbcOutils);
-
-        GridBagConstraints gbcDroite = new GridBagConstraints();
-        gbcDroite.gridx = 0; 
-        
-        // On ajoute d'abord le pavé numérique en haut
-        gbcDroite.gridy = 0;
-        pnlColonneDroite.add(this.pnlNbres, gbcDroite);
-        
-        // Puis les outils juste en dessous
-        gbcDroite.gridy = 1;
-        gbcDroite.insets = new Insets(38, 0, 0, 0); // Espace entre le pavé et les outils
-        pnlColonneDroite.add(pnlOutils, gbcDroite);
-
-
-        gbc.anchor = GridBagConstraints.NORTH;
-        
-        // 1ère règle : Le plateau (Colonne 0)
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(0, 0, 0, 100); // Ajoute une PanelAccueil.MARGE de 60 pixels à droite du plateau
-        this.pnlCentre.add(this.pnlPlateau, gbc);
-
-        // 2ème règle : Le pavé numérique (Colonne 1)
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(0, 0, 0, 0); // Pas de PanelAccueil.MARGE supplémentaire
-        this.pnlCentre.add(pnlColonneDroite, gbc);
-
-        pnlBas      .add(separateurBas  , BorderLayout.NORTH );
-        pnlBas      .add(pnlBoutons       , BorderLayout.CENTER);
-
-        this.add(pnlHaut        , BorderLayout.NORTH );
-        this.add(this.pnlCentre , BorderLayout.CENTER);
-        this.add(pnlBas         , BorderLayout.SOUTH );
+        this.positionnerComposants();
         
         /* ----------------------------- */
         /* Activation des Composants     */
         /* ----------------------------- */
-        this.btnGomme   .addActionListener(this);
-        this.btnGomme      .addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnGomme.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnGomme.setForeground(Color.BLACK); // Pour que le texte reste lisible
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnGomme.setBackground(Color.WHITE);
-                btnGomme.setForeground(Color.BLACK);
-            }
-        });
-
-        this.btnIndice  .addActionListener(this);
-        this.btnIndice.addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                // Si le bouton est encore utilisable, on met la couleur de survol
-                if (btnIndice.isEnabled()) {
-                    btnIndice.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                // Si le bouton est encore utilisable, on le remet en orange.
-                // Sinon (s'il a été utilisé), on le laisse tranquille (il sera blanc) !
-                if (btnIndice.isEnabled()) {
-                    btnIndice.setBackground(ConstantesIHM.COULEUR_INDICE_ACTIVE);
-                }
-            }
-        });
-
-        this.btnBrouillon.addActionListener(this);
-        this.btnBrouillon.addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                // On lit directement le booléen de la classe
-                if (!PanelJeu.this.modeBrouillon) 
-                    btnBrouillon.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                if (PanelJeu.this.modeBrouillon) 
-                    btnBrouillon.setBackground(ConstantesIHM.COULEUR_BROUILLON_ACTIVE);
-                else 
-                    btnBrouillon.setBackground(Color.WHITE);
-            }
-        });
         
-        this.btnValide  .addActionListener(this);
-        this.btnValide  .addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnValide.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnValide.setForeground(Color.BLACK); // Pour que le texte reste lisible
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnValide.setBackground(Color.WHITE);
-                btnValide.setForeground(Color.BLACK);
-            }
-        });
-        
-        this.btnReset   .addActionListener(this);
-        this.btnReset      .addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnReset.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnReset.setForeground(Color.BLACK); // Pour que le texte reste lisible
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnReset.setBackground(Color.WHITE);
-                btnReset.setForeground(Color.BLACK);
-            }
-        });
-        
-        this.btnRestart .addActionListener(this);
-        this.btnRestart      .addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnRestart.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnRestart.setForeground(Color.BLACK); // Pour que le texte reste lisible
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnRestart.setBackground(Color.WHITE);
-                btnRestart.setForeground(Color.BLACK);
-            }
-        });
-        
-        this.btnAnnuler .addActionListener(this);
-        this.btnAnnuler      .addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnAnnuler.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnAnnuler.setForeground(Color.BLACK); // Pour que le texte reste lisible
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnAnnuler.setBackground(Color.WHITE);
-                btnAnnuler.setForeground(Color.BLACK);
-            }
-        });
-        
-        this.btnAccueil .addActionListener(this);
-        this.btnAccueil      .addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnAccueil.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnAccueil.setForeground(Color.BLACK); // Pour que le texte reste lisible
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnAccueil.setBackground(Color.WHITE);
-                btnAccueil.setForeground(Color.BLACK);
-            }
-        });
-        
-
-        // Pour le clic dans le vide (désélectionne la case en cours)
-        MouseAdapter clicDansLeVide = new MouseAdapter() 
-        {
-            public void mouseClicked(MouseEvent e) 
-            {
-                PanelJeu.this.ligSelectionne = -1;
-                PanelJeu.this.colSelectionne = -1;
-                PanelJeu.this.majPlateau();
-            }
-        };
-
-        // On l'applique au panneau principal et au panneau central
-        this.addMouseListener(clicDansLeVide);
-        this.pnlCentre.addMouseListener(clicDansLeVide);
+        this.activerComposants();
         
         this.setVisible(true);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e)
     {
         if (e.getSource() instanceof JToggleButton)
@@ -547,85 +147,39 @@ public class PanelJeu extends JPanel implements ActionListener
 
         if (e.getSource() == this.btnGomme)
         {
-           /*// --- MODE TOUT GOMMER ---
-            if (this.chGomme.isSelected())
+           if (this.ligSelectionne != -1 && this.colSelectionne != -1)
             {
-                for (int lig = 0; lig < this.nbLigne; lig++)
+                JLabel lblContenu = (JLabel) tabPnlCases[this.ligSelectionne][this.colSelectionne].getComponent(0);
+                String chiffreEfface = lblContenu.getText();
+                    
+                if (this.ctrl.getCasePlateau(this.ligSelectionne, this.colSelectionne).estModifiable())
                 {
-                    for (int col = 0; col < this.nbColonne; col++)
+                    this.ctrl.effacerChiffre(this.ligSelectionne, this.colSelectionne);
+                    
+                    lblContenu.setText(""); 
+                    lblContenu.setForeground(null);
+
+                    if (!chiffreEfface.equals("") && !chiffreEfface.equals("0") && this.grpBtn != null) 
                     {
-                        // On vérifie si la case est modifiable (on ne touche pas aux chiffres de départ)
-                        if (this.ctrl.getCasePlateau(lig, col).estModifiable())
+                        java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
+                        while (elements.hasMoreElements()) 
                         {
-                            JLabel lblContenu = (JLabel) tabPnlCases[lig][col].getComponent(0);
-                            String chiffreEfface = lblContenu.getText();
-
-                            // Si la case n'est pas déjà vide
-                            if (!chiffreEfface.equals("") && !chiffreEfface.equals("0"))
+                            AbstractButton btn = elements.nextElement();
+                            if (btn.getText().equals(chiffreEfface)) 
                             {
-                                this.ctrl.effacerChiffre(lig, col);
-                                
-                                lblContenu.setText(""); // Chaîne vide pour masquer le chiffre
-                                lblContenu.setForeground(null);
-
-                                // On réactive le bouton correspondant dans le pavé numérique
-                                if (this.grpBtn != null) 
-                                {
-                                    java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
-                                    while (elements.hasMoreElements()) 
-                                    {
-                                        AbstractButton btn = elements.nextElement();
-                                        if (btn.getText().equals(chiffreEfface)) 
-                                        {
-                                            btn.setBackground(Color.WHITE);
-                                            break;
-                                        }
-                                    }
-                                }
+                                btn.setBackground(Color.WHITE);
+                                break; 
                             }
                         }
                     }
                 }
-                this.modeValidation = false;
+
+                this.modeValidation = false; 
+                this.ligSelectionne = -1;
+                this.colSelectionne = -1;
+
                 this.majPlateau();
             }
-            // --- MODE GOMME CLASSIQUE (Une seule case) ---
-            else
-            {
-                */if (this.ligSelectionne != -1 && this.colSelectionne != -1)
-                {
-                    JLabel lblContenu = (JLabel) tabPnlCases[this.ligSelectionne][this.colSelectionne].getComponent(0);
-                    String chiffreEfface = lblContenu.getText();
-                    
-                    if (this.ctrl.getCasePlateau(this.ligSelectionne, this.colSelectionne).estModifiable())
-                    {
-                        this.ctrl.effacerChiffre(this.ligSelectionne, this.colSelectionne);
-                    
-                        lblContenu.setText(""); // J'ai remplacé votre "0" par une chaîne vide pour que la case soit vierge
-                        lblContenu.setForeground(null);
-
-                        if (!chiffreEfface.equals("") && !chiffreEfface.equals("0") && this.grpBtn != null) 
-                        {
-                            java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
-                            while (elements.hasMoreElements()) 
-                            {
-                                AbstractButton btn = elements.nextElement();
-                                if (btn.getText().equals(chiffreEfface)) 
-                                {
-                                    btn.setBackground(Color.WHITE);
-                                    break; 
-                                }
-                            }
-                        }
-                    }
-
-                    this.modeValidation = false; 
-                    this.ligSelectionne = -1;
-                    this.colSelectionne = -1;
-
-                    this.majPlateau();
-                }
-            //}
         }
 
         if (e.getSource() == this.btnIndice)
@@ -661,13 +215,13 @@ public class PanelJeu extends JPanel implements ActionListener
             if(this.modeBrouillon)
                 this.btnBrouillon.setBackground(ConstantesIHM.COULEUR_BROUILLON_ACTIVE);
             else 
-                this.btnBrouillon.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL); // gris survol car la souris est encore dessus !
+                this.btnBrouillon.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL); // gris survol car la souris est encore dessus
 
             this.majPlateau();
         }
 
         if (e.getSource() == this.btnValide)
-        {
+    {
             this.modeValidation = true; 
             this.ligSelectionne = -1;   
             this.colSelectionne = -1;
@@ -724,9 +278,487 @@ public class PanelJeu extends JPanel implements ActionListener
         }
     }
 
+    /*-------------------------------*/
+    /*            Getters            */
+    /*-------------------------------*/
+
     public int getNbValidationsRestantes()
     {
         return this.nbValidationsRestantes;
+    }
+
+    /*-------------------------------*/
+    /*      Méthodes utilitaires     */
+    /*-------------------------------*/
+
+    private void creerComposants()
+    {
+        // Récupère la taille de l'écran de l'utilisateur
+        this.tailleEcran            = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Le plateau prendra 55% de la hauteur de l'écran
+        this.taillePlateau          = (int) (tailleEcran.height * 0.55);
+
+        // On calcule la taille des boutons du pavé numérique proportionnellement
+        this.tailleBoutonPave       = (int) (taillePlateau * 0.15);
+
+        this.tailleBoutonOutil      = (int) (this.tailleBoutonPave * 3) + 20;
+
+        this.nbLigne                = this.ctrl.getNbLigne();
+        this.nbColonne              = this.ctrl.getNbColonne();
+
+        this.tabPnlCases            = new JPanel[this.nbLigne][this.nbColonne];
+
+        this.tabLblTotauxLignes     = new JLabel[this.nbLigne];
+        this.tabLblTotauxColonnes   = new JLabel[this.nbColonne];
+        
+        this.ligSelectionne         = -1;
+        this.colSelectionne         = -1;
+
+        // Panel qui contiendra pnlBandeau
+        this.pnlHaut                = new JPanel();
+        this.pnlHaut                .setLayout(new BorderLayout());
+        this.pnlHaut                .setOpaque(false);
+
+        // Panel qui contiendra le JLabel du bandeau
+        this.pnlBandeau             = new JPanel();
+        this.pnlBandeau             .setLayout(new FlowLayout(FlowLayout.CENTER, 5, 15));
+        this.pnlBandeau             .setOpaque(false);
+
+        this.lblValidation          = new JLabel();
+        this.lblValidation          .setOpaque(false);
+        this.lblValidation          .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.lblValidation          .setLayout(new FlowLayout(FlowLayout.CENTER, 10, 15));
+
+        this.initNbValidations();
+
+        // Panel qui contiendra pnlPlateau
+        this.pnlCentre              = new JPanel(new GridBagLayout());
+        this.pnlCentre              .setOpaque(false);
+        
+        // Panel qui affichera le Plateau
+        this.pnlPlateau             = new JPanel();
+        this.pnlPlateau             .setLayout(new GridLayout(this.nbLigne + 1, this.nbColonne + 1, 2, 2));
+        this.pnlPlateau             .setPreferredSize(new Dimension(600, 600));
+        this.pnlPlateau             .setBackground(ConstantesIHM.COULEUR_FOND);
+
+        // Panel qui contiendra pnlNbres
+        this.pnlBas                 = new JPanel();
+        this.pnlBas                 .setLayout(new BorderLayout());
+        this.pnlBas                 .setOpaque(false);
+
+        this.pnlBoutons             = new JPanel();
+        this.pnlBoutons             .setLayout(new FlowLayout(FlowLayout.CENTER , 20, 20));
+        this.pnlBoutons             .setOpaque(false);
+
+        // Panel qui affichera les nombres à placer
+        this.pnlNbres               = new JPanel();
+        this.pnlNbres               .setLayout(new GridLayout(3, 3, 10, 10));
+        this.pnlNbres               .setBackground(ConstantesIHM.COULEUR_FOND);
+        
+        this.pnlOutils              = new JPanel();
+        this.pnlOutils              .setLayout(new GridBagLayout());
+        this.pnlOutils              .setOpaque(false);
+
+        this.pnlColonneDroite       = new JPanel();
+        this.pnlColonneDroite       .setLayout(new GridBagLayout());
+        this.pnlColonneDroite       .setOpaque(false);
+
+        // Crée une ligne séparatrice à l'aide de JSeparator
+        this.separateurHaut         = new JSeparator(SwingConstants.HORIZONTAL);
+        this.separateurHaut         .setForeground(ConstantesIHM.COULEUR_SEPARATEUR);
+        this.separateurHaut         .setBackground(ConstantesIHM.COULEUR_FOND_SEPARATEUR);
+
+        this.separateurBas          = new JSeparator(SwingConstants.HORIZONTAL);
+        this.separateurBas          .setForeground(ConstantesIHM.COULEUR_SEPARATEUR);
+        this.separateurBas          .setBackground(ConstantesIHM.COULEUR_FOND_SEPARATEUR);
+
+        /*-----------------------------*/
+
+        // Parcours pour dessiner le plateau
+        this.dessinerPlateau();   
+
+        this.btnValide              = new JButton("  Valider");
+        this.btnValide              .setBackground(Color.WHITE);
+        this.btnValide              .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnValide              .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
+        this.btnValide              .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/valide.png", 30, 30)));
+        this.btnValide              .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
+        this.btnValide              .setFocusPainted(false);
+
+        this.btnReset               = new JButton("  Réintialiser le plateau");
+        this.btnReset               .setBackground(Color.WHITE);
+        this.btnReset               .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnReset               .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
+        this.btnReset               .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/reset.png", 30, 25)));
+        this.btnReset               .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
+        this.btnReset               .setFocusPainted(false);
+
+        this.btnRestart             = new JButton("  Recommencer une partie");
+        this.btnRestart             .setBackground(Color.WHITE);
+        this.btnRestart             .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnRestart             .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
+        this.btnRestart             .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/restart.png", 35, 35)));
+        this.btnRestart             .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
+        this.btnRestart             .setFocusPainted(false);
+
+        this.btnAnnuler             = new JButton("  Annuler");
+        this.btnAnnuler             .setBackground(Color.WHITE);
+        this.btnAnnuler             .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnAnnuler             .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
+        this.btnAnnuler             .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/annuler.png", 30, 25)));
+        this.btnAnnuler             .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
+        this.btnAnnuler             .setFocusPainted(false);
+        this.btnAnnuler             .setEnabled(false);
+
+        this.btnAccueil             = new JButton("  Retourner à l'accueil");
+        this.btnAccueil             .setBackground(Color.WHITE);
+        this.btnAccueil             .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnAccueil             .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
+        this.btnAccueil             .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/accueil.png", 30, 25)));
+        this.btnAccueil             .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
+        this.btnAccueil             .setFocusPainted(false);
+
+        this.dessinerBoutons();    
+
+        this.btnGomme               = new JButton("");
+        this.btnGomme               .setBackground(Color.WHITE);
+        this.btnGomme               .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE_GOMME));
+        this.btnGomme               .setPreferredSize(new Dimension((this.tailleBoutonOutil - 10) / 2, 50));
+        this.btnGomme               .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/gomme.png", 30, 30)));
+        this.btnGomme               .setFocusPainted(false);
+
+        this.btnIndice              = new JButton("");
+        this.btnIndice              .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnIndice              .setPreferredSize(new Dimension((this.tailleBoutonOutil - 10) / 2, 50));
+        this.btnIndice              .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/indice.png", 40, 35)));
+        this.btnIndice              .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
+        this.btnIndice              .setFocusPainted(false);
+
+        this.initBoutonIndice();
+
+        this.btnBrouillon           = new JButton("  Mode Brouillon");
+        this.btnBrouillon           .setBackground(Color.WHITE);
+        this.btnBrouillon           .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.btnBrouillon           .setPreferredSize(new Dimension(this.tailleBoutonOutil, 50));
+        this.btnBrouillon           .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/brouillon.png", 30, 25)));
+        this.btnBrouillon           .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
+        this.btnBrouillon           .setFocusPainted(false);
+    }
+
+    private void positionnerComposants()
+    {
+        this.pnlBoutons.add(this.btnValide );
+        this.pnlBoutons.add(this.btnReset);
+        this.pnlBoutons.add(this.btnRestart);
+        this.pnlBoutons.add(this.btnAnnuler);
+        this.pnlBoutons.add(this.btnAccueil);
+
+        this.pnlBandeau.add(lblValidation);
+        
+        this.pnlHaut   .add(pnlBandeau     , BorderLayout.CENTER  );
+        this.pnlHaut   .add(separateurHaut , BorderLayout.SOUTH );
+
+        GridBagConstraints gbcOutils    = new GridBagConstraints();
+        gbcOutils.fill                  = GridBagConstraints.BOTH; // Pour que les boutons s'étirent bien
+        gbcOutils.insets                = new Insets(5, 5, 5, 5); // Un peu d'espace entre eux
+
+        // 1. La Gomme (colonne 0, ligne 0)
+        gbcOutils.gridx     = 0; 
+        gbcOutils.gridy     = 0;
+        gbcOutils.gridwidth = 1; // Prend 1 case
+        gbcOutils.insets    = new Insets(15, 0, 0, 5);
+        pnlOutils           .add(this.btnGomme, gbcOutils);
+
+        // 2. L'Indice (colonne 1, ligne 0)
+        gbcOutils.gridx     = 1; 
+        gbcOutils.gridy     = 0;
+        gbcOutils.insets    = new Insets(15, 5, 0, 0);
+        pnlOutils           .add(this.btnIndice, gbcOutils);
+
+        // 3. Le Mode Brouillon (colonne 0, ligne 1 sur 2 colonnes)
+        gbcOutils.gridx     = 0; 
+        gbcOutils.gridy     = 1;
+        gbcOutils.gridwidth = 2; // Ici que le bouton devient large de deux boutons
+        gbcOutils.insets    = new Insets(10, 0, 0, 0);
+        pnlOutils           .add(this.btnBrouillon, gbcOutils);
+
+        GridBagConstraints gbcDroite = new GridBagConstraints();
+        gbcDroite.gridx             = 0; 
+        
+        // On ajoute d'abord le pavé numérique en haut
+        gbcDroite.gridy             = 0;
+        this.pnlColonneDroite       .add(this.pnlNbres, gbcDroite);
+        
+        // Puis les outils juste en dessous
+        gbcDroite.gridy         = 1;
+        gbcDroite.insets        = new Insets(38, 0, 0, 0); // Espace entre le pavé et les outils
+        this.pnlColonneDroite   .add(this.pnlOutils, gbcDroite);
+
+        // Création des règles de placement
+        GridBagConstraints gbc  = new GridBagConstraints();
+
+        gbc.anchor              = GridBagConstraints.NORTH;
+        
+        // 1ère règle : Le plateau (Colonne 0)
+        gbc.gridx       = 0;
+        gbc.gridy       = 0;
+        gbc.insets      = new Insets(0, 0, 0, 100); // Ajoute une PanelAccueil.MARGE de 60 pixels à droite du plateau
+        this.pnlCentre  .add(this.pnlPlateau, gbc);
+
+        // 2ème règle : Le pavé numérique (Colonne 1)
+        gbc.gridx       = 1;
+        gbc.gridy       = 0;
+        gbc.insets      = new Insets(0, 0, 0, 0); // Pas de PanelAccueil.MARGE supplémentaire
+        this.pnlCentre  .add(this.pnlColonneDroite, gbc);
+
+        pnlBas          .add(separateurBas  , BorderLayout.NORTH );
+        pnlBas          .add(pnlBoutons     , BorderLayout.CENTER);
+
+        this.add(pnlHaut        , BorderLayout.NORTH );
+        this.add(this.pnlCentre , BorderLayout.CENTER);
+        this.add(pnlBas         , BorderLayout.SOUTH );
+    }
+
+    private void activerComposants()
+    {
+        this.btnGomme.addActionListener(this);
+        this.btnGomme.addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnGomme.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnGomme.setForeground(Color.BLACK); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnGomme.setBackground(Color.WHITE);
+                btnGomme.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) 
+            {
+                btnGomme.setBackground(Color.WHITE);
+                btnGomme.setForeground(Color.BLACK);
+            }
+        });
+
+        this.btnIndice.addActionListener(this);
+        this.btnIndice.addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                // Si le bouton est encore utilisable, on met la couleur de survol
+                if (btnIndice.isEnabled()) {
+                    btnIndice.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                // Si le bouton est encore utilisable, on le remet en orange.
+                // Sinon (s'il a été utilisé), on le laisse tranquille (il sera blanc) !
+                if (btnIndice.isEnabled()) {
+                    btnIndice.setBackground(ConstantesIHM.COULEUR_INDICE_ACTIVE);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) 
+            {
+                btnIndice.setBackground(Color.WHITE);
+                btnIndice.setForeground(Color.BLACK);
+            }
+        });
+
+        this.btnBrouillon.addActionListener(this);
+        this.btnBrouillon.addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                // On lit directement le booléen de la classe
+                if (!PanelJeu.this.modeBrouillon) 
+                    btnBrouillon.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                if (PanelJeu.this.modeBrouillon) 
+                    btnBrouillon.setBackground(ConstantesIHM.COULEUR_BROUILLON_ACTIVE);
+                else 
+                    btnBrouillon.setBackground(Color.WHITE);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) 
+            {
+                btnBrouillon.setBackground(Color.WHITE);
+                btnBrouillon.setForeground(Color.BLACK);
+            }
+        });
+        
+        this.btnValide.addActionListener(this);
+        this.btnValide.addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnValide.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnValide.setForeground(Color.BLACK); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnValide.setBackground(Color.WHITE);
+                btnValide.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) 
+            {
+                btnValide.setBackground(Color.WHITE);
+                btnValide.setForeground(Color.BLACK);
+            }
+        });
+        
+        this.btnReset   .addActionListener(this);
+        this.btnReset      .addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnReset.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnReset.setForeground(Color.BLACK); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnReset.setBackground(Color.WHITE);
+                btnReset.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) 
+            {
+                btnReset.setBackground(Color.WHITE);
+                btnReset.setForeground(Color.BLACK);
+            }
+        });
+        
+        this.btnRestart.addActionListener(this);
+        this.btnRestart.addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnRestart.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnRestart.setForeground(Color.BLACK); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnRestart.setBackground(Color.WHITE);
+                btnRestart.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) 
+            {
+                btnRestart.setBackground(Color.WHITE);
+                btnRestart.setForeground(Color.BLACK);
+            }
+        });
+        
+        this.btnAnnuler.addActionListener(this);
+        this.btnAnnuler.addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnAnnuler.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnAnnuler.setForeground(Color.BLACK); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnAnnuler.setBackground(Color.WHITE);
+                btnAnnuler.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) 
+            {
+                btnAnnuler.setBackground(Color.WHITE);
+                btnAnnuler.setForeground(Color.BLACK);
+            }
+        });
+        
+        this.btnAccueil.addActionListener(this);
+        this.btnAccueil.addMouseListener(new MouseAdapter() 
+        {
+            @Override
+            public void mouseEntered(MouseEvent e) 
+            {
+                btnAccueil.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnAccueil.setForeground(Color.BLACK); // Pour que le texte reste lisible
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) 
+            {
+                btnAccueil.setBackground(Color.WHITE);
+                btnAccueil.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) 
+            {
+                btnAccueil.setBackground(Color.WHITE);
+                btnAccueil.setForeground(Color.BLACK);
+            }
+        });
+        
+
+        // Pour le clic dans le vide (désélectionne la case en cours)
+        MouseAdapter clicDansLeVide = new MouseAdapter() 
+        {
+            @Override
+            public void mouseClicked(MouseEvent e) 
+            {
+                PanelJeu.this.ligSelectionne = -1;
+                PanelJeu.this.colSelectionne = -1;
+                PanelJeu.this.majPlateau();
+            }
+        };
+
+        // On l'applique au panneau principal et au panneau central
+        this            .addMouseListener(clicDansLeVide);
+        this.pnlCentre  .addMouseListener(clicDansLeVide);
+
+        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put
+        (KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK), "actionAnnuler");
+        
+        // On définit ce que fait l'action "actionAnnuler"
+        this.getActionMap().put("actionAnnuler", new AbstractAction() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                btnAnnuler.doClick();
+            }
+        });
     }
 
     public void dessinerPlateau()
@@ -1028,10 +1060,7 @@ public class PanelJeu extends JPanel implements ActionListener
 
     private void initNbValidations()
     {
-        int difficulte = this.ctrl.getDifficulte();
-        if      (difficulte == 0) this.nbValidationsMax = 5; // Facile
-        else if (difficulte == 1) this.nbValidationsMax = 3;  // Moyen
-        else                      this.nbValidationsMax = 1;  // Difficile
+        this.nbValidationsMax = 3;
 
         this.nbValidationsRestantes = this.nbValidationsMax;
         this.majAffichageValidation();
@@ -1042,7 +1071,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.lblValidation.setText("Nombre de validations restantes : " + this.nbValidationsRestantes);
 
         // Calcul du ratio pour les couleurs
-        if (this.nbValidationsRestantes > (int) (this.nbValidationsMax / 2)) 
+        if (this.nbValidationsRestantes > 2) 
         {
             this.lblValidation.setForeground(new Color(0, 150, 0)); // VERT (loin de la défaite)
         } 
@@ -1139,16 +1168,6 @@ public class PanelJeu extends JPanel implements ActionListener
         this.majPlateau();
     }
 
-    public Image creerImages (String chemin, int longueur, int largeur)
-    {
-        ImageIcon   imgOriginale;
-        Image       imgRedimensionnee;
-
-        imgOriginale        = new ImageIcon(chemin);
-        imgRedimensionnee   = imgOriginale.getImage().getScaledInstance(longueur, largeur, Image.SCALE_SMOOTH);
-		
-        return imgRedimensionnee;
-    }
 
     // Classe interne permettant de gérer le clic de la souris pendant le Jeu
     private class GereSouris extends MouseAdapter
@@ -1277,25 +1296,25 @@ public class PanelJeu extends JPanel implements ActionListener
             }
         }
 
-            @Override
-            public void mouseEntered(MouseEvent e) 
+        @Override
+        public void mouseEntered(MouseEvent e) 
+        {
+            // On ne met la couleur de survol que si la case n'est pas celle actuellement sélectionnée
+            if (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris) 
             {
-                // On ne met la couleur de survol que si la case n'est pas celle actuellement sélectionnée
-                if (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris) 
-                {
-                    PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                }
+                PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
             }
+        }
 
-            @Override
-            public void mouseExited(MouseEvent e) 
+        @Override
+        public void mouseExited(MouseEvent e) 
+        {
+            // Quand la souris part, on remet en blanc QUE si la case n'est pas sélectionnée
+            if (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris) 
             {
-                // Quand la souris part, on remet en blanc QUE si la case n'est pas sélectionnée
-                if (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris) 
-                {
-                    PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setBackground(Color.WHITE);
-                }
+                PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setBackground(Color.WHITE);
             }
+        }
     }
 
     private class GereDepot extends TransferHandler
@@ -1338,7 +1357,7 @@ public class PanelJeu extends JPanel implements ActionListener
                 // Si le chiffre est d'origine, on refuse
                 if (PanelJeu.this.ctrl.estPresent(valeurAjoutee)) return false;
 
-                // NOUVEAU : Interception si le Mode Brouillon est activé
+                // Interception si le Mode Brouillon est activé
                 if (PanelJeu.this.modeBrouillon) 
                 {
                     JPanel pnlBrouillon = (JPanel) tabPnlCases[ligCible][colCible].getComponent(1);
@@ -1348,11 +1367,8 @@ public class PanelJeu extends JPanel implements ActionListener
                     else                                  lblPetitNum.setText("");
 
                     PanelJeu.this.majPlateau();
-                    return true; // On s'arrête là pour ne pas placer le gros chiffre !
+                    return true; // On s'arrête là pour ne pas placer le gros chiffre
                 }
-
-                // Logique de placement classique (similaire à GereSouris)
-                // Si la case cible contenait déjà un chiffre, on réactive son ancien bouton...
 
                 // Logique de placement classique (similaire à GereSouris)
                 // Si la case cible contenait déjà un chiffre, on réactive son ancien bouton
