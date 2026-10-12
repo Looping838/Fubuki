@@ -219,7 +219,6 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnAnnuler     .setIcon(new ImageIcon(this.creerImages("./images/icones/annuler.png", 30, 25)));
         this.btnAnnuler     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnAnnuler     .setFocusPainted(false);
-        this.btnAnnuler     .setEnabled(false);
 
         this.btnAccueil     = new JButton("  Retourner à l'accueil");
         this.btnAccueil     .setBackground(Color.WHITE);
@@ -700,11 +699,6 @@ public class PanelJeu extends JPanel implements ActionListener
             }
         }
 
-        if (e.getSource() == this.btnAccueil)
-        {
-            this.frame.setPnl(this.frame.getPnl(0));
-        }
-
         if (e.getSource() == this.btnReset)
         {
             this.reset();
@@ -713,6 +707,18 @@ public class PanelJeu extends JPanel implements ActionListener
         if (e.getSource() == this.btnRestart)
         {
             this.restart();
+        }
+
+        if (e.getSource() == this.btnAnnuler)
+        {
+            this.ctrl.depilerCase();
+            this.majPlateau();
+            this.majBoutons();
+        }
+
+        if (e.getSource() == this.btnAccueil)
+        {
+            this.frame.setPnl(this.frame.getPnl(0));
         }
     }
 
@@ -970,6 +976,24 @@ public class PanelJeu extends JPanel implements ActionListener
         }
 
         this.repaint();
+    }
+
+    public void majBoutons()
+    {
+        java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
+        while (elements.hasMoreElements()) 
+        {
+            AbstractButton btn = elements.nextElement();
+            int numero = Integer.parseInt(btn.getText());
+
+            // On utilise notre variable 'btn' pour faire toutes les modifications
+            if (this.ctrl.estPresent(numero))
+                btn.setBackground(ConstantesIHM.COULEUR_GRIS_PLACE);
+            else
+                btn.setBackground(Color.WHITE);
+
+            btn.setEnabled(true);
+        }
     }
 
     private void initBoutonIndice()
