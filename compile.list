@@ -1,6 +1,7 @@
 ./metier/Case.java
 ./metier/Fubuki.java
 ./metier/Plateau.java
+./metier/Pile.java
 
 ./controleur/Controleur.java
 

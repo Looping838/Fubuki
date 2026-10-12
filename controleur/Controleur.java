@@ -44,7 +44,12 @@ public class Controleur
     public int      getNombreCasePlateau (int lig , int col )   { return this.plateau.getNombreCase(lig , col ) ; }
     public int[]    getNbrPossible()                            { return this.plateau.getNbrPossible(); }
 
-    public void     setNbrCase ( int lig , int col , int num )  {  this.plateau.getCasePlateau(lig , col ).set_nombre(num) ;}
+    public void     setNbrCase ( int lig , int col , int num )  
+    {  
+        this.plateau.getCasePlateau(lig , col ).set_nombre(num) ;
+        this.metier.getPile().empiler("setNbrCase " + num + " [" + lig + "," + col + "]");
+        System.out.println(this.metier.getPile().afficherPile() );
+    }
 
     public boolean  estPresent(int nbr)                          { return this.metier.estPresent(nbr); }
     public boolean  estGagne()                                   { return this.metier.estGagne(); }
@@ -67,7 +72,6 @@ public class Controleur
         return somme == getTotauxColonnes(col);
     }
 
-    // TODO: a modif la difficulter plus tard 
     public void    resetJeu() { this.initPlateau( this.metier.getDifficulte() ) ; } 
 
     public void    effacerChiffre(int ligne, int colonne)               { this.metier.effacerChiffre(ligne, colonne);}
