@@ -49,9 +49,9 @@ public class FrameJeu extends JFrame
     public void creerPanelChoixDiff()   { this.tabPanel[1] = new PanelChoixDiff     (ctrl , this, 1); }
     public void creerPanelJeu()         { this.tabPanel[2] = new PanelJeu           (ctrl , this, 2); }
     
-    public void afficherPanelVictoire()
+    public void afficherPanelResultat(boolean estVictoire)
     {
-        this.tabPanel[3] = new PanelVictoire(ctrl, this, 3);
+        this.tabPanel[3] = new PanelResultat(ctrl, this, 3, estVictoire);
         this.setPnl(this.tabPanel[3]);
     }
 
