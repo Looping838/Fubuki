@@ -26,7 +26,7 @@ public class Pile
         if ( this.numAction > 1)
         {
             this.numAction -- ;
-            this.decomposeur( this.pile[numAction + 1] ) ;
+            this.decomposeur( this.pile[numAction]) ;
         }
 
     }
@@ -41,16 +41,16 @@ public class Pile
         switch (action)
         {
             case "setNbrCase" -> {
-                int lig = Integer.parseInt(parties[1]);
-                int col = Integer.parseInt(parties[2]);
-                this.ctrl.effacerChiffre(lig, col);
+                int lig = Integer.parseInt(parties[2]); 
+                int col = Integer.parseInt(parties[3]); 
+                this.ctrl.effacerChiffreAnnulation(lig, col);            
             }
 
             case "effacerChiffre" -> {
-                int lig = Integer.parseInt(parties[1]);
-                int col = Integer.parseInt(parties[2]);
-                int val = Integer.parseInt(parties[3]);
-                this.ctrl.setNbrCase(lig, col, val);
+                int val = Integer.parseInt(parties[1]); 
+                int lig = Integer.parseInt(parties[2]);
+                int col = Integer.parseInt(parties[3]);
+                this.ctrl.setNbrCaseAnnulation(lig, col, val);
             }
 
             case "echangerNbr" -> {
@@ -58,7 +58,7 @@ public class Pile
                 int col1 = Integer.parseInt(parties[2]);
                 int lig2 = Integer.parseInt(parties[3]);
                 int col2 = Integer.parseInt(parties[4]);
-                this.ctrl.echangerNbr(lig2, col2, lig1, col1);
+                this.ctrl.echangerNbrAnnulation(lig2, col2, lig1, col1);
             }
 
             default -> System.err.println("Action inconnue : " + action);
