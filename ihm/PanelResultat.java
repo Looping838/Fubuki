@@ -32,21 +32,6 @@ public class PanelResultat extends JPanel implements ActionListener
 		/*   Création des composants     */
 		/*-------------------------------*/       
 
-        this.lblResultat    = new JLabel("", SwingConstants.CENTER);
-        
-        if (estVictoire)
-        {
-            this.lblResultat.setText("VICTOIRE !");
-            this.lblResultat.setForeground(ConstantesIHM.COULEUR_VICTOIRE);
-        }
-        else
-        {
-            this.lblResultat.setText("DEFAITE ..");
-            this.lblResultat.setForeground(ConstantesIHM.COULEUR_DEFAITE);
-        }
-
-        lblResultat.setFont(new Font("Sans-Serif", Font.BOLD, 70));
-
         this.btnAccueil     = new JButton("  Retourner à l'accueil");
         this.btnAccueil     .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
         this.btnAccueil     .setBackground(Color.WHITE);
@@ -70,6 +55,23 @@ public class PanelResultat extends JPanel implements ActionListener
         this.btnQuitter     .setFocusPainted(false);
         this.btnQuitter     .setPreferredSize(new Dimension(400, 60));
         this.btnQuitter     .setIcon(new ImageIcon(this.creerImages("./images/icones/quitter.png", 30, 30)));
+
+        this.lblResultat    = new JLabel("", SwingConstants.CENTER);
+        
+        if (estVictoire)
+        {
+            this.lblResultat.setText("VICTOIRE !");
+            this.lblResultat.setForeground(ConstantesIHM.COULEUR_VICTOIRE);
+        }
+        else
+        {
+            this.lblResultat.setText("DEFAITE ..");
+            this.lblResultat.setForeground(ConstantesIHM.COULEUR_DEFAITE);
+
+            this.btnRecommencer.setText("  Réessayer");
+        }
+
+        lblResultat.setFont(new Font("Sans-Serif", Font.BOLD, 70));
 
         /*-------------------------------*/
 		/* Positionnement des composants */
