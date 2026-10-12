@@ -644,7 +644,9 @@ public class PanelJeu extends JPanel implements ActionListener
                     this.btnIndice.setEnabled(false);
                 }
 
-                // TODO plus tard : demander au Métier de révéler une case
+                this.ctrl.donnerIndice(); // On demande au métier de placer l'indice
+                this.majPlateau();        // On rafraîchit la grille pour voir le chiffre
+                this.majBoutons();        // On grise le bouton correspondant dans le pavé numérique
             }
         }
 
@@ -680,7 +682,6 @@ public class PanelJeu extends JPanel implements ActionListener
 
                 if (this.nbValidationsRestantes <= 0)
                 {
-                    JOptionPane.showMessageDialog(this, "Nombre de validations dépassé ! Partie perdue.", "Défaite", JOptionPane.ERROR_MESSAGE);
                     this.frame.afficherPanelResultat(false);
                     this.frame.setPnl(this.frame.getPnl(this.indice + 1));
                     this.ctrl.resetJeu();
@@ -947,6 +948,12 @@ public class PanelJeu extends JPanel implements ActionListener
                 else 
                 {
                     lbl.setText(String.valueOf(vraiChiffre)); 
+                    
+                    if (!this.ctrl.getCasePlateau(lig, col).estModifiable()) 
+                        lbl.setFont(new Font("Sans-Serif", Font.BOLD, 24));
+                    else 
+                        lbl.setFont(new Font("Sans-Serif", Font.PLAIN, 24));
+                    
                     // La case est remplie : on dit au croupier de cacher le brouillon et d'afficher le gros chiffre !
                     croupier.show(this.tabPnlCases[lig][col], "VALEUR");
                 }
