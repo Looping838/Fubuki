@@ -109,6 +109,11 @@ public class Controleur
         return !this.metier.getPile().estVide(); 
     }
 
+    public void donnerIndice()
+    {
+        this.metier.getIndice();
+    }
+
     public static void main (String[] args) { new Controleur(); }
 
 }
