@@ -7,6 +7,7 @@ public class Fubuki
 {
     private Plateau plateau;
     private int     difficulte ;
+    private Pile    pile ;
 
     private Controleur ctrl;
 
@@ -18,12 +19,16 @@ public class Fubuki
         this.plateauJeu() ;
         this.plateauVide() ;
         this.ctrl = ctrl;
+
+        this.pile = new Pile(ctrl);
     }
 
     public Plateau getPlateau() 
     { 
         return this.plateau; 
     }
+
+    public Pile getPile() { return this.pile ;}
 
     public void setDifficulte(int difficulte)
     {
