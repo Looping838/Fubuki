@@ -6,19 +6,21 @@ import java.util.Random;
 public class Fubuki 
 {
     private Plateau plateau;
+    private Plateau plateauComplet ;
     private int     difficulte ;
     private Pile    pile ;
-
-    private Controleur ctrl;
 
     public Fubuki (Controleur ctrl , int difficulte )
     {
         this.difficulte        = difficulte ; 
-        this.plateau            = new Plateau(ctrl);
+        this.plateau           = new Plateau(ctrl);
+        this.plateauComplet    = new Plateau(ctrl);
         this.plateau.initPlateau();
         this.plateauJeu() ;
+
+        this.plateauComplet    = plateau ;
+        
         this.plateauVide() ;
-        this.ctrl = ctrl;
 
         this.pile = new Pile(ctrl);
     }
@@ -27,6 +29,8 @@ public class Fubuki
     { 
         return this.plateau; 
     }
+
+    public Plateau getPlateauComplet () { return this.plateauComplet ;}
 
     public Pile getPile() { return this.pile ;}
 
@@ -144,6 +148,32 @@ public class Fubuki
         int memoire = case1.get_nombre();
         case1.set_nombre(case2.get_nombre());
         case2.set_nombre(memoire);
+    }
+
+    public int getIndice () 
+    {
+        Random rand = new Random();
+
+        int indice = 0 ;
+
+        int x = 4 ;
+        int y = 4 ;
+
+        int cpt = 0 ;
+
+        while ( cpt < 1 )
+        {
+            x = rand.nextInt(this.plateau.getNbLigne());
+            y = rand.nextInt(this.plateau.getNbColonne());
+                
+            if (this.plateau.getCasePlateau(x , y).estModifiable() == true )
+            {
+                indice = this.plateauComplet.getCasePlateau(x , y).get_nombre() ;
+                cpt ++ ;
+            }
+        }
+
+        return indice ;
     }
 
 }
