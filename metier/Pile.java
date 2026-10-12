@@ -80,4 +80,9 @@ public class Pile
 
         return res ;
     }
+
+    public boolean estVide() 
+    {
+        return this.numAction <= 1;
+    }
 }
