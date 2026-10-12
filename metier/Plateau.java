@@ -13,8 +13,6 @@ public class Plateau
     private int []   totauxColonnes;
 
     private int[]   nbrPossible = { 1,2,3,4,5,6,7,8,9 };
-
-    private Controleur ctrl;
     
     public Plateau (Controleur ctrl)
     {

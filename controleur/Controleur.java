@@ -43,6 +43,7 @@ public class Controleur
     public int      getTotauxColonnes(int i)                    { return this.plateau.getTotauxColonnes(i);}
     public int      getNombreCasePlateau (int lig , int col )   { return this.plateau.getNombreCase(lig , col ) ; }
     public int[]    getNbrPossible()                            { return this.plateau.getNbrPossible(); }
+    public int      getIndiceCase ()                            { return this.metier.getIndice() ; }
 
     public void     setNbrCase ( int lig , int col , int num )  
     {  
