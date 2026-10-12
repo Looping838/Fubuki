@@ -1,13 +1,16 @@
-- fonction annuler 
+- fonction annuler => FAIT
 
 - petit numeros ( numeros possible ) => FAIT
 
-- touche clavier fonctionnel 
+- touche clavier fonctionnel => FAIT
 
-- bouton indice (voir jeu sur site) => Fait graphiquement 
+- bouton indice (voir jeu sur site) => FAIT
 
 - faire limite de validation (au bout de n validations -> défaite) :
     - soit pour toutes les difficultés (ex. 10 validations pour "Facile", 5 validations pour "Moyen", 1 pour "Difficile"), 
     - soit pour "moyen" et "difficile" (et facile on a une infinité de validations possibles)
-
     => je pense que la limite de 3 validation est bien pour tous , mais voudrais peut etre afficher la tableau fini si perdu 
+    
+    => FAIT
+
+- faire bouton JMenuItem "Aide" avec règles du Jeu => FAIT
