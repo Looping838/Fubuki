@@ -10,15 +10,17 @@ public class Pile
 
     public Pile (Controleur ctrl)
     {
-        this.pile      = new String[10] ;
+        this.pile      = new String[50] ;
         this.numAction = 1 ;
         this.ctrl      = ctrl ;
     }
 
     public void   empiler( String action ) 
     { 
+        if ( this.numAction == 50 ) this.numAction = 1;
         this.pile[numAction] = action   ;
         this.numAction ++ ;
+        
     }
     
     public void depiler()                
