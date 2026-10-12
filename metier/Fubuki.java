@@ -159,7 +159,7 @@ public class Fubuki
         case2.set_nombre(memoire);
     }
 
-    public int getIndice () 
+    public void getIndice () 
     {
         Random rand = new Random();
 
@@ -178,13 +178,19 @@ public class Fubuki
             if (this.plateau.getCasePlateau(x , y).estModifiable() == true )
             {
                 indice = this.plateauComplet.getCasePlateau(x , y).get_nombre() ;
+
+                for ( int lig = 0 ; lig < this.plateau.getNbColonne() ; lig ++ )
+                    for ( int col = 0 ; col < this.plateau.getNbLigne() ; col ++ )
+                        if ( this.plateau.getCasePlateau(lig,col).get_nombre() == indice )
+                            this.effacerChiffre(lig, col);
+
+                
                 this.plateau.getCasePlateau(x, y).set_nombre(indice);
                 this.plateau.getCasePlateau(x, y).setModifiable(false) ;
                 cpt ++ ;
             }
         }
 
-        return indice ;
     }
+}   
 
-}
