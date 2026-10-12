@@ -18,7 +18,16 @@ public class Fubuki
         this.plateau.initPlateau();
         this.plateauJeu() ;
 
-        this.plateauComplet    = plateau ;
+        this.plateauComplet.initPlateau();
+        
+        for (int lig = 0; lig < this.plateau.getNbLigne(); lig++) 
+        {
+            for (int col = 0; col < this.plateau.getNbColonne(); col++) 
+            {
+                int valeur = this.plateau.getCasePlateau(lig, col).get_nombre();
+                this.plateauComplet.getCasePlateau(lig, col).set_nombre(valeur);
+            }
+        }
         
         this.plateauVide() ;
 
