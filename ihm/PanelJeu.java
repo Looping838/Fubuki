@@ -676,17 +676,18 @@ public class PanelJeu extends JPanel implements ActionListener
             if (!this.ctrl.estGagne())
             {
                 this.nbValidationsRestantes--;
-                this.majAffichageValidation(); // <--- C'ELLE-CI MET À JOUR LE TEXTE ET LA COULEUR
+                this.majAffichageValidation();
 
                 if (this.nbValidationsRestantes <= 0)
                 {
                     JOptionPane.showMessageDialog(this, "Nombre de validations dépassé ! Partie perdue.", "Défaite", JOptionPane.ERROR_MESSAGE);
-                    this.frame.setPnl(this.frame.getPnl(0)); // Retour à l'accueil
+                    this.frame.afficherPanelResultat(false);
+                    this.frame.setPnl(this.frame.getPnl(this.indice + 1));
                     this.ctrl.resetJeu();
                     return;
                 }
             }
-            else // SI C'ÉTAIT LA BONNE RÉPONSE : VICTOIRE !
+            else
             {
                 this.btnGomme.setEnabled(false);
                 java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
@@ -694,7 +695,8 @@ public class PanelJeu extends JPanel implements ActionListener
                 {
                     elements.nextElement().setEnabled(false);
                 }
-                this.frame.afficherPanelVictoire();
+
+                this.frame.afficherPanelResultat(true);
             }
         }
 
@@ -712,6 +714,11 @@ public class PanelJeu extends JPanel implements ActionListener
         {
             this.restart();
         }
+    }
+
+    public int getNbValidationsRestantes()
+    {
+        return this.nbValidationsRestantes;
     }
 
     public void dessinerPlateau()
