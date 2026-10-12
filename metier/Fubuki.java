@@ -170,6 +170,7 @@ public class Fubuki
             {
                 indice = this.plateauComplet.getCasePlateau(x , y).get_nombre() ;
                 this.plateau.getCasePlateau(x, y).set_nombre(indice);
+                this.plateau.getCasePlateau(x, y).setModifiable(false) ;
                 cpt ++ ;
             }
         }
