@@ -104,6 +104,11 @@ public class Controleur
         this.metier.echangerNbr(lig1, col1, lig2, col2);
     }
 
+    public boolean peutAnnuler() 
+    { 
+        return !this.metier.getPile().estVide(); 
+    }
+
     public static void main (String[] args) { new Controleur(); }
 
 }
