@@ -18,6 +18,8 @@ public class ConstantesIHM
     public static final Color COULEUR_BROUILLON_ACTIVE  = new Color(223, 242, 255);
     public static final Color COULEUR_GRIS_BROUILLON    = new Color(121, 128, 129);
     public static final Color COULEUR_INDICE_ACTIVE     = new Color(252, 220, 18 );
+    public static final Color COULEUR_VICTOIRE          = new Color(0  , 150, 0  );
+    public static final Color COULEUR_DEFAITE           = new Color(255, 0  , 0  );
 
     public static final Color LUMIERE               = Color.WHITE;
     public static final Color OMBRE                 = Color.LIGHT_GRAY;

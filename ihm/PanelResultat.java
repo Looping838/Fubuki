@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class PanelVictoire extends JPanel implements ActionListener
+public class PanelResultat extends JPanel implements ActionListener
 {
     private Controleur  ctrl;
     private FrameJeu    frame;
@@ -17,7 +17,9 @@ public class PanelVictoire extends JPanel implements ActionListener
     private JButton     btnRecommencer;
     private JButton     btnChoisir;
 
-    public PanelVictoire(Controleur ctrl, FrameJeu frame, int indice)
+    private JLabel      lblResultat;
+
+    public PanelResultat(Controleur ctrl, FrameJeu frame, int indice, boolean estVictoire)
     {
         this.setLayout(new GridBagLayout());
         this.setBackground(ConstantesIHM.COULEUR_FOND);
@@ -30,9 +32,20 @@ public class PanelVictoire extends JPanel implements ActionListener
 		/*   Création des composants     */
 		/*-------------------------------*/       
 
-        JLabel lblVictoire = new JLabel("VICTOIRE !", SwingConstants.CENTER);
-        lblVictoire.setFont(new Font("Sans-Serif", Font.BOLD, 70));
-        lblVictoire.setForeground(new Color(0, 150, 0));
+        this.lblResultat    = new JLabel("", SwingConstants.CENTER);
+        
+        if (estVictoire)
+        {
+            this.lblResultat.setText("VICTOIRE !");
+            this.lblResultat.setForeground(ConstantesIHM.COULEUR_VICTOIRE);
+        }
+        else
+        {
+            this.lblResultat.setText("DEFAITE ..");
+            this.lblResultat.setForeground(ConstantesIHM.COULEUR_DEFAITE);
+        }
+
+        lblResultat.setFont(new Font("Sans-Serif", Font.BOLD, 70));
 
         this.btnAccueil     = new JButton("  Retourner à l'accueil");
         this.btnAccueil     .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
@@ -70,7 +83,7 @@ public class PanelVictoire extends JPanel implements ActionListener
         gbc.gridy = 0; // Tout en haut de notre grille
         // Insets(Haut, Gauche, Bas, Droite) = grand espace sous le titre
         gbc.insets = new Insets(130, 0, 150, 0);
-        this.add(lblVictoire, gbc);
+        this.add(lblResultat, gbc);
 
         // Le bouton Facile
         gbc.gridy = 1; // En dessous du titre
