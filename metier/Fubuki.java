@@ -41,105 +41,33 @@ public class Fubuki
 
     public Plateau getPlateauComplet () { return this.plateauComplet ;}
 
-    public Pile getPile() { return this.pile ;}
+    public Pile    getPile() { return this.pile ;}
 
-    public void setDifficulte(int difficulte)
+    public void    setDifficulte(int difficulte)
     {
         this.difficulte = difficulte ;
     }
 
-    public int getDifficulte () { return this.difficulte ;}
+    public int     getDifficulte () { return this.difficulte ;}
     
-    public void plateauJeu ()
+    public void    plateauJeu ()
     {
-        if ( this.difficulte == 0 )
-        {
-            Random rand = new Random();
-            int x = 4 ;
-            int y = 4 ;
-
-            int cpt = 0 ;
-
-            while ( cpt < 2 )
-            {
-                x = rand.nextInt(this.plateau.getNbLigne());
-                y = rand.nextInt(this.plateau.getNbColonne());
-                
-                if (this.plateau.getCasePlateau(x , y).estModifiable() == true )
-                {
-                    this.plateau.getCasePlateau(x , y).setModifiable(false) ;
-                    cpt ++ ;
-                }
-            }
-        }
-        else 
-            if ( this.difficulte == 1 )
-            {
-                Random rand = new Random();
-                int x = 4 ;
-                int y = 4 ;
-
-                x = rand.nextInt(this.plateau.getNbLigne());
-                y = rand.nextInt(this.plateau.getNbColonne());
-
-                this.plateau.getCasePlateau(x , y).setModifiable(false) ; 
-            }
-            else 
-            {
-
-            }
+        this.plateau.plateauJeu(this.difficulte);
     }
 
-    public void plateauVide ()
+    public void     plateauVide ()
     {
-        for ( int cpt = 0 ; cpt < this.plateau.getNbLigne() ; cpt ++ )
-        {
-            for ( int cpt2 = 0 ; cpt2 < this.plateau.getNbColonne() ; cpt2 ++ )
-            {
-                if (this.plateau.getCasePlateau(cpt , cpt2).estModifiable() == true )
-                {
-                    this.plateau.getCasePlateau(cpt , cpt2).set_nombre(0) ;
-                }
-            }
-        }
+        this.plateau.plateauVide();
     }
 
     public boolean estPresent ( int nbr )
     {
-        for ( int cpt = 0 ; cpt < this.plateau.getNbLigne() ; cpt ++ )
-            for ( int cpt2 = 0 ; cpt2 < this.plateau.getNbColonne() ; cpt2 ++ )
-                if ( this.plateau.getCasePlateau(cpt, cpt2).get_nombre() == nbr )
-                    return true ;
-
-        return false ;
+        return this.estPresent(nbr);
     }
 
     public boolean estGagne ()
     {
-
-        for (int cpt = 0; cpt < this.plateau.getNbLigne(); cpt++)
-        {
-            int somme = 0;
-            for (int cpt2 = 0; cpt2 < this.plateau.getNbColonne(); cpt2++)
-            {
-                somme += this.plateau.getCasePlateau(cpt, cpt2).get_nombre();
-            }
-            if (somme != this.plateau.getTotauxLignes(cpt))
-                return false;
-        }
-
-        for (int cpt = 0; cpt < this.plateau.getNbColonne(); cpt++)
-        {
-            int somme = 0;
-            for (int cpt2 = 0; cpt2 < this.plateau.getNbLigne(); cpt2++)
-            {
-                somme += this.plateau.getCasePlateau(cpt2, cpt).get_nombre();
-            }
-            if (somme != this.plateau.getTotauxColonnes(cpt))
-                return false;
-        }
-
-        return true;
+        return this.estGagne() ;
     }
 
     public void effacerChiffre(int ligne, int colonne)  
@@ -149,14 +77,7 @@ public class Fubuki
 
     public void echangerNbr(int lig1, int col1, int lig2, int col2) 
     {
-        // On récupère les deux objets Case via le Plateau
-        Case case1 = this.plateau.getCasePlateau(lig1, col1);
-        Case case2 = this.plateau.getCasePlateau(lig2, col2);
-        
-        // On échange physiquement leurs nombres en mémoire
-        int memoire = case1.get_nombre();
-        case1.set_nombre(case2.get_nombre());
-        case2.set_nombre(memoire);
+        this.plateau.echangerNbr(lig1, col1, lig2, col2);
     }
 
     public void getIndice () 

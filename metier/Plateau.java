@@ -92,4 +92,107 @@ public class Plateau
             this.nbrPossible[j] = temp;
         }
     }
+
+
+
+
+    public void    plateauJeu (int difficulte)
+    {
+        if ( difficulte == 0 )
+        {
+            Random rand = new Random();
+            int x = 4 ;
+            int y = 4 ;
+
+            int cpt = 0 ;
+
+            while ( cpt < 2 )
+            {
+                x = rand.nextInt(this.getNbLigne());
+                y = rand.nextInt(this.getNbColonne());
+                
+                if (this.getCasePlateau(x , y).estModifiable() == true )
+                {
+                    this.getCasePlateau(x , y).setModifiable(false) ;
+                    cpt ++ ;
+                }
+            }
+        }
+        else 
+            if ( difficulte == 1 )
+            {
+                Random rand = new Random();
+                int x = 4 ;
+                int y = 4 ;
+
+                x = rand.nextInt(this.getNbLigne());
+                y = rand.nextInt(this.getNbColonne());
+
+                this.getCasePlateau(x , y).setModifiable(false) ; 
+            }
+    }
+
+    public void plateauVide ()
+    {
+        for ( int cpt = 0 ; cpt < this.getNbLigne() ; cpt ++ )
+        {
+            for ( int cpt2 = 0 ; cpt2 < this.getNbColonne() ; cpt2 ++ )
+            {
+                if (this.getCasePlateau(cpt , cpt2).estModifiable() == true )
+                {
+                    this.getCasePlateau(cpt , cpt2).set_nombre(0) ;
+                }
+            }
+        }
+    }
+
+    public boolean estPresent ( int nbr )
+    {
+        for ( int cpt = 0 ; cpt < this.getNbLigne() ; cpt ++ )
+            for ( int cpt2 = 0 ; cpt2 < this.getNbColonne() ; cpt2 ++ )
+                if ( this.getCasePlateau(cpt, cpt2).get_nombre() == nbr )
+                    return true ;
+
+        return false ;
+    }
+
+    public boolean estGagne ()
+    {
+
+        for (int cpt = 0; cpt < this.getNbLigne(); cpt++)
+        {
+            int somme = 0;
+            for (int cpt2 = 0; cpt2 < this.getNbColonne(); cpt2++)
+            {
+                somme += this.getCasePlateau(cpt, cpt2).get_nombre();
+            }
+            if (somme != this.getTotauxLignes(cpt))
+                return false;
+        }
+
+        for (int cpt = 0; cpt < this.getNbColonne(); cpt++)
+        {
+            int somme = 0;
+            for (int cpt2 = 0; cpt2 < this.getNbLigne(); cpt2++)
+            {
+                somme += this.getCasePlateau(cpt2, cpt).get_nombre();
+            }
+            if (somme != this.getTotauxColonnes(cpt))
+                return false;
+        }
+
+        return true;
+    }
+
+    public void echangerNbr(int lig1, int col1, int lig2, int col2) 
+    {
+        // On récupère les deux objets Case via le Plateau
+        Case case1 = this.getCasePlateau(lig1, col1);
+        Case case2 = this.getCasePlateau(lig2, col2);
+        
+        // On échange physiquement leurs nombres en mémoire
+        int memoire = case1.get_nombre();
+        case1.set_nombre(case2.get_nombre());
+        case2.set_nombre(memoire);
+    }
 }
