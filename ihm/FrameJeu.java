@@ -75,6 +75,7 @@ public class FrameJeu extends JFrame
         pnlJeu.restart(); 
     }
 
+    // Permet de créer une image à partir d'un chemin et de la redimensionner
     public Image creerImages (String chemin, int longueur, int largeur)
     {
         ImageIcon   imgOriginale;
@@ -86,6 +87,7 @@ public class FrameJeu extends JFrame
         return imgRedimensionnee;
     }
 
+    // Permet de créer la barre de menu et ses sous-menus
     private void creerMenuBar()
     {
         UIManager.put("Menu.selectionBackground", ConstantesIHM.COULEUR_GRIS_SURVOL);
@@ -94,25 +96,24 @@ public class FrameJeu extends JFrame
         UIManager.put("MenuItem.selectionForeground", Color.BLACK);
         UIManager.put("MenuItem.background", Color.WHITE);
         
-        // 1. Création de la barre de menu principale
+        // Création de la barre de menu principale
         JMenuBar barreMenu      = new JMenuBar();
         barreMenu               .setOpaque(true);
         barreMenu               .setBackground(ConstantesIHM.COULEUR_FOND);
         barreMenu               .setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ConstantesIHM.COULEUR_SEPARATEUR));
 
-        // 2. Création de l'onglet "Aide"
+        // Création de l'onglet "Aide"
         JMenu menuAide          = new JMenu("Aide");
-        //menuAide                .setIcon(new ImageIcon(this.creerImages("./images/icones/aide.png", 20, 20)));
-        menuAide                .setFont(new Font("Sans-Serif", Font.BOLD, 18)); // Plus gros et en gras
-        menuAide                .setForeground(Color.BLACK);
-        menuAide                .setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        menuAide                .setFont(new Font("Sans-Serif", Font.BOLD, 18));            // Change la police de l'onglet "Aide"
+        menuAide                .setForeground(Color.BLACK);                                // Change la couleur du texte de l'onglet "Aide"
+        menuAide                .setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));    // Ajoute un peu d'espace autour du texte de l'onglet "Aide"
 
-        // 3. Création du sous-bouton "Règles du jeu"
+        // Création du sous-bouton "Règles du jeu"
         JMenuItem itemRegles    = new JMenuItem("Règles du jeu");
-        itemRegles              .setFont(new Font("Sans-Serif", Font.PLAIN, 16));
+        itemRegles              .setFont(new Font("Sans-Serif", Font.PLAIN, 16));           
         itemRegles              .setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-        // 4. On ajoute l'action quand on clique sur "Règles du jeu"
+        // On ajoute l'action quand on clique sur "Règles du jeu"
         itemRegles.addActionListener(new java.awt.event.ActionListener() 
         {
             @Override
@@ -127,6 +128,7 @@ public class FrameJeu extends JFrame
 
                 ImageIcon iconeRegle = new ImageIcon(FrameJeu.this.creerImages("./images/icones/regles.png", 50, 50));
 
+                // Affichage
                 JOptionPane.showMessageDialog(FrameJeu.this, message, "Règles du Fubuki", JOptionPane.PLAIN_MESSAGE, iconeRegle);
             }
         });
@@ -258,7 +260,7 @@ public class FrameJeu extends JFrame
 
         barreMenu.add(menuAide);
 
-        // 6. On applique la barre à la fenêtre (Frame)
+        // On applique la barre à la fenêtre (Frame)
         this.setJMenuBar(barreMenu);
     }
 }

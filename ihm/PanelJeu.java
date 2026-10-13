@@ -291,6 +291,7 @@ private JButton             btnReset;
     /*      Méthodes utilitaires     */
     /*-------------------------------*/
 
+     // Méthode qui crée les composants de l'interface
     private void creerComposants()
     {
         // Récupère la taille de l'écran de l'utilisateur
@@ -446,6 +447,7 @@ private JButton             btnReset;
         this.btnBrouillon           .setFocusPainted(false);
     }
 
+    // Méthode qui positionne les composants de l'interface
     private void positionnerComposants()
     {
         this.pnlBoutons.add(this.btnValide );
@@ -520,8 +522,13 @@ private JButton             btnReset;
         this.add(pnlBas         , BorderLayout.SOUTH );
     }
 
+    // Méthode qui active les composants de l'interface
     private void activerComposants()
     {
+        /*---------------------------------------------*/
+        /* Ajout du système de survol pour les boutons */
+        /*---------------------------------------------*/
+
         this.btnGomme.addActionListener(this);
         this.btnGomme.addMouseListener(new MouseAdapter() 
         {
@@ -730,6 +737,9 @@ private JButton             btnReset;
             }
         });
         
+        /*-----------------------------*/
+        /*     Clic dans le vide       */
+        /*-----------------------------*/
 
         // Pour le clic dans le vide (désélectionne la case en cours)
         MouseAdapter clicDansLeVide = new MouseAdapter() 
@@ -747,6 +757,11 @@ private JButton             btnReset;
         this            .addMouseListener(clicDansLeVide);
         this.pnlCentre  .addMouseListener(clicDansLeVide);
 
+
+        /*-----------------------------*/
+        /*   Raccourci clavier CTRL+Z  */
+        /*-----------------------------*/
+
         this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put
         (KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK), "actionAnnuler");
         
@@ -763,15 +778,15 @@ private JButton             btnReset;
 
     public void dessinerPlateau()
     {
-        // 1. Vider le composant graphique de ses anciennes cases
+        // Vider le composant graphique de ses anciennes cases
         this.pnlPlateau.removeAll();
 
-        // 2. Réinitialiser les tableaux en mémoire pour le nouveau plateau
+        // Réinitialiser les tableaux en mémoire pour le nouveau plateau
         this.tabPnlCases          = new JPanel[this.nbLigne][this.nbColonne];
         this.tabLblTotauxLignes   = new JLabel[this.nbLigne];
         this.tabLblTotauxColonnes = new JLabel[this.nbColonne];
 
-        // 3. Boucle de création (votre code actuel)
+        // Boucle de création du plateau (cases + totaux)
         for (int lig = 0; lig <= this.nbLigne; lig++)
         {
             for (int col = 0; col <= this.nbColonne; col++)
@@ -784,9 +799,9 @@ private JButton             btnReset;
                 pnlBrouillon.setLayout(new GridLayout(3, 3));
                 pnlBrouillon.setOpaque(false);
 
+                // Création des 9 labels pour le brouillon (1 à 9)                
                 for (int valeurLabel = 1; valeurLabel <= 9; valeurLabel++)
                 {
-                    // Ajout de SwingConstants.CENTER ici :
                     JLabel lblNombre = new JLabel("", SwingConstants.CENTER);
                     lblNombre.setFont(new Font("Sans-Serif", Font.PLAIN, 18));
                     lblNombre.setForeground(ConstantesIHM.COULEUR_GRIS_BROUILLON);
@@ -794,19 +809,19 @@ private JButton             btnReset;
                     pnlBrouillon.add(lblNombre);
                 }
 
+                // Si on est dans la zone du plateau (hors totaux)
                 if (lig < this.nbLigne && col < this.nbColonne)
                 {    
                     JLabel lblNombre;
                     
+                    // Si la case contient un chiffre, on l'affiche en gras, sinon on laisse vide
                     if (this.ctrl.getNombreCasePlateau(lig , col ) != 0)
                     {    
-                        // Ajout de SwingConstants.CENTER ici :
                         lblNombre = new JLabel("" + this.ctrl.getNombreCasePlateau(lig , col ), SwingConstants.CENTER);
                         lblNombre.setFont(new Font("Sans-Serif", Font.BOLD, 24));
                     }
                     else
                     {
-                        // Ajout de SwingConstants.CENTER ici :
                         lblNombre = new JLabel("", SwingConstants.CENTER);
                         lblNombre.setFont(new Font("Sans-Serif", Font.PLAIN, 24));
                     }
@@ -820,11 +835,12 @@ private JButton             btnReset;
                     this.tabPnlCases[lig][col] = pnlCellule;    
                     pnlCellule       .addMouseListener(new GereSouris(lig, col));
 
-                    // L'ASTUCE : On donne le droit de recevoir au panneau ET au texte
+                    // On donne le droit de recevoir au panneau et au texte
                     GereDepot depot = new GereDepot(lig, col);
                     pnlCellule.setTransferHandler(depot);
                     lblNombre.setTransferHandler(depot);
                 }
+                // Si on est dans la zone des totaux (dernière colonne)
                 else if (lig < this.nbLigne && col == this.nbColonne)
                 {
                     JLabel lblTtlLigne  = new JLabel(String.valueOf(this.ctrl.getTotauxLignes(lig)), SwingConstants.CENTER);
@@ -839,6 +855,7 @@ private JButton             btnReset;
                     pnlCellule          .add(lblTtlLigne); // Plus besoin du nom "VALEUR" car il n'y a qu'une carte
                     pnlCellule          .setBorder(null);
                 }
+                // Si on est dans la zone des totaux (dernière ligne)
                 else if (lig == this.nbLigne && col < this.nbColonne)
                 {
                     JLabel lblTtlColonne = new JLabel(String.valueOf(this.ctrl.getTotauxColonnes(col)), SwingConstants.CENTER);
@@ -846,24 +863,26 @@ private JButton             btnReset;
                     lblTtlColonne        .setFont(new Font("Sans-Serif", Font.BOLD, 24));
                     lblTtlColonne        .setBackground(ConstantesIHM.COULEUR_FOND);
 
-                    // NOUVEAU : On sauvegarde ce label
+                    // On sauvegarde ce label
                     this.tabLblTotauxColonnes[col] = lblTtlColonne;
 
                     pnlCellule.setBackground(ConstantesIHM.COULEUR_FOND);
-                    pnlCellule.add(lblTtlColonne); // Pareil, on l'ajoute simplement
+                    pnlCellule.add(lblTtlColonne);
                     pnlCellule.setBorder(null);
                 }
+                // Sinon (on est dans le coin en bas à droite, case inutile)
                 else
                 {
                     pnlCellule.setBorder(null);
                     pnlCellule.setBackground(this.getBackground());
                 }
                 
-                this.pnlPlateau.add(pnlCellule);         // Le panel qui affichera le plateau ajoute le pnlCellule
+                this.pnlPlateau.add(pnlCellule);  // Le panel qui affichera le plateau ajoute le pnlCellule
             }
         }
     }
 
+    // Méthode qui dessine les boutons du pavé numérique
     public void dessinerBoutons()
     {
         this.pnlNbres.removeAll(); // On efface les anciens boutons
@@ -879,6 +898,7 @@ private JButton             btnReset;
             btnTmp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
             btnTmp.setFocusPainted(false);
 
+            // On ajoute le transfert de données pour le drag & drop
             btnTmp.setTransferHandler(new TransferHandler() 
             {
                 @Override
@@ -892,6 +912,7 @@ private JButton             btnReset;
                 }
             });
 
+            // On ajoute un écouteur pour le drag & drop
             btnTmp.addMouseMotionListener(new MouseMotionAdapter() 
             {
                 public void mouseDragged(MouseEvent e)
@@ -901,6 +922,7 @@ private JButton             btnReset;
                 }
             });
 
+            // On ajoute un écouteur pour le survol de la souris
             btnTmp.addMouseListener(new MouseAdapter() 
             {
                 @Override
@@ -931,7 +953,7 @@ private JButton             btnReset;
             }
             else // S'il est déjà sur le plateau d'origine
             {
-                btnTmp.setBackground(ConstantesIHM.COULEUR_GRIS_PLACE); // GRIS
+                btnTmp.setBackground(ConstantesIHM.COULEUR_GRIS_PLACE);
             }
             
             // On ajoute le bouton au groupe et aux actions dans tous les cas
@@ -940,21 +962,22 @@ private JButton             btnReset;
             this.pnlNbres.add(btnTmp);
         }
 
-        // On force Swing à mettre à jour l'affichage de cette zone
+        // On force à mettre à jour l'affichage de cette zone
         this.pnlNbres.revalidate();
         this.pnlNbres.repaint();
     }
 
+    // Méthode qui met à jour l'affichage du plateau et des totaux
     public void majPlateau()
     {
-        // 1. Remettre les cases de jeu de la bonne couleur et actualiser le texte
+        // On remet les cases de jeu de la bonne couleur et actualise le texte
         for (int lig = 0; lig < this.nbLigne; lig++)
         {
             for (int col = 0; col < this.nbColonne; col++)
             {
                 Color couleurCase = Color.WHITE;
 
-                // Si c'est la case cliquée par la souris, on l'affiche en bleu
+                // Si c'est la case cliquée par la souris, on l'affiche en COULEUR_SELECTION
                 if (lig == this.ligSelectionne && col == this.colSelectionne) 
                 {
                     couleurCase = ConstantesIHM.COULEUR_SELECTION;
@@ -962,19 +985,19 @@ private JButton             btnReset;
 
                 this.tabPnlCases[lig][col].setBackground(couleurCase);
 
-                // 1. On récupère le grand Label (qui est toujours le composant 0 de notre paquet)
+                // On récupère le grand Label (qui est toujours le composant 0 de notre paquet)
                 JLabel lbl = (JLabel) this.tabPnlCases[lig][col].getComponent(0);
                 
-                // 2. On récupère le "croupier" (le CardLayout) qui gère cette case précise
+                // On récupère le "croupier" (le CardLayout) qui gère cette case précise
                 CardLayout croupier = (CardLayout) this.tabPnlCases[lig][col].getLayout();
                 
-                // 3. On demande au métier s'il y a un vrai chiffre placé ici
+                // On demande au métier s'il y a un vrai chiffre placé ici
                 int vraiChiffre = this.ctrl.getNombreCasePlateau(lig, col);
                 
                 if (vraiChiffre == 0) 
                 {
                     lbl.setText(""); 
-                    // La case est vide : on dit au croupier d'afficher la mini-grille !
+                    // La case est vide : on dit au croupier d'afficher la mini-grille
                     croupier.show(this.tabPnlCases[lig][col], "BROUILLON");
                 } 
                 else 
@@ -986,13 +1009,13 @@ private JButton             btnReset;
                     else 
                         lbl.setFont(new Font("Sans-Serif", Font.PLAIN, 24));
                     
-                    // La case est remplie : on dit au croupier de cacher le brouillon et d'afficher le gros chiffre !
+                    // La case est remplie : on dit au croupier de cacher le brouillon et d'afficher le gros chiffre
                     croupier.show(this.tabPnlCases[lig][col], "VALEUR");
                 }
             }
         }
 
-        // 2. Gestion de la coloration des Labels de totaux en mode Validation
+        // Gestion de la coloration des Labels de totaux en mode Validation
         Color vertFonce = ConstantesIHM.COULEUR_VERT_VALIDE; 
 
         for (int lig = 0; lig < this.nbLigne; lig++)
@@ -1019,6 +1042,7 @@ private JButton             btnReset;
         this.repaint();
     }
 
+    // Méthode qui met à jour l'affichage des boutons du pavé numérique
     public void majBoutons()
     {
         java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
@@ -1037,6 +1061,7 @@ private JButton             btnReset;
         }
     }
 
+    // Méthode qui initialise le bouton Indice en fonction de la difficulté
     private void initBoutonIndice()
     {
         int difficulte = this.ctrl.getDifficulte();
@@ -1045,7 +1070,7 @@ private JButton             btnReset;
         else                      this.nbIndicesRestants = 0;
 
         // On gère la couleur et l'activation du bouton Indice
-        this.btnIndice.setText("  " + this.nbIndicesRestants); // Optionnel : met à jour le chiffre sur le bouton
+        this.btnIndice.setText("  " + this.nbIndicesRestants); // On met à jour le chiffre sur le bouton
         if (this.nbIndicesRestants > 0)
         {
             this.btnIndice.setBackground(ConstantesIHM.COULEUR_INDICE_ACTIVE);
@@ -1058,6 +1083,7 @@ private JButton             btnReset;
         }
     }
 
+    // Méthode qui initialise le nombre de validations restantes
     private void initNbValidations()
     {
         this.nbValidationsMax = 3;
@@ -1066,6 +1092,7 @@ private JButton             btnReset;
         this.majAffichageValidation();
     }
 
+    // Méthode qui met à jour l'affichage du nombre de validations restantes et la couleur du texte
     private void majAffichageValidation()
     {
         this.lblValidation.setText("Nombre de validations restantes : " + this.nbValidationsRestantes);
@@ -1085,6 +1112,7 @@ private JButton             btnReset;
         }
     }
 
+    // Méthode qui remet le plateau dans l'état initial (efface toutes les cases modifiables)
     public void reset()
     {
         this.ligSelectionne = -1;
@@ -1100,15 +1128,13 @@ private JButton             btnReset;
         {
             for (int col = 0; col < this.nbColonne; col++)
             {
-                // -- NOUVEAU : Nettoyage de la carte Brouillon --
+                // Nettoyage de la carte Brouillon 
                 JPanel pnlBrouillon = (JPanel) tabPnlCases[lig][col].getComponent(1);
 
                 for (int i = 0; i < 9; i++) 
                     ((JLabel) pnlBrouillon.getComponent(i)).setText("");
                 
-                // -- Suite du code existant --
-                // On vérifie si la case est modifiable...
-                 // On vérifie si la case est modifiable (on ne touche pas aux chiffres de départ)
+                // On vérifie si la case est modifiable (on ne touche pas aux chiffres de départ)
                 if (this.ctrl.getCasePlateau(lig, col).estModifiable())
                 {
                     JLabel lblContenu = (JLabel) tabPnlCases[lig][col].getComponent(0);
@@ -1126,6 +1152,8 @@ private JButton             btnReset;
                         if (this.grpBtn != null) 
                         {
                             java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
+                            
+                            // Boucle qui parcourt tous les boutons du pavé numérique pour trouver celui qui correspond au chiffre effacé
                             while (elements.hasMoreElements()) 
                             {
                                 AbstractButton btn = elements.nextElement();
@@ -1144,6 +1172,7 @@ private JButton             btnReset;
         this.majPlateau();
     }
 
+    // Méthode qui remet le plateau dans l'état initial (efface toutes les cases modifiables) et demande un nouveau plateau au métier
     public void restart()
     {
         // On demande un tout nouveau plateau au métier via le contrôleur
@@ -1165,6 +1194,7 @@ private JButton             btnReset;
         this.dessinerPlateau();
         this.dessinerBoutons();
 
+        // On met à jour l'affichage du plateau et des totaux
         this.majPlateau();
     }
 
@@ -1270,14 +1300,14 @@ private JButton             btnReset;
             }
             else
             {
-                // 1. On vérifie qu'un bouton chiffre est bien sélectionné, que la case est modifiable et qu'elle est VIDE !
+                // On vérifie qu'un bouton chiffre est bien sélectionné, que la case est modifiable et qu'elle est VIDE !
                 if (PanelJeu.this.btnActif != null 
                     && PanelJeu.this.ctrl.getCasePlateau(this.ligSouris, this.colSouris).estModifiable()
                     && PanelJeu.this.ctrl.getNombreCasePlateau(this.ligSouris, this.colSouris) == 0)
                 {
                     int valeur = Integer.parseInt(PanelJeu.this.btnActif.getText());
 
-                    // NOUVEAU : On refuse si le chiffre est déjà sur le plateau d'origine
+                    // On refuse si le chiffre est déjà sur le plateau d'origine
                     if (PanelJeu.this.ctrl.estPresent(valeur)) 
                     {
                         PanelJeu.this.btnActif.setSelected(false);
@@ -1317,6 +1347,7 @@ private JButton             btnReset;
         }
     }
 
+    // Classe externe qui gère le drag & drop des chiffres du pavé numérique vers le plateau de jeu
     private class GereDepot extends TransferHandler
     {
         private int ligCible;

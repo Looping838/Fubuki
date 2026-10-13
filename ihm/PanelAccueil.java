@@ -56,8 +56,6 @@ public class PanelAccueil extends JPanel implements ActionListener
 	{
         if (e.getSource() == this.btnJouer)
         {
-            //this.ctrl.initPlateau(0); // changer 0 par difficulter quand boutton placer 
-            //this.frame.creerPanelJeu();
             this.frame.creerPanelChoixDiff();
             this.frame.setPnl(this.frame.getPnl(this.indice + 1));
         }
@@ -72,6 +70,7 @@ public class PanelAccueil extends JPanel implements ActionListener
     /*      Méthodes utilitaires     */
     /*-------------------------------*/
 
+    // Méthode qui crée les composants de l'interface
     private void creerComposants()
     {
         this.lblTitre = new JLabel("Fubuki");
@@ -94,6 +93,7 @@ public class PanelAccueil extends JPanel implements ActionListener
         this.btnQuitter .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/quitter.png", 30, 25)));
     }
 
+    // Méthode qui positionne les composants de l'interface
     private void positionnerComposants()
     {
         GridBagConstraints gbc = new GridBagConstraints();
@@ -116,17 +116,13 @@ public class PanelAccueil extends JPanel implements ActionListener
         gbc.insets = new Insets(0, 0, 0, 0); // Pas d'espace en dessous
         this.add(this.btnQuitter, gbc);
 
-        // 3. Le bouton Quitter
-        gbc.gridy = 2; 
-        gbc.insets = new Insets(0, 0, 0, 0); 
-        this.add(this.btnQuitter, gbc);
-
         // 4. LE RESSORT INVISIBLE
         gbc.gridy = 3; // On le place sur une 4ème ligne
-        gbc.weighty = 1.0; // La magie opère ici : il aspire tout l'espace vertical restant !
+        gbc.weighty = 1.0; // Il aspire tout l'espace vertical restant
         this.add(new JLabel(""), gbc); // On ajoute un texte vide
     }
 
+    // Méthode qui active les composants de l'interface
     private void activerComposants()
     {
         this.btnJouer.addActionListener(this);

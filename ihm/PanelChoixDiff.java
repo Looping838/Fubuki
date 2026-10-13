@@ -75,27 +75,33 @@ public class PanelChoixDiff extends JPanel implements ActionListener
     @Override
     public void actionPerformed ( ActionEvent e )
 	{
+        // Difficulté : 0 = Facile, 1 = Moyen, 2 = Difficile
+
+        // Difficulté Facile
         if (e.getSource() == this.btnFacile)
         {
-            this.ctrl.initPlateau(0); // changer 0 par difficulter quand boutton placer 
+            this.ctrl.initPlateau(0);  
             this.frame.creerPanelJeu();
             this.frame.setPnl(this.frame.getPnl(this.indice + 1));
         }
 
+        // Difficulté Moyen
         if (e.getSource() == this.btnMoyen)
         {
-            this.ctrl.initPlateau(1); // changer 0 par difficulter quand boutton placer 
+            this.ctrl.initPlateau(1);
             this.frame.creerPanelJeu();
             this.frame.setPnl(this.frame.getPnl(this.indice + 1));
         }
 
+        // Difficulté Difficile
         if (e.getSource() == this.btnDifficile)
         {
-            this.ctrl.initPlateau(2); // changer 0 par difficulter quand boutton placer 
+            this.ctrl.initPlateau(2);
             this.frame.creerPanelJeu();
             this.frame.setPnl(this.frame.getPnl(this.indice + 1));
         }
 
+        // Retour à l'accueil
         if (e.getSource() == this.btnRetour)
         {
             this.frame.setPnl(this.frame.getPnl(this.indice - 1));
@@ -106,6 +112,7 @@ public class PanelChoixDiff extends JPanel implements ActionListener
     /*      Méthodes utilitaires     */
     /*-------------------------------*/
 
+     // Méthode qui crée les composants de l'interface
     private void creerComposants()
     {
         // Bordure lumiere + ombre de couleur (haut, gauche, bas, droite)
@@ -175,6 +182,7 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnDifficile.setBorder(this.bordureNormaleD);
 
 
+        // --- BOUTON RETOUR ---
         this.btnRetour      = new JButton("  Retour à l'accueil"   );
         this.btnRetour      .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnRetour      .setBackground(Color.WHITE);
@@ -184,6 +192,7 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnRetour      .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/accueil.png", 30, 25)));
     }
 
+    // Méthode qui positionne les composants de l'interface
     private void positionnerComposants()
     {
         GridBagConstraints gbc = new GridBagConstraints();
@@ -211,17 +220,18 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         gbc.insets = new Insets(0, 0, 40, 0); 
         this.add(this.btnDifficile, gbc);
 
-        // Le bouton Difficile
+        // Le bouton Retour
         gbc.gridy = 4; 
         gbc.insets = new Insets(0, 0, 0, 0); 
         this.add(this.btnRetour, gbc);
 
         // LE RESSORT INVISIBLE
-        gbc.gridy = 5; // On le place sur une 4ème ligne
+        gbc.gridy = 5; // On le place sur une 5ème ligne
         gbc.weighty = 1.0; // Il aspire tout l'espace vertical restant !
         this.add(new JLabel(""), gbc); // On ajoute un texte vide
     }
 
+    // Méthode qui active les composants de l'interface
     private void activerComposants()
     {
         this.btnFacile      .addActionListener(this);

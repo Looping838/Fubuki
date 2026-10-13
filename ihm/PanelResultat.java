@@ -72,6 +72,7 @@ public class PanelResultat extends JPanel implements ActionListener
         }
     }
 
+     // Méthode qui crée les composants de l'interface
     private void creerComposants()
     {
         this.btnAccueil     = new JButton("  Retourner à l'accueil");
@@ -100,6 +101,7 @@ public class PanelResultat extends JPanel implements ActionListener
 
         this.lblResultat    = new JLabel("", SwingConstants.CENTER);
         
+        // Si victoire, on affiche "VICTOIRE !" en vert, sinon on affiche "DEFAITE .." en rouge
         if (this.estVictoire)
         {
             this.lblResultat.setText("VICTOIRE !");
@@ -114,39 +116,41 @@ public class PanelResultat extends JPanel implements ActionListener
         this.lblResultat.setFont(new Font("Sans-Serif", Font.BOLD, 70));
     }
 
+    // Méthode qui positionne les composants de l'interface
     private void positionnnerComposants()
     {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0; // Tout sera empilé dans la même colonne
         gbc.anchor = GridBagConstraints.CENTER; // Centré horizontalement
 
-        // Le Titre
+        // Le Label Resultat
         gbc.gridy = 0; // Tout en haut de notre grille
         // Insets(Haut, Gauche, Bas, Droite) = grand espace sous le titre
         gbc.insets = new Insets(130, 0, 150, 0);
         this.add(this.lblResultat, gbc);
 
-        // Le bouton Facile
+        // Le bouton Accueil
         gbc.gridy = 1; // En dessous du titre
-        gbc.insets = new Insets(50, 0, 20, 0); // Petit espace de 20px sous ce bouton
+        gbc.insets = new Insets(50, 0, 20, 0); // Petit espace de 50px au-dessus, et 20px sous ce bouton
         this.add(this.btnAccueil, gbc);
 
-        // Le bouton Moyen
+        // Le bouton Recommencer
         gbc.gridy = 2; // Tout en bas
-        gbc.insets = new Insets(0, 0, 20, 0); // Pas d'espace en dessous
+        gbc.insets = new Insets(0, 0, 20, 0); 
         this.add(this.btnRecommencer, gbc);
 
-        // Le bouton Moyen
+        // Le bouton Quitter 
         gbc.gridy = 3; // Tout en bas
-        gbc.insets = new Insets(0, 0, 20, 0); // Pas d'espace en dessous
+        gbc.insets = new Insets(0, 0, 20, 0);
         this.add(this.btnQuitter, gbc);
 
         // LE RESSORT INVISIBLE
         gbc.gridy = 4; // On le place sur une 4ème ligne
-        gbc.weighty = 1.0; // Il aspire tout l'espace vertical restant !
+        gbc.weighty = 1.0; // Il aspire tout l'espace vertical restant
         this.add(new JLabel(""), gbc); // On ajoute un texte vide
     }
 
+    // Méthode qui active les composants de l'interface
     private void activerComposants()
     {
         this.btnAccueil     .addActionListener(this);
