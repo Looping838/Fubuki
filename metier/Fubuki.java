@@ -43,44 +43,7 @@ public class Fubuki
 
     public Pile    getPile() { return this.pile ;}
 
-    public void    setDifficulte(int difficulte)
-    {
-        this.difficulte = difficulte ;
-    }
-
-    public int     getDifficulte () { return this.difficulte ;}
-    
-    public void    plateauJeu ()
-    {
-        this.plateau.plateauJeu(this.difficulte);
-    }
-
-    public void     plateauVide ()
-    {
-        this.plateau.plateauVide();
-    }
-
-    public boolean estPresent ( int nbr )
-    {
-        return this.estPresent(nbr);
-    }
-
-    public boolean estGagne ()
-    {
-        return this.estGagne() ;
-    }
-
-    public void effacerChiffre(int ligne, int colonne)  
-    { 
-        this.plateau.setCase(ligne, colonne, 0);
-    }
-
-    public void echangerNbr(int lig1, int col1, int lig2, int col2) 
-    {
-        this.plateau.echangerNbr(lig1, col1, lig2, col2);
-    }
-
-    public void getIndice () 
+    public void    getIndice () 
     {
         Random rand = new Random();
 
@@ -113,5 +76,43 @@ public class Fubuki
         }
 
     }
-}   
+
+    public int     getDifficulte () { return this.difficulte ;}
+    
+    public void    setDifficulte(int difficulte)
+    {
+        this.difficulte = difficulte ;
+    }
+
+    public boolean estPresent ( int nbr )
+    {
+        return this.estPresent(nbr);
+    }
+
+    public boolean estGagne ()
+    {
+        return this.estGagne() ;
+    }
+ 
+    public void    plateauJeu ()
+    {
+        this.plateau.plateauJeu(this.difficulte);
+    }
+
+    public void    plateauVide ()
+    {
+        this.plateau.plateauVide();
+    }
+
+    public void    effacerChiffre(int ligne, int colonne)  
+    { 
+        this.plateau.setCase(ligne, colonne, 0);
+    }
+
+    public void    echangerNbr(int lig1, int col1, int lig2, int col2) 
+    {
+        this.plateau.echangerNbr(lig1, col1, lig2, col2);
+    }
+
+    }   
 

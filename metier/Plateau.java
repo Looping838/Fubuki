@@ -47,9 +47,9 @@ public class Plateau
 
     public void     setTotauxLignes   (int x   , int nbr)      { this.totauxLignes  [x] = nbr  ;}
     public void     setTotauxColonnes (int y   , int nbr)      { this.totauxColonnes[y] = nbr  ;}
-    public void     setCase           (int x , int y , int nbr)   { this.plateau[x][y].set_nombre(nbr) ; }
+    public void     setCase           (int x , int y , int nbr){ this.plateau[x][y].set_nombre(nbr) ; }
 
-    public void initPlateau()
+    public void     initPlateau()
     {
         melangerNombres();
 
@@ -81,22 +81,7 @@ public class Plateau
         }
     }
 
-    private void melangerNombres()
-    {
-        Random rand = new Random();
-        for (int i = this.nbrPossible.length - 1; i > 0; i--)
-        {
-            int j = rand.nextInt(i + 1);
-            int temp = this.nbrPossible[i];
-            this.nbrPossible[i] = nbrPossible[j];
-            this.nbrPossible[j] = temp;
-        }
-    }
-
-
-
-
-    public void    plateauJeu (int difficulte)
+    public void     plateauJeu (int difficulte)
     {
         if ( difficulte == 0 )
         {
@@ -132,7 +117,7 @@ public class Plateau
             }
     }
 
-    public void plateauVide ()
+    public void     plateauVide ()
     {
         for ( int cpt = 0 ; cpt < this.getNbLigne() ; cpt ++ )
         {
@@ -146,7 +131,7 @@ public class Plateau
         }
     }
 
-    public boolean estPresent ( int nbr )
+    public boolean  estPresent ( int nbr )
     {
         for ( int cpt = 0 ; cpt < this.getNbLigne() ; cpt ++ )
             for ( int cpt2 = 0 ; cpt2 < this.getNbColonne() ; cpt2 ++ )
@@ -156,7 +141,7 @@ public class Plateau
         return false ;
     }
 
-    public boolean estGagne ()
+    public boolean  estGagne ()
     {
 
         for (int cpt = 0; cpt < this.getNbLigne(); cpt++)
@@ -184,7 +169,7 @@ public class Plateau
         return true;
     }
 
-    public void echangerNbr(int lig1, int col1, int lig2, int col2) 
+    public void     echangerNbr(int lig1, int col1, int lig2, int col2) 
     {
         // On récupère les deux objets Case via le Plateau
         Case case1 = this.getCasePlateau(lig1, col1);
@@ -195,4 +180,17 @@ public class Plateau
         case1.set_nombre(case2.get_nombre());
         case2.set_nombre(memoire);
     }
+
+    private void    melangerNombres()
+    {
+        Random rand = new Random();
+        for (int i = this.nbrPossible.length - 1; i > 0; i--)
+        {
+            int j = rand.nextInt(i + 1);
+            int temp = this.nbrPossible[i];
+            this.nbrPossible[i] = nbrPossible[j];
+            this.nbrPossible[j] = temp;
+        }
+    }
+
 }
