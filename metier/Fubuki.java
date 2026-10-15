@@ -86,12 +86,12 @@ public class Fubuki
 
     public boolean estPresent ( int nbr )
     {
-        return this.estPresent(nbr);
+        return this.plateau.estPresent(nbr);
     }
 
     public boolean estGagne ()
     {
-        return this.estGagne() ;
+        return this.plateau.estGagne() ;
     }
  
     public void    plateauJeu ()
