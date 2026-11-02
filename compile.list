@@ -2,6 +2,7 @@
 ./metier/Fubuki.java
 ./metier/Plateau.java
 ./metier/Pile.java
+./metier/lireGrille.java
 
 ./controleur/Controleur.java
 

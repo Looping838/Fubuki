@@ -9,8 +9,23 @@ public class Fubuki
     private Plateau plateauComplet ;
     private int     difficulte ;
     private Pile    pile ;
+    private boolean grilleJour ;
 
     public Fubuki (Controleur ctrl , int difficulte )
+    {
+        this.grilleJour        = true ;
+
+        if ( grilleJour )
+        {
+            this.initPlateauJour(ctrl);
+        }
+        else 
+            this.initPlateau(ctrl, difficulte);
+
+        this.pile = new Pile(ctrl);
+    }
+
+    public void initPlateau ( Controleur ctrl , int difficulte )
     {
         this.difficulte        = difficulte ; 
         this.plateau           = new Plateau(ctrl);
@@ -30,8 +45,19 @@ public class Fubuki
         }
         
         this.plateauVide() ;
+    }
 
-        this.pile = new Pile(ctrl);
+    public void initPlateauJour(Controleur ctrl)
+    {
+        this.plateau        = new Plateau(ctrl);
+        this.plateauComplet = new Plateau(ctrl);
+
+        boolean succes = lireGrille.chargerGrille(this.plateau, this.plateauComplet);
+
+        if (!succes)
+        {
+            System.err.println("Impossible de charger la grille du jour.");
+        }
     }
 
     public Plateau getPlateau() 
