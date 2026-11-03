@@ -47,14 +47,8 @@ Le projet suit une architecture de type MVC (Modèle-Vue-Contrôleur) :
 Depuis la racine du projet dans un terminal :
 Bash
 
-
-## Compilation de l'ensemble du projet
-javac @compile.list
-
-
 ## Exécution de l'application
-java controleur.Controleur
-
+./run.sh
 
 ## Rôle des classes principales
 
