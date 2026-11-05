@@ -48,7 +48,7 @@ Depuis la racine du projet dans un terminal :
 Bash
 
 ## Exécution de l'application
-./run.sh
+./Fubuki.sh
 
 ## Rôle des classes principales
 
