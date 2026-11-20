@@ -113,7 +113,7 @@ public class PanelResultat extends JPanel implements ActionListener
             this.lblResultat.setForeground(ConstantesIHM.COULEUR_DEFAITE);
         }
 
-        this.lblResultat.setFont(new Font("Sans-Serif", Font.BOLD, 70));
+        this.lblResultat.setFont(new Font("Noto Serif Display Black", Font.BOLD, 70));
     }
 
     // Méthode qui positionne les composants de l'interface
