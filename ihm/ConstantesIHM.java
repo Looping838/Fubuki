@@ -22,6 +22,7 @@ public class ConstantesIHM
     public static final Color COULEUR_DEFAITE           = new Color(255, 0  , 0  );
     public static final Color COULEUR_SEPARATEUR        = new Color(150, 150, 150);
     public static final Color COULEUR_FOND_SEPARATEUR   = new Color(0 , 0 , 0 , 0);
+    public static final Color COULEUR_FOND_MENUBAR      = new Color(245, 245, 225);
 
     public static final Color LUMIERE               = Color.WHITE;
     public static final Color OMBRE                 = Color.LIGHT_GRAY;

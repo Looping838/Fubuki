@@ -99,7 +99,7 @@ public class FrameJeu extends JFrame
         // Création de la barre de menu principale
         JMenuBar barreMenu      = new JMenuBar();
         barreMenu               .setOpaque(true);
-        barreMenu               .setBackground(ConstantesIHM.COULEUR_FOND);
+        barreMenu               .setBackground(ConstantesIHM.COULEUR_FOND_MENUBAR);
         barreMenu               .setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ConstantesIHM.COULEUR_SEPARATEUR));
 
         // Création de l'onglet "Aide"

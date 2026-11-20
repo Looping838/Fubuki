@@ -74,7 +74,7 @@ public class PanelAccueil extends JPanel implements ActionListener
     private void creerComposants()
     {
         this.lblTitre = new JLabel("Fubuki");
-        this.lblTitre.setFont(new Font("Sans-Serif", Font.BOLD, 80));
+        this.lblTitre.setFont(new Font("Noto Serif Display Black", Font.BOLD, 80));
 
         this.btnJouer   = new JButton("  Jouer !");
         this.btnJouer   .setFont(new Font("Sans-Serif", Font.PLAIN, 24));

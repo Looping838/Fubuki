@@ -328,7 +328,7 @@ private JButton             btnReset;
 
         this.lblValidation          = new JLabel();
         this.lblValidation          .setOpaque(false);
-        this.lblValidation          .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+        this.lblValidation          .setFont(new Font("Sans-Serif", Font.BOLD, 18));
         this.lblValidation          .setLayout(new FlowLayout(FlowLayout.CENTER, 10, 15));
 
         this.initNbValidations();
@@ -459,7 +459,7 @@ private JButton             btnReset;
         this.pnlBandeau.add(lblValidation);
         
         this.pnlHaut   .add(pnlBandeau     , BorderLayout.CENTER  );
-        this.pnlHaut   .add(separateurHaut , BorderLayout.SOUTH );
+        //this.pnlHaut   .add(separateurHaut , BorderLayout.SOUTH );
 
         GridBagConstraints gbcOutils    = new GridBagConstraints();
         gbcOutils.fill                  = GridBagConstraints.BOTH; // Pour que les boutons s'étirent bien
@@ -803,7 +803,7 @@ private JButton             btnReset;
                 for (int valeurLabel = 1; valeurLabel <= 9; valeurLabel++)
                 {
                     JLabel lblNombre = new JLabel("", SwingConstants.CENTER);
-                    lblNombre.setFont(new Font("Sans-Serif", Font.PLAIN, 18));
+                    lblNombre.setFont(new Font("Sans-Serif", Font.ITALIC, 18));
                     lblNombre.setForeground(ConstantesIHM.COULEUR_GRIS_BROUILLON);
 
                     pnlBrouillon.add(lblNombre);
@@ -823,7 +823,7 @@ private JButton             btnReset;
                     else
                     {
                         lblNombre = new JLabel("", SwingConstants.CENTER);
-                        lblNombre.setFont(new Font("Sans-Serif", Font.PLAIN, 24));
+                        lblNombre.setFont(new Font("Sans-Serif", Font.ITALIC, 24));
                     }
 
                     lblNombre.setOpaque(false); 
@@ -1007,7 +1007,7 @@ private JButton             btnReset;
                     if (!this.ctrl.getCasePlateau(lig, col).estModifiable()) 
                         lbl.setFont(new Font("Sans-Serif", Font.BOLD, 24));
                     else 
-                        lbl.setFont(new Font("Sans-Serif", Font.PLAIN, 24));
+                        lbl.setFont(new Font("Sans-Serif", Font.ITALIC, 24));
                     
                     // La case est remplie : on dit au croupier de cacher le brouillon et d'afficher le gros chiffre
                     croupier.show(this.tabPnlCases[lig][col], "VALEUR");
