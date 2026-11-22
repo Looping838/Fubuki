@@ -85,7 +85,7 @@ public class PanelResultat extends JPanel implements ActionListener
 
         this.btnRecommencer = new JButton("  Recommencer une partie");
         this.btnRecommencer .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
-        this.btnRecommencer .setBackground(Color.WHITE);
+        this.btnRecommencer .setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
         this.btnRecommencer .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnRecommencer .setFocusPainted(false);
         this.btnRecommencer .setPreferredSize(new Dimension(400, 60));
@@ -129,15 +129,15 @@ public class PanelResultat extends JPanel implements ActionListener
         gbc.insets = new Insets(130, 0, 150, 0);
         this.add(this.lblResultat, gbc);
 
-        // Le bouton Accueil
-        gbc.gridy = 1; // En dessous du titre
-        gbc.insets = new Insets(50, 0, 20, 0); // Petit espace de 50px au-dessus, et 20px sous ce bouton
-        this.add(this.btnAccueil, gbc);
-
         // Le bouton Recommencer
-        gbc.gridy = 2; // Tout en bas
-        gbc.insets = new Insets(0, 0, 20, 0); 
+        gbc.gridy = 1; // Tout en bas
+        gbc.insets = new Insets(50, 0, 20, 0); 
         this.add(this.btnRecommencer, gbc);
+        
+        // Le bouton Accueil
+        gbc.gridy = 2; // En dessous du titre
+        gbc.insets = new Insets(0, 0, 20, 0); // Petit espace de 50px au-dessus, et 20px sous ce bouton
+        this.add(this.btnAccueil, gbc);
 
         // Le bouton Quitter 
         gbc.gridy = 3; // Tout en bas

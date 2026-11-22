@@ -12,14 +12,16 @@ import javax.swing.*;
 
 public class PanelAccueil extends JPanel implements ActionListener
 {
-    private Controleur ctrl;
-    private FrameJeu   frame;
-    private int        indice;
+    private Controleur  ctrl;
+    private FrameJeu    frame;
+    private int         indice;
 
-    private JButton    btnJouer;
-    private JButton    btnQuitter;
+    private JButton     btnJouer;
+    private JButton     btnQuitter;
 
-    private JLabel lblTitre;
+    private JLabel      lblTitre;
+
+    private JLabel      lblSousTitre;
 
     public PanelAccueil(Controleur ctrl, FrameJeu frame, int indice)
     {
@@ -76,13 +78,15 @@ public class PanelAccueil extends JPanel implements ActionListener
         this.lblTitre = new JLabel(new ImageIcon("./images/logos/Fubuki.png"));
         this.lblTitre.setFont(new Font("Noto Serif Display Black", Font.BOLD, 80));
 
+        this.lblSousTitre = new JLabel("- Le casse-tête des additions - ");
+        this.lblSousTitre.setFont(new Font("Noto Serif Display Black", Font.PLAIN, 32));
+
         this.btnJouer   = new JButton("  Jouer !");
         this.btnJouer   .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
-        this.btnJouer   .setBackground(Color.WHITE);
+        this.btnJouer   .setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
         this.btnJouer   .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnJouer   .setFocusPainted(false);
         this.btnJouer   .setPreferredSize(new Dimension(250, 60)); 
-        this.btnJouer   .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/jouer.png", 30, 25)));
 
         this.btnQuitter = new JButton("  Quitter");
         this.btnQuitter .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
@@ -90,7 +94,6 @@ public class PanelAccueil extends JPanel implements ActionListener
         this.btnQuitter .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnQuitter .setFocusPainted(false);
         this.btnQuitter .setPreferredSize(new Dimension(250, 60));
-        this.btnQuitter .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/quitter.png", 30, 25)));
     }
 
     // Méthode qui positionne les composants de l'interface
@@ -103,21 +106,26 @@ public class PanelAccueil extends JPanel implements ActionListener
         // Le Titre
         gbc.gridy = 0; // Tout en haut de notre grille
         // Insets(Haut, Gauche, Bas, Droite) = grand espace sous le titre
-        gbc.insets = new Insets(130, 0, 150, 0);
+        gbc.insets = new Insets(130, 0, 50, 0);
         this.add(this.lblTitre, gbc);
 
+        gbc.gridy = 1; // Tout en haut de notre grille
+        // Insets(Haut, Gauche, Bas, Droite) = grand espace sous le titre
+        gbc.insets = new Insets(0, 0, 120, 0);
+        this.add(this.lblSousTitre, gbc);
+
         // Le bouton Jouer
-        gbc.gridy = 1; // En dessous du titre
+        gbc.gridy = 2; // En dessous du titre
         gbc.insets = new Insets(50, 0, 20, 0); // Petit espace de 20px sous ce bouton
         this.add(this.btnJouer, gbc);
 
         // Le bouton Quitter
-        gbc.gridy = 2; // Tout en bas
+        gbc.gridy = 3; // Tout en bas
         gbc.insets = new Insets(0, 0, 0, 0); // Pas d'espace en dessous
         this.add(this.btnQuitter, gbc);
 
         // 4. LE RESSORT INVISIBLE
-        gbc.gridy = 3; // On le place sur une 4ème ligne
+        gbc.gridy = 4; // On le place sur une 4ème ligne
         gbc.weighty = 1.0; // Il aspire tout l'espace vertical restant
         this.add(new JLabel(""), gbc); // On ajoute un texte vide
     }
@@ -131,21 +139,21 @@ public class PanelAccueil extends JPanel implements ActionListener
             @Override
             public void mouseEntered(MouseEvent e) 
             {
-                btnJouer.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnJouer.setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU_FONCE);
                 btnJouer.setForeground(Color.BLACK); // Pour que le texte reste lisible
             }
 
             @Override
             public void mouseExited(MouseEvent e) 
             {
-                btnJouer.setBackground(Color.WHITE);
+                btnJouer.setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
                 btnJouer.setForeground(Color.BLACK);
             }
 
             @Override
             public void mousePressed(MouseEvent e) 
             {
-                btnJouer.setBackground(Color.WHITE);
+                btnJouer.setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU_FONCE);
                 btnJouer.setForeground(Color.BLACK);
             }
         });

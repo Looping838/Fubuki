@@ -13,10 +13,14 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 public class PanelJeu extends JPanel implements ActionListener
 {   
     private JPanel[][]          tabPnlCases;
+
+    private Border[][]          tabBorduresNormales;
+    private Border[][]          tabBorduresSelection;
 
     private Controleur          ctrl;
     private FrameJeu            frame;
@@ -53,7 +57,7 @@ public class PanelJeu extends JPanel implements ActionListener
     private JLabel              lblValidationCoul;
 
     private JButton             btnValide;
-private JButton             btnReset;
+    private JButton             btnReset;
     private JButton             btnRestart;
     private JButton             btnAccueil;
     private JButton             btnAnnuler;
@@ -72,10 +76,12 @@ private JButton             btnReset;
     private int                 nbValidationsRestantes;
     private int                 nbValidationsMax;
 
+    private JMenuBar            barreMenu;
+
     public PanelJeu(Controleur ctrl, FrameJeu frame, int indice)
     {
         // Forcer la couleur grise quand on sélectionne un bouton de pnlNbres
-        UIManager.put("ToggleButton.select", ConstantesIHM.COULEUR_SELECTION);
+        UIManager.put("ToggleButton.select", ConstantesIHM.COULEUR_ROSE_CERVEAU);
         // Forcer la couleur noire du lbl quand le bouton est désactivé pour être plus lisible
         UIManager.put("ToggleButton.disabledText", Color.BLACK);
         
@@ -132,9 +138,15 @@ private JButton             btnReset;
                     AbstractButton btn = elements.nextElement();
                     
                     // On remet en blanc UNIQUEMENT si le bouton n'est pas placé ET n'est pas sélectionné
-                    if (btn.getBackground() != ConstantesIHM.COULEUR_GRIS_PLACE && !btn.isSelected()) 
+                    if (btn.getBackground() != ConstantesIHM.COULEUR_GRIS_PLACE) 
                     {
-                        btn.setBackground(Color.WHITE);
+                        if (!btn.isSelected()) 
+                            btn.setBackground(Color.WHITE);
+                        else
+                        {
+                            btn.setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
+                            btn.setForeground(Color.WHITE);
+                        }
                     }
                 }
             }
@@ -147,39 +159,7 @@ private JButton             btnReset;
 
         if (e.getSource() == this.btnGomme)
         {
-           if (this.ligSelectionne != -1 && this.colSelectionne != -1)
-            {
-                JLabel lblContenu = (JLabel) tabPnlCases[this.ligSelectionne][this.colSelectionne].getComponent(0);
-                String chiffreEfface = lblContenu.getText();
-                    
-                if (this.ctrl.getCasePlateau(this.ligSelectionne, this.colSelectionne).estModifiable())
-                {
-                    this.ctrl.effacerChiffre(this.ligSelectionne, this.colSelectionne);
-                    
-                    lblContenu.setText(""); 
-                    lblContenu.setForeground(null);
-
-                    if (!chiffreEfface.equals("") && !chiffreEfface.equals("0") && this.grpBtn != null) 
-                    {
-                        java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
-                        while (elements.hasMoreElements()) 
-                        {
-                            AbstractButton btn = elements.nextElement();
-                            if (btn.getText().equals(chiffreEfface)) 
-                            {
-                                btn.setBackground(Color.WHITE);
-                                break; 
-                            }
-                        }
-                    }
-                }
-
-                this.modeValidation = false; 
-                this.ligSelectionne = -1;
-                this.colSelectionne = -1;
-
-                this.majPlateau();
-            }
+           this.effacerCase(this.ligSelectionne, this.colSelectionne);
         }
 
         if (e.getSource() == this.btnIndice)
@@ -251,6 +231,7 @@ private JButton             btnReset;
                     elements.nextElement().setEnabled(false);
                 }
 
+                this.cacherMenuBar();
                 this.frame.afficherPanelResultat(true);
             }
         }
@@ -275,6 +256,7 @@ private JButton             btnReset;
         if (e.getSource() == this.btnAccueil)
         {
             this.frame.setPnl(this.frame.getPnl(0));
+            this.cacherMenuBar();
         }
     }
 
@@ -350,7 +332,7 @@ private JButton             btnReset;
 
         this.pnlBoutons             = new JPanel();
         this.pnlBoutons             .setLayout(new FlowLayout(FlowLayout.CENTER , 20, 20));
-        this.pnlBoutons             .setOpaque(false);
+        this.pnlBoutons             .setBackground(ConstantesIHM.COULEUR_FOND_MENUBAR);
 
         // Panel qui affichera les nombres à placer
         this.pnlNbres               = new JPanel();
@@ -380,7 +362,8 @@ private JButton             btnReset;
         this.dessinerPlateau();   
 
         this.btnValide              = new JButton("  Valider");
-        this.btnValide              .setBackground(Color.WHITE);
+        this.btnValide              .setBackground(ConstantesIHM.COULEUR_VERT_VALIDE);
+        this.btnValide              .setForeground(Color.WHITE);
         this.btnValide              .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnValide              .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
         this.btnValide              .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/valide.png", 30, 30)));
@@ -430,6 +413,7 @@ private JButton             btnReset;
         this.btnGomme               .setFocusPainted(false);
 
         this.btnIndice              = new JButton("");
+        this.btnIndice              .setBackground(Color.WHITE);
         this.btnIndice              .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnIndice              .setPreferredSize(new Dimension((this.tailleBoutonOutil - 10) / 2, 50));
         this.btnIndice              .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/indice.png", 40, 35)));
@@ -571,10 +555,8 @@ private JButton             btnReset;
             @Override
             public void mouseExited(MouseEvent e) 
             {
-                // Si le bouton est encore utilisable, on le remet en orange.
-                // Sinon (s'il a été utilisé), on le laisse tranquille (il sera blanc) !
                 if (btnIndice.isEnabled()) {
-                    btnIndice.setBackground(ConstantesIHM.COULEUR_INDICE_ACTIVE);
+                    btnIndice.setBackground(Color.WHITE);
                 }
             }
 
@@ -620,22 +602,22 @@ private JButton             btnReset;
             @Override
             public void mouseEntered(MouseEvent e) 
             {
-                btnValide.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnValide.setForeground(Color.BLACK); // Pour que le texte reste lisible
+                btnValide.setBackground(ConstantesIHM.COULEUR_VERT_VALIDE_SURVOL);
+                btnValide.setForeground(Color.WHITE); // Pour que le texte reste lisible
             }
 
             @Override
             public void mouseExited(MouseEvent e) 
             {
-                btnValide.setBackground(Color.WHITE);
-                btnValide.setForeground(Color.BLACK);
+                btnValide.setBackground(ConstantesIHM.COULEUR_VERT_VALIDE);
+                btnValide.setForeground(Color.WHITE);
             }
 
             @Override
             public void mousePressed(MouseEvent e) 
             {
-                btnValide.setBackground(Color.WHITE);
-                btnValide.setForeground(Color.BLACK);
+                btnValide.setBackground(ConstantesIHM.COULEUR_VERT_VALIDE_SURVOL);
+                btnValide.setForeground(Color.WHITE);
             }
         });
         
@@ -788,10 +770,10 @@ private JButton             btnReset;
         UIManager.put("MenuItem.background", Color.WHITE);
         
         // Création de la barre de menu principale
-        JMenuBar barreMenu      = new JMenuBar();
-        barreMenu               .setOpaque(true);
-        barreMenu               .setBackground(ConstantesIHM.COULEUR_FOND_MENUBAR);
-        barreMenu               .setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ConstantesIHM.COULEUR_SEPARATEUR));
+        this.barreMenu      = new JMenuBar();
+        this.barreMenu               .setOpaque(true);
+        this.barreMenu               .setBackground(ConstantesIHM.COULEUR_FOND_MENUBAR);
+        this.barreMenu               .setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ConstantesIHM.COULEUR_SEPARATEUR));
 
         // Création de l'onglet "Aide"
         JMenu menuAide          = new JMenu("Aide");
@@ -949,10 +931,15 @@ private JButton             btnReset;
         menuAide.addSeparator();
         menuAide.add(itemAPropos);
 
-        barreMenu.add(menuAide);
+        this.barreMenu.add(menuAide);
 
         // On applique la barre à la fenêtre (Frame)
-        frame.setJMenuBar(barreMenu);
+        frame.setJMenuBar(this.barreMenu);
+    }
+
+    public void cacherMenuBar()
+    {
+        this.barreMenu.setVisible(false);
     }
 
     public void dessinerPlateau()
@@ -964,6 +951,9 @@ private JButton             btnReset;
         this.tabPnlCases          = new JPanel[this.nbLigne][this.nbColonne];
         this.tabLblTotauxLignes   = new JLabel[this.nbLigne];
         this.tabLblTotauxColonnes = new JLabel[this.nbColonne];
+
+        this.tabBorduresNormales  = new Border[this.nbLigne][this.nbColonne];
+        this.tabBorduresSelection = new Border[this.nbLigne][this.nbColonne];
 
         // Boucle de création du plateau (cases + totaux)
         for (int lig = 0; lig <= this.nbLigne; lig++)
@@ -1010,6 +1000,18 @@ private JButton             btnReset;
 
                     pnlCellule       .add(lblNombre, "VALEUR");
                     pnlCellule       .add(pnlBrouillon, "BROUILLON");
+
+                    int haut   = (lig == 0)                  ? 3 : 1;
+                    int gauche = (col == 0)                  ? 3 : 1;
+                    int bas    = (lig == this.nbLigne - 1)   ? 3 : 1;
+                    int droite = (col == this.nbColonne - 1) ? 3 : 1;
+
+                    Border bordureBase = BorderFactory.createMatteBorder(haut, gauche, bas, droite, Color.BLACK);
+
+                    this.tabBorduresNormales[lig][col]  = BorderFactory.createCompoundBorder(bordureBase, ConstantesIHM.BORDURE_INTERIEURE_VIDE);
+                    this.tabBorduresSelection[lig][col] = BorderFactory.createCompoundBorder(bordureBase, ConstantesIHM.BORDURE_INTERIEURE_SELECTION);
+
+                    pnlCellule.setBorder(this.tabBorduresNormales[lig][col]);
 
                     this.tabPnlCases[lig][col] = pnlCellule;    
                     pnlCellule       .addMouseListener(new GereSouris(lig, col));
@@ -1072,7 +1074,8 @@ private JButton             btnReset;
         for (int valeurBouton = 1; valeurBouton <= 9; valeurBouton++)
         {   
             JToggleButton btnTmp = new JToggleButton(String.valueOf(valeurBouton));
-            btnTmp.setFont(new Font("Sans-Serif", Font.BOLD, 18));
+            btnTmp.setForeground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
+            btnTmp.setFont(new Font("Sans-Serif", Font.PLAIN, 18));
             btnTmp.setPreferredSize(new Dimension(tailleBoutonPave, tailleBoutonPave));
             btnTmp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
             btnTmp.setFocusPainted(false);
@@ -1110,7 +1113,7 @@ private JButton             btnReset;
                     // On n'applique le survol que si le bouton n'est pas grisé (déjà placé) et n'est pas sélectionné
                     if (btnTmp.getBackground() != ConstantesIHM.COULEUR_GRIS_PLACE && !btnTmp.isSelected()) 
                     {
-                        btnTmp.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                        btnTmp.setBackground(ConstantesIHM.COULEUR_ROSE_SURVOL);
                     }
                 }
 
@@ -1121,6 +1124,7 @@ private JButton             btnReset;
                     if (btnTmp.getBackground() != ConstantesIHM.COULEUR_GRIS_PLACE && !btnTmp.isSelected()) 
                     {
                         btnTmp.setBackground(Color.WHITE);
+                        btnTmp.setForeground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
                     }
                 }
             });
@@ -1132,7 +1136,9 @@ private JButton             btnReset;
             }
             else // S'il est déjà sur le plateau d'origine
             {
+                btnTmp.setForeground(ConstantesIHM.COULEUR_GRIS_PLACE_LABEL);
                 btnTmp.setBackground(ConstantesIHM.COULEUR_GRIS_PLACE);
+                btnTmp.setFont(new Font("Sans-Serif", Font.BOLD, 20));
             }
             
             // On ajoute le bouton au groupe et aux actions dans tous les cas
@@ -1154,15 +1160,19 @@ private JButton             btnReset;
         {
             for (int col = 0; col < this.nbColonne; col++)
             {
-                Color couleurCase = Color.WHITE;
+                boolean estModifiable = this.ctrl.getCasePlateau(lig, col).estModifiable();
+                boolean estSelectionnee = (lig == this.ligSelectionne && col == this.colSelectionne);
 
-                // Si c'est la case cliquée par la souris, on l'affiche en COULEUR_SELECTION
-                if (lig == this.ligSelectionne && col == this.colSelectionne) 
+                if (!estModifiable)
                 {
-                    couleurCase = ConstantesIHM.COULEUR_SELECTION;
+                    this.tabPnlCases[lig][col].setBackground(ConstantesIHM.COULEUR_CASE_VERROUILLEE);
+                    this.tabPnlCases[lig][col].setBorder(this.tabBorduresNormales[lig][col]);
                 }
-
-                this.tabPnlCases[lig][col].setBackground(couleurCase);
+                else
+                {
+                    this.tabPnlCases[lig][col].setBackground(Color.WHITE);
+                    this.tabPnlCases[lig][col].setBorder(estSelectionnee ? this.tabBorduresSelection[lig][col] : this.tabBorduresNormales[lig][col]);
+                }
 
                 // On récupère le grand Label (qui est toujours le composant 0 de notre paquet)
                 JLabel lbl = (JLabel) this.tabPnlCases[lig][col].getComponent(0);
@@ -1232,9 +1242,16 @@ private JButton             btnReset;
 
             // On utilise notre variable 'btn' pour faire toutes les modifications
             if (this.ctrl.estPresent(numero))
+            {
                 btn.setBackground(ConstantesIHM.COULEUR_GRIS_PLACE);
+                btn.setForeground(ConstantesIHM.COULEUR_GRIS_PLACE_LABEL);
+            }
             else
+            {
                 btn.setBackground(Color.WHITE);
+                btn.setForeground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
+                btn.setSelected(false);
+            }
 
             btn.setEnabled(true);
         }
@@ -1252,12 +1269,10 @@ private JButton             btnReset;
         this.btnIndice.setText("  " + this.nbIndicesRestants); // On met à jour le chiffre sur le bouton
         if (this.nbIndicesRestants > 0)
         {
-            this.btnIndice.setBackground(ConstantesIHM.COULEUR_INDICE_ACTIVE);
             this.btnIndice.setEnabled(true);
         }
         else
         {
-            this.btnIndice.setBackground(Color.WHITE);
             this.btnIndice.setEnabled(false); 
         }
     }
@@ -1276,7 +1291,7 @@ private JButton             btnReset;
     {
         this.lblValidation.setText("Nombre de validations restantes : " + this.nbValidationsRestantes);
 
-        // Calcul du ratio pour les couleurs
+        /*// Calcul du ratio pour les couleurs
         if (this.nbValidationsRestantes > 2) 
         {
             this.lblValidation.setForeground(new Color(0, 150, 0)); // VERT (loin de la défaite)
@@ -1288,7 +1303,7 @@ private JButton             btnReset;
         else 
         {
             this.lblValidation.setForeground(Color.RED); // ROUGE (au bord de la défaite)
-        }
+        }*/
     }
 
     // Méthode qui remet le plateau dans l'état initial (efface toutes les cases modifiables)
@@ -1377,6 +1392,37 @@ private JButton             btnReset;
         this.majPlateau();
     }
 
+    private void effacerCase(int lig, int col)
+    {
+        if (lig == -1 || col == -1) return;
+
+        JLabel lblContenu = (JLabel) this.tabPnlCases[lig][col].getComponent(0);
+        String chiffreEfface = lblContenu.getText();
+
+        if (this.ctrl.getCasePlateau(lig, col).estModifiable())
+        {
+            this.ctrl.effacerChiffre(lig, col);
+
+            lblContenu.setText("");
+            lblContenu.setForeground(null);
+
+            if (!chiffreEfface.equals("") && !chiffreEfface.equals("0") && this.grpBtn != null)
+            {
+                java.util.Enumeration<AbstractButton> elements = this.grpBtn.getElements();
+                while (elements.hasMoreElements())
+                {
+                    AbstractButton btn = elements.nextElement();
+                    if (btn.getText().equals(chiffreEfface))
+                    {
+                        btn.setBackground(Color.WHITE);
+                        btn.setForeground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
 
     // Classe interne permettant de gérer le clic de la souris pendant le Jeu
     private class GereSouris extends MouseAdapter
@@ -1390,11 +1436,21 @@ private JButton             btnReset;
             this.colSouris = col;
         }
 
+        @Override
         public void mouseClicked(MouseEvent e)
         {
-            if (PanelJeu.this.ctrl.estGagne()) 
+            if (PanelJeu.this.ctrl.estGagne()) return;
+
+            if (!PanelJeu.this.ctrl.getCasePlateau(this.ligSouris, this.colSouris).estModifiable()) return;
+
+            if (SwingUtilities.isRightMouseButton(e))
             {
-                return; // Stoppe l'exécution de la méthode ici
+                PanelJeu.this.effacerCase(this.ligSouris, this.colSouris);
+                PanelJeu.this.modeValidation = false;
+                PanelJeu.this.ligSelectionne = -1;
+                PanelJeu.this.colSelectionne = -1;
+                PanelJeu.this.majPlateau();
+                return;
             }
             
             if (!PanelJeu.this.modeBrouillon) 
@@ -1465,6 +1521,7 @@ private JButton             btnReset;
                         PanelJeu.this.ctrl.setNbrCase(this.ligSouris, this.colSouris, valeur);
                         
                         PanelJeu.this.btnActif.setBackground(ConstantesIHM.COULEUR_GRIS_PLACE);
+                        PanelJeu.this.btnActif.setForeground(ConstantesIHM.COULEUR_GRIS_PLACE_LABEL);
                         PanelJeu.this.grpBtn.clearSelection(); 
                         PanelJeu.this.btnActif = null;
 
@@ -1506,20 +1563,22 @@ private JButton             btnReset;
         }
 
         @Override
-        public void mouseEntered(MouseEvent e) 
+        public void mouseEntered(MouseEvent e)
         {
-            // On ne met la couleur de survol que si la case n'est pas celle actuellement sélectionnée
-            if (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris) 
+            if (!PanelJeu.this.ctrl.getCasePlateau(this.ligSouris, this.colSouris).estModifiable()) return;
+
+            if (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris)
             {
-                PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setBackground(ConstantesIHM.COULEUR_ROSE_SURVOL);
             }
         }
 
         @Override
-        public void mouseExited(MouseEvent e) 
+        public void mouseExited(MouseEvent e)
         {
-            // Quand la souris part, on remet en blanc QUE si la case n'est pas sélectionnée
-            if (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris) 
+            if (!PanelJeu.this.ctrl.getCasePlateau(this.ligSouris, this.colSouris).estModifiable()) return;
+
+            if (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris)
             {
                 PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setBackground(Color.WHITE);
             }
@@ -1596,6 +1655,7 @@ private JButton             btnReset;
                             if (btn.getText().equals(chiffreEcrase)) 
                             {
                                 btn.setBackground(Color.WHITE);
+                                btn.setForeground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
                                 break;
                             }
                         }
@@ -1616,6 +1676,7 @@ private JButton             btnReset;
                         if (btn.getText().equals(String.valueOf(valeurAjoutee))) 
                         {
                             btn.setBackground(ConstantesIHM.COULEUR_GRIS_PLACE);
+                            btn.setForeground(ConstantesIHM.COULEUR_GRIS_PLACE_LABEL);
                             PanelJeu.this.grpBtn.clearSelection();
                             break;
                         }

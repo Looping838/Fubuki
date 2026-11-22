@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.*;
 import javax.swing.*;
@@ -21,6 +22,8 @@ public class PanelChoixDiff extends JPanel implements ActionListener
     private JButton     btnMoyen;
     private JButton     btnDifficile;
     private JButton     btnRetour;
+
+    private JPanel      pnlDifficulte;
 
     public JLabel       lblTitre;
 
@@ -126,7 +129,7 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnFacile.setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnFacile.setBackground(Color.WHITE); // Le bouton devient blanc
         this.btnFacile.setFocusPainted(false);
-        this.btnFacile.setPreferredSize(new Dimension(250, 60));
+        this.btnFacile.setPreferredSize(new Dimension(250, 250));
         this.btnFacile.setIcon(new ImageIcon(this.frame.creerImages("./images/icones/facile.png", 30, 25))); 
         
         this.ombreF  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_FACILE);
@@ -147,7 +150,7 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnMoyen.setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnMoyen.setBackground(Color.WHITE); // Le bouton devient blanc
         this.btnMoyen.setFocusPainted(false);
-        this.btnMoyen.setPreferredSize(new Dimension(250, 60)); 
+        this.btnMoyen.setPreferredSize(new Dimension(250, 250)); 
         this.btnMoyen.setIcon(new ImageIcon(this.frame.creerImages("./images/icones/moyen.png", 30, 25)));
 
         this.ombreM  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_MOYEN);
@@ -167,7 +170,7 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnDifficile.setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnDifficile.setBackground(Color.WHITE); // Le bouton devient blanc
         this.btnDifficile.setFocusPainted(false);
-        this.btnDifficile.setPreferredSize(new Dimension(250, 60)); 
+        this.btnDifficile.setPreferredSize(new Dimension(250, 250)); 
         this.btnDifficile.setIcon(new ImageIcon(this.frame.creerImages("./images/icones/difficile.png", 30, 25)));
 
         this.ombreD  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_DIFFICILE);
@@ -190,11 +193,18 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.btnRetour      .setFocusPainted(false);
         this.btnRetour      .setPreferredSize(new Dimension(250, 60)); 
         this.btnRetour      .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/accueil.png", 30, 25)));
+
+        this.pnlDifficulte  = new JPanel(new GridLayout(1, 3, 25, 0));
+        this.pnlDifficulte  .setOpaque(false);
     }
 
     // Méthode qui positionne les composants de l'interface
     private void positionnerComposants()
     {
+        this.pnlDifficulte.add(this.btnFacile);
+        this.pnlDifficulte.add(this.btnMoyen);
+        this.pnlDifficulte.add(this.btnDifficile);
+        
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0; // Tout sera empilé dans la même colonne
         gbc.anchor = GridBagConstraints.CENTER; // Centré horizontalement
@@ -202,31 +212,21 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         // Le Titre
         gbc.gridy = 0; // Tout en haut de notre grille
         // Insets(Haut, Gauche, Bas, Droite) = grand espace sous le titre
-        gbc.insets = new Insets(130, 0, 150, 0);
+        gbc.insets = new Insets(180, 0, 80, 0);
         this.add(lblTitre, gbc);
 
-        // Le bouton Facile
+        // Le panel Difficulté
         gbc.gridy = 1; // En dessous du titre
-        gbc.insets = new Insets(50, 0, 20, 0); // Petit espace de 20px sous ce bouton
-        this.add(this.btnFacile, gbc);
-
-        // Le bouton Moyen
-        gbc.gridy = 2; // Tout en bas
-        gbc.insets = new Insets(0, 0, 20, 0); // Pas d'espace en dessous
-        this.add(this.btnMoyen, gbc);
-
-        // Le bouton Difficile
-        gbc.gridy = 3; 
-        gbc.insets = new Insets(0, 0, 40, 0); 
-        this.add(this.btnDifficile, gbc);
+        gbc.insets = new Insets(0, 0, 20, 0); // Petit espace de 20px sous ce bouton
+        this.add(this.pnlDifficulte, gbc);
 
         // Le bouton Retour
-        gbc.gridy = 4; 
-        gbc.insets = new Insets(0, 0, 0, 0); 
+        gbc.gridy = 2; 
+        gbc.insets = new Insets(50, 0, 0, 0); 
         this.add(this.btnRetour, gbc);
 
         // LE RESSORT INVISIBLE
-        gbc.gridy = 5; // On le place sur une 5ème ligne
+        gbc.gridy = 3; // On le place sur une 5ème ligne
         gbc.weighty = 1.0; // Il aspire tout l'espace vertical restant !
         this.add(new JLabel(""), gbc); // On ajoute un texte vide
     }
