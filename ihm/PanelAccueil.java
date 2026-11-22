@@ -73,7 +73,7 @@ public class PanelAccueil extends JPanel implements ActionListener
     // Méthode qui crée les composants de l'interface
     private void creerComposants()
     {
-        this.lblTitre = new JLabel("Fubuki");
+        this.lblTitre = new JLabel(new ImageIcon("./images/logos/Fubuki.png"));
         this.lblTitre.setFont(new Font("Noto Serif Display Black", Font.BOLD, 80));
 
         this.btnJouer   = new JButton("  Jouer !");
