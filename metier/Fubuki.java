@@ -13,7 +13,7 @@ public class Fubuki
 
     public Fubuki (Controleur ctrl , int difficulte )
     {
-        this.grilleJour        = true ;
+        this.grilleJour        = false ;
 
         if ( grilleJour )
         {
