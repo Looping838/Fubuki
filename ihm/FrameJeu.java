@@ -84,4 +84,16 @@ public class FrameJeu extends JFrame
 		
         return imgRedimensionnee;
     }
+
+    // Permet de créer une image à partir d'un chemin et de la redimensionner
+    public Image creerDessins (String chemin)
+    {
+        ImageIcon   imgOriginale;
+        Image       imgRedimensionnee;
+
+        imgOriginale        = new ImageIcon(chemin);
+        imgRedimensionnee   = imgOriginale.getImage().getScaledInstance(imgOriginale.getIconWidth(), imgOriginale.getIconHeight(), Image.SCALE_SMOOTH);
+		
+        return imgRedimensionnee;
+    }
 }

@@ -29,22 +29,26 @@ public class ConstantesIHM
     public static final Color COULEUR_FOND_MENUBAR      = new Color(240, 241, 237); 
     public static final Color COULEUR_CASE_VERROUILLEE  = new Color(225, 228, 232);
 
-    public static final Color LUMIERE               = Color.WHITE;
-    public static final Color OMBRE                 = Color.LIGHT_GRAY;
+    public static final Color LUMIERE                   = Color.WHITE;
+    public static final Color OMBRE                     = Color.LIGHT_GRAY;
 
     // Couleurs de difficulté
-    public static final Color VERT_DIFFICULTE       = new Color(135, 233, 144);
-    public static final Color ORANGE_DIFFICULTE     = new Color(255, 215, 0  );
-    public static final Color ROUGE_DIFFICULTE      = new Color(255, 94 , 77 );
+    public static final Color VERT_DIFFICULTE           = new Color(135, 233, 144);
+    public static final Color ORANGE_DIFFICULTE         = new Color(253, 224, 130);
+    public static final Color ROUGE_DIFFICULTE          = new Color(252, 185, 185);
 
-    public static final Color OMBRE_FACILE          = new Color(135, 233, 144);
-    public static final Color OMBRE_MOYEN           = new Color(255, 215, 0 );
-    public static final Color OMBRE_DIFFICILE       = new Color(255, 94 , 77 );
+    public static final Color OMBRE_FACILE              = new Color(135, 233, 144);
+    public static final Color OMBRE_MOYEN               = new Color(255, 215, 0 );
+    public static final Color OMBRE_DIFFICILE           = new Color(255, 94 , 77 );
+
+    public static final Color COULEUR_FOND_BOUTON_FACILE= new Color(176, 242, 182);
+    public static final Color COULEUR_FOND_BOUTON_MOYEN = new Color(254, 243, 199);
+    public static final Color COULEUR_FOND_BOUTON_DIFF  = new Color(254, 226, 226);
 
     // Bordures
-    public static final Border RELIEF               = BorderFactory.createRaisedBevelBorder();
-    public static final Border MARGE                = BorderFactory.createEmptyBorder(10, 25, 10, 25);
-    public static final Border MARGE_GOMME          = BorderFactory.createEmptyBorder(2 , 15, 2 , 15);
+    public static final Border RELIEF                   = BorderFactory.createRaisedBevelBorder();
+    public static final Border MARGE                    = BorderFactory.createEmptyBorder(10, 25, 10, 25);
+    public static final Border MARGE_GOMME              = BorderFactory.createEmptyBorder(2 , 15, 2 , 15);
 
     public static final Border BORDURE_INTERIEURE_VIDE      = BorderFactory.createEmptyBorder(3, 3, 3, 3);
     public static final Border BORDURE_INTERIEURE_SELECTION = BorderFactory.createLineBorder(COULEUR_ROSE_CERVEAU, 3);

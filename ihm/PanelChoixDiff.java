@@ -126,11 +126,14 @@ public class PanelChoixDiff extends JPanel implements ActionListener
 
         // --- BOUTON FACILE ---
         this.btnFacile = new JButton("Facile");
+        this.btnFacile.setHorizontalTextPosition(SwingConstants.CENTER);
+        this.btnFacile.setVerticalTextPosition(SwingConstants.BOTTOM);
         this.btnFacile.setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnFacile.setBackground(Color.WHITE); // Le bouton devient blanc
+        this.btnFacile.setBackground(ConstantesIHM.COULEUR_FOND_BOUTON_FACILE); // Le bouton devient blanc
         this.btnFacile.setFocusPainted(false);
         this.btnFacile.setPreferredSize(new Dimension(250, 250));
-        this.btnFacile.setIcon(new ImageIcon(this.frame.creerImages("./images/icones/facile.png", 30, 25))); 
+        this.btnFacile.setIcon(new ImageIcon(this.frame.creerDessins("./images/logos/etoile-pleine.png"))); 
+        this.btnFacile.setIconTextGap(15);
         
         this.ombreF  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_FACILE);
         
@@ -147,11 +150,14 @@ public class PanelChoixDiff extends JPanel implements ActionListener
 
         // --- BOUTON MOYEN ---
         this.btnMoyen = new JButton("Moyen");
+        this.btnMoyen.setHorizontalTextPosition(SwingConstants.CENTER);
+        this.btnMoyen.setVerticalTextPosition(SwingConstants.BOTTOM);
         this.btnMoyen.setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnMoyen.setBackground(Color.WHITE); // Le bouton devient blanc
+        this.btnMoyen.setBackground(ConstantesIHM.COULEUR_FOND_BOUTON_MOYEN); // Le bouton devient blanc
         this.btnMoyen.setFocusPainted(false);
         this.btnMoyen.setPreferredSize(new Dimension(250, 250)); 
-        this.btnMoyen.setIcon(new ImageIcon(this.frame.creerImages("./images/icones/moyen.png", 30, 25)));
+        this.btnMoyen.setIcon(new ImageIcon(this.frame.creerDessins("./images/logos/etoile-pleine2.png")));
+        this.btnMoyen.setIconTextGap(15);
 
         this.ombreM  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_MOYEN);
         
@@ -167,11 +173,14 @@ public class PanelChoixDiff extends JPanel implements ActionListener
 
         // --- BOUTON DIFFICILE ---
         this.btnDifficile = new JButton("Difficile");
+        this.btnDifficile.setHorizontalTextPosition(SwingConstants.CENTER);
+        this.btnDifficile.setVerticalTextPosition(SwingConstants.BOTTOM);
         this.btnDifficile.setFont(new Font("Sans-Serif", Font.PLAIN, 18));
-        this.btnDifficile.setBackground(Color.WHITE); // Le bouton devient blanc
+        this.btnDifficile.setBackground(ConstantesIHM.COULEUR_FOND_BOUTON_DIFF); // Le bouton devient blanc
         this.btnDifficile.setFocusPainted(false);
         this.btnDifficile.setPreferredSize(new Dimension(250, 250)); 
-        this.btnDifficile.setIcon(new ImageIcon(this.frame.creerImages("./images/icones/difficile.png", 30, 25)));
+        this.btnDifficile.setIcon(new ImageIcon(this.frame.creerDessins("./images/logos/etoile-pleine3.png")));
+        this.btnDifficile.setIconTextGap(15);
 
         this.ombreD  = BorderFactory.createMatteBorder(0, 0, 3, 3, ConstantesIHM.OMBRE_DIFFICILE);
         
@@ -249,7 +258,7 @@ public class PanelChoixDiff extends JPanel implements ActionListener
             @Override
             public void mouseExited(MouseEvent e) 
             {
-                btnFacile.setBackground(Color.WHITE);
+                btnFacile.setBackground(ConstantesIHM.COULEUR_FOND_BOUTON_FACILE);
                 btnFacile.setForeground(Color.BLACK);
 
                 btnFacile.setBorder(bordureNormaleF);
@@ -271,7 +280,7 @@ public class PanelChoixDiff extends JPanel implements ActionListener
             @Override
             public void mouseExited(MouseEvent e) 
             {
-                btnMoyen.setBackground(Color.WHITE);
+                btnMoyen.setBackground(ConstantesIHM.COULEUR_FOND_BOUTON_MOYEN);
                 btnMoyen.setForeground(Color.BLACK);
 
                 btnMoyen.setBorder(bordureNormaleM);
@@ -293,7 +302,7 @@ public class PanelChoixDiff extends JPanel implements ActionListener
             @Override
             public void mouseExited(MouseEvent e) 
             {
-                btnDifficile.setBackground(Color.WHITE);
+                btnDifficile.setBackground(ConstantesIHM.COULEUR_FOND_BOUTON_DIFF);
                 btnDifficile.setForeground(Color.BLACK);
 
                 btnDifficile.setBorder(bordureNormaleD);
