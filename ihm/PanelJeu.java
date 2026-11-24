@@ -190,6 +190,7 @@ public class PanelJeu extends JPanel implements ActionListener
                 {
                     this.btnIndice.setBackground(Color.WHITE);
                     this.btnIndice.setEnabled(false);
+                    this.btnIndice.setCursor(java.awt.dnd.DragSource.DefaultCopyNoDrop);
                 }
 
                 this.ctrl.donnerIndice(); // On demande au métier de placer l'indice
@@ -597,8 +598,11 @@ public class PanelJeu extends JPanel implements ActionListener
             public void mouseEntered(MouseEvent e)
             {
                 btnAnnuler.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                
                 if (!PanelJeu.this.btnAnnuler.isEnabled())
-                    btnAnnuler.setCursor(java.awt.dnd.DragSource.DefaultCopyNoDrop);
+                {
+                    PanelJeu.this.btnAnnuler.setCursor(java.awt.dnd.DragSource.DefaultCopyNoDrop);
+                }
             }
 
             @Override
@@ -788,10 +792,21 @@ public class PanelJeu extends JPanel implements ActionListener
                                + "  •  La somme des lignes et des colonnes doit correspondre aux totaux indiqués.\n\n"
                                + "Utilisez le clic simple ou le glisser-déposer pour jouer.";
 
+                JLabel lblContenu = new JLabel(message);
+                
                 ImageIcon iconeRegle = new ImageIcon(frame.creerDessins("./images/icones/regles.png"));
 
                 // Affichage
-                JOptionPane.showMessageDialog(frame, message, "Règles du Fubuki", JOptionPane.PLAIN_MESSAGE, iconeRegle);
+                JOptionPane.showOptionDialog(
+                    frame,
+                    lblContenu,
+                    "Niveaux de Difficulté",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    iconeRegle,
+                    new Object[]{ btnCompris },
+                    btnCompris
+                );
             }
         });
 
@@ -843,15 +858,27 @@ public class PanelJeu extends JPanel implements ActionListener
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) 
             {
-                String message = "Outils à votre disposition en cours de partie :\n\n"
-                               + "  •  GOMME : Efface le chiffre de la case sélectionnée.\n"
-                               + "  •  INDICE : Révèle une case correcte au hasard et la verrouille.\n"
-                               + "  •  VALIDER : Vérifie votre grille. Attention au nombre d'essais restants !\n"
-                               + "  •  ANNULER : Annule votre dernier coup (chiffre placé, effacé ou échangé).";
+                String message = "<html><body style='width: 500px; font-family: Sans-Serif; font-size: 13px; color: #222222;'>"
+                               + "<div style='font-size: 15px; font-weight: bold; margin-bottom: 10px;'>Outils à votre disposition en cours de partie :</div>"
+                               + "<p style='margin: 5px 0;'><b style='color: #222222;'>•  GOMME : Efface le chiffre de la case sélectionnée.</p>"
+                               + "<p style='margin: 5px 0;'><b style='color: #222222;'>•  INDICE : Révèle une case correcte au hasard et la verrouille.</p>"
+                               + "<p style='margin: 5px 0;'><b style='color: #222222;'>•  VALIDER : Vérifie votre grille. Attention au nombre d'essais restants !</p>"
+                               + "<p style='margin: 5px 0;'><b style='color: #222222;'>•  ANNULER : Annule votre dernier coup (chiffre placé, effacé ou échangé).</p></body></html>";
+                
+                JLabel lblContenu = new JLabel(message);
                 
                 ImageIcon iconeOutils = new ImageIcon(frame.creerDessins("./images/icones/outils.png"));
 
-                JOptionPane.showMessageDialog(frame, message, "Utilisation des Outils", JOptionPane.PLAIN_MESSAGE, iconeOutils);
+                JOptionPane.showOptionDialog(
+                    frame,
+                    lblContenu,
+                    "Niveaux de Difficulté",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    iconeOutils,
+                    new Object[]{ btnCompris },
+                    btnCompris
+                );
             }
         });
 
@@ -866,16 +893,29 @@ public class PanelJeu extends JPanel implements ActionListener
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) 
             {
-                String message = "Le Mode Brouillon vous permet de tester plusieurs options sur une case.\n\n"
-                               + "  1.  Activez le mode (le bouton devient bleu).\n"
-                               + "  2.  Cliquez sur une case vide, puis sélectionnez vos chiffres à noter.\n"
-                               + "  3.  Pour retirer une note, sélectionnez à nouveau le chiffre.\n"
-                               + "  4.  Désactivez le mode pour reprendre la partie normalement.";
+                String message = "<html><body style='width: 500px; font-family: Sans-Serif; font-size: 13px; color: #222222;'>"
+                               + "<div style='font-size: 15px; font-weight: bold; margin-bottom: 10px;'>"
+                               + "Le Mode Brouillon vous permet de tester plusieurs options sur une case.</div>"
+                               + "<p style='margin: 5px 0;'><b style='color: #222222;'>  1.  Activez le mode (le bouton devient bleu).</p>"
+                               + "<p style='margin: 5px 0;'><b style='color: #222222;'>  2.  Cliquez sur une case vide, puis sélectionnez vos chiffres à noter.</p>"
+                               + "<p style='margin: 5px 0;'><b style='color: #222222;'>  3.  Pour retirer une note, sélectionnez à nouveau le chiffre.</p>"
+                               + "<p style='margin: 5px 0;'><b style='color: #222222;'>  4.  Désactivez le mode pour reprendre la partie normalement.</p></body></html>";
 
+                JLabel lblContenu = new JLabel(message);
+                
                 ImageIcon iconeBrouillon = new ImageIcon(frame.creerDessins("./images/icones/brouillon.png"));
                 
                 // Affichage (on garde INFORMATION_MESSAGE pour l'icône)
-                JOptionPane.showMessageDialog(frame, message, "Le Mode Brouillon", JOptionPane.PLAIN_MESSAGE, iconeBrouillon);
+                JOptionPane.showOptionDialog(
+                    frame,
+                    lblContenu,
+                    "Niveaux de Difficulté",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    iconeBrouillon,
+                    new Object[]{ btnCompris },
+                    btnCompris
+                );
             }
         });
 
@@ -898,9 +938,20 @@ public class PanelJeu extends JPanel implements ActionListener
                                + "  •  ÉCHANGE : Cliquez sur deux chiffres déjà placés sur le plateau\n"
                                + "     pour échanger leurs positions instantanément.";
 
+                JLabel lblContenu = new JLabel(message);
+                
                 ImageIcon iconeAstuce = new ImageIcon(frame.creerDessins("./images/icones/raccourci.png"));
 
-                JOptionPane.showMessageDialog(frame, message, "Astuces & Raccourcis", JOptionPane.PLAIN_MESSAGE, iconeAstuce);
+                JOptionPane.showOptionDialog(
+                    frame,
+                    lblContenu,
+                    "Niveaux de Difficulté",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    iconeAstuce,
+                    new Object[]{ btnCompris },
+                    btnCompris
+                );
             }
         });
 
@@ -921,9 +972,20 @@ public class PanelJeu extends JPanel implements ActionListener
                                + "  •  Timothé LARBI (Moteur logique & Métier)\n\n"
                                + "Merci d'avoir joué !";
 
+                JLabel lblContenu = new JLabel(message);
+                
                 ImageIcon iconeAPropos = new ImageIcon(frame.creerDessins("./images/icones/a-propos.png"));
 
-                JOptionPane.showMessageDialog(frame, message, "À propos de Fubuki", JOptionPane.PLAIN_MESSAGE, iconeAPropos);
+                JOptionPane.showOptionDialog(
+                    frame,
+                    lblContenu,
+                    "Niveaux de Difficulté",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    iconeAPropos,
+                    new Object[]{ btnCompris },
+                    btnCompris
+                );
             }
         });
 
@@ -1280,6 +1342,10 @@ public class PanelJeu extends JPanel implements ActionListener
         }
 
         this.btnAnnuler.setEnabled(this.ctrl.peutAnnuler());
+
+        if (!this.btnAnnuler.isEnabled())
+            this.btnAnnuler.setCursor(java.awt.dnd.DragSource.DefaultCopyNoDrop);
+
         this.repaint();
     }
 
