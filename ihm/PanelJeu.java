@@ -4,6 +4,7 @@ import controleur.Controleur;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -11,6 +12,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -55,6 +57,7 @@ public class PanelJeu extends JPanel implements ActionListener
     private JLabel[]            tabLblTotauxColonnes;
     private JLabel              lblValidation;
     private JLabel              lblValidationCoul;
+    private JLabel              lblNbValidations;
 
     private JButton             btnValide;
     private JButton             btnReset;
@@ -77,6 +80,8 @@ public class PanelJeu extends JPanel implements ActionListener
     private int                 nbValidationsMax;
 
     private JMenuBar            barreMenu;
+
+    private long                tempsDebut;
 
     public PanelJeu(Controleur ctrl, FrameJeu frame, int indice)
     {
@@ -109,6 +114,8 @@ public class PanelJeu extends JPanel implements ActionListener
         /* ----------------------------- */
         
         this.activerComposants();
+
+        this.majPlateau();
         
         this.setVisible(true);
     }
@@ -119,6 +126,13 @@ public class PanelJeu extends JPanel implements ActionListener
         if (e.getSource() instanceof JToggleButton)
         {
             JToggleButton btnClique = (JToggleButton) e.getSource();
+            int valCliquee = Integer.parseInt(btnClique.getText());
+
+            if (this.ctrl.estPresent(valCliquee))
+            {
+                this.grpBtn.clearSelection();
+                return;
+            }
 
             if (this.btnActif == btnClique) 
             {
@@ -216,7 +230,8 @@ public class PanelJeu extends JPanel implements ActionListener
 
                 if (this.nbValidationsRestantes <= 0)
                 {
-                    this.frame.afficherPanelResultat(false);
+                    this.cacherMenuBar(false);
+                    this.frame.afficherPanelResultat(false, "");
                     this.frame.setPnl(this.frame.getPnl(this.indice + 1));
                     this.ctrl.resetJeu();
                     return;
@@ -231,8 +246,8 @@ public class PanelJeu extends JPanel implements ActionListener
                     elements.nextElement().setEnabled(false);
                 }
 
-                this.cacherMenuBar();
-                this.frame.afficherPanelResultat(true);
+                this.cacherMenuBar(false);
+                this.frame.afficherPanelResultat(true, getTempsEcoule());
             }
         }
 
@@ -256,7 +271,7 @@ public class PanelJeu extends JPanel implements ActionListener
         if (e.getSource() == this.btnAccueil)
         {
             this.frame.setPnl(this.frame.getPnl(0));
-            this.cacherMenuBar();
+            this.cacherMenuBar(false);
         }
     }
 
@@ -267,6 +282,16 @@ public class PanelJeu extends JPanel implements ActionListener
     public int getNbValidationsRestantes()
     {
         return this.nbValidationsRestantes;
+    }
+
+    public String getTempsEcoule() 
+    { 
+        long tempsTotalSecondes = (System.currentTimeMillis() - this.tempsDebut) / 1000;
+
+        int tempsMinutes       = (int) tempsTotalSecondes / 60;
+        int tempsSecondes      = (int) tempsTotalSecondes % 60;
+
+        return String.format("Temps total : %02d:%02d ", tempsMinutes, tempsSecondes);
     }
 
     /*-------------------------------*/
@@ -298,6 +323,8 @@ public class PanelJeu extends JPanel implements ActionListener
         this.ligSelectionne         = -1;
         this.colSelectionne         = -1;
 
+        this.tempsDebut             = System.currentTimeMillis();
+
         // Panel qui contiendra pnlBandeau
         this.pnlHaut                = new JPanel();
         this.pnlHaut                .setLayout(new BorderLayout());
@@ -308,10 +335,15 @@ public class PanelJeu extends JPanel implements ActionListener
         this.pnlBandeau             .setLayout(new FlowLayout(FlowLayout.CENTER, 5, 15));
         this.pnlBandeau             .setOpaque(false);
 
-        this.lblValidation          = new JLabel();
-        this.lblValidation          .setOpaque(false);
-        this.lblValidation          .setFont(new Font("Sans-Serif", Font.BOLD, 18));
-        this.lblValidation          .setLayout(new FlowLayout(FlowLayout.CENTER, 10, 15));
+        this.lblValidation = new JLabel("Nombre de validations restantes :");
+        this.lblValidation.setFont(new Font("Sans-Serif", Font.BOLD, 18));
+
+        ImageIcon iconeCoeur = new ImageIcon(this.frame.creerDessins("./images/logos/coeur.png"));
+        this.lblNbValidations = new JLabel();
+        this.lblNbValidations.setFont(new Font("Sans-Serif", Font.BOLD, 18));
+        this.lblNbValidations.setIcon(iconeCoeur);
+        this.lblNbValidations.setHorizontalTextPosition(SwingConstants.RIGHT);
+        this.lblNbValidations.setIconTextGap(6);
 
         this.initNbValidations();
 
@@ -369,14 +401,16 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnValide              .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/valide.png", 30, 30)));
         this.btnValide              .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnValide              .setFocusPainted(false);
+        this.btnValide              .setToolTipText("Valider votre choix");
 
-        this.btnReset               = new JButton("  Réintialiser le plateau");
+        this.btnReset               = new JButton("  Réinitialiser le plateau");
         this.btnReset               .setBackground(Color.WHITE);
         this.btnReset               .setFont(new Font("Sans-Serif", Font.PLAIN, 18));
         this.btnReset               .setPreferredSize(new Dimension(tailleEcran.width/6, 50));
         this.btnReset               .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/reset.png", 30, 25)));
         this.btnReset               .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnReset               .setFocusPainted(false);
+        this.btnReset               .setToolTipText("Réinitialiser le plateau comme à l'origine");
 
         this.btnRestart             = new JButton("  Recommencer une partie");
         this.btnRestart             .setBackground(Color.WHITE);
@@ -385,6 +419,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnRestart             .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/restart.png", 35, 35)));
         this.btnRestart             .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnRestart             .setFocusPainted(false);
+        this.btnRestart             .setToolTipText("Recommencer une partie différente");
 
         this.btnAnnuler             = new JButton("  Annuler");
         this.btnAnnuler             .setBackground(Color.WHITE);
@@ -394,6 +429,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnAnnuler             .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnAnnuler             .setFocusPainted(false);
         this.btnAnnuler             .setEnabled(false);
+        this.btnAnnuler             .setToolTipText("Annuler le coup précédent");
 
         this.btnAccueil             = new JButton("  Retourner à l'accueil");
         this.btnAccueil             .setBackground(Color.WHITE);
@@ -402,6 +438,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnAccueil             .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/accueil.png", 30, 25)));
         this.btnAccueil             .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnAccueil             .setFocusPainted(false);
+        this.btnAccueil             .setToolTipText("Retourner à l'accueil du jeu");
 
         this.dessinerBoutons();    
 
@@ -411,6 +448,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnGomme               .setPreferredSize(new Dimension((this.tailleBoutonOutil - 10) / 2, 50));
         this.btnGomme               .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/gomme.png", 30, 30)));
         this.btnGomme               .setFocusPainted(false);
+        this.btnGomme               .setToolTipText("Gommer un chiffre du plateau en cliquant la case en amont");
 
         this.btnIndice              = new JButton("");
         this.btnIndice              .setBackground(Color.WHITE);
@@ -419,6 +457,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnIndice              .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/indice.png", 40, 35)));
         this.btnIndice              .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnIndice              .setFocusPainted(false);
+        this.btnIndice              .setToolTipText("Révéler une case du plateau");
 
         this.initBoutonIndice();
 
@@ -429,6 +468,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnBrouillon           .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/brouillon.png", 30, 25)));
         this.btnBrouillon           .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnBrouillon           .setFocusPainted(false);
+        this.btnBrouillon           .setToolTipText("Passer au mode Brouillon pour placer vos candidats");
     }
 
     // Méthode qui positionne les composants de l'interface
@@ -442,7 +482,8 @@ public class PanelJeu extends JPanel implements ActionListener
         this.pnlBoutons.add(this.btnAnnuler);
         this.pnlBoutons.add(this.btnAccueil);
 
-        this.pnlBandeau.add(lblValidation);
+        this.pnlBandeau.add(this.lblValidation);
+        this.pnlBandeau.add(this.lblNbValidations);
         
         this.pnlHaut   .add(pnlBandeau     , BorderLayout.CENTER  );
         //this.pnlHaut   .add(separateurHaut , BorderLayout.SOUTH );
@@ -511,213 +552,59 @@ public class PanelJeu extends JPanel implements ActionListener
     // Méthode qui active les composants de l'interface
     private void activerComposants()
     {
-        /*---------------------------------------------*/
-        /* Ajout du système de survol pour les boutons */
-        /*---------------------------------------------*/
+        this.configurerSurvolBouton(this.btnGomme,   Color.WHITE, ConstantesIHM.COULEUR_GRIS_SURVOL, Color.BLACK);
+        this.configurerSurvolBouton(this.btnIndice,  Color.WHITE, ConstantesIHM.COULEUR_GRIS_SURVOL, Color.BLACK);
+        this.configurerSurvolBouton(this.btnReset,   Color.WHITE, ConstantesIHM.COULEUR_GRIS_SURVOL, Color.BLACK);
+        this.configurerSurvolBouton(this.btnRestart, Color.WHITE, ConstantesIHM.COULEUR_GRIS_SURVOL, Color.BLACK);
+        this.configurerSurvolBouton(this.btnAnnuler, Color.WHITE, ConstantesIHM.COULEUR_GRIS_SURVOL, Color.BLACK);
+        this.configurerSurvolBouton(this.btnAccueil, Color.WHITE, ConstantesIHM.COULEUR_GRIS_SURVOL, Color.BLACK);
+        this.configurerSurvolBouton(this.btnValide,  ConstantesIHM.COULEUR_VERT_VALIDE, ConstantesIHM.COULEUR_VERT_VALIDE_SURVOL, Color.WHITE);
 
-        this.btnGomme.addActionListener(this);
-        this.btnGomme.addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnGomme.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnGomme.setForeground(Color.BLACK); // Pour que le texte reste lisible
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnGomme.setBackground(Color.WHITE);
-                btnGomme.setForeground(Color.BLACK);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) 
-            {
-                btnGomme.setBackground(Color.WHITE);
-                btnGomme.setForeground(Color.BLACK);
-            }
-        });
-
-        this.btnIndice.addActionListener(this);
-        this.btnIndice.addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                // Si le bouton est encore utilisable, on met la couleur de survol
-                if (btnIndice.isEnabled()) {
-                    btnIndice.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                if (btnIndice.isEnabled()) {
-                    btnIndice.setBackground(Color.WHITE);
-                }
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) 
-            {
-                btnIndice.setBackground(Color.WHITE);
-                btnIndice.setForeground(Color.BLACK);
-            }
-        });
-
+        // Cas particulier de btnBrouillon (conserve sa couleur bleue quand le mode est actif)
         this.btnBrouillon.addActionListener(this);
-        this.btnBrouillon.addMouseListener(new MouseAdapter() 
+        this.btnBrouillon.addMouseListener(new MouseAdapter()
         {
             @Override
-            public void mouseEntered(MouseEvent e) 
+            public void mouseEntered(MouseEvent e)
             {
-                // On lit directement le booléen de la classe
-                if (!PanelJeu.this.modeBrouillon) 
+                btnBrouillon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                if (!PanelJeu.this.modeBrouillon)
                     btnBrouillon.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
             }
 
             @Override
-            public void mouseExited(MouseEvent e) 
+            public void mouseExited(MouseEvent e)
             {
-                if (PanelJeu.this.modeBrouillon) 
+                btnBrouillon.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                if (PanelJeu.this.modeBrouillon)
                     btnBrouillon.setBackground(ConstantesIHM.COULEUR_BROUILLON_ACTIVE);
-                else 
+                else
                     btnBrouillon.setBackground(Color.WHITE);
             }
 
             @Override
-            public void mousePressed(MouseEvent e) 
+            public void mousePressed(MouseEvent e)
             {
                 btnBrouillon.setBackground(Color.WHITE);
                 btnBrouillon.setForeground(Color.BLACK);
             }
         });
-        
-        this.btnValide.addActionListener(this);
-        this.btnValide.addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnValide.setBackground(ConstantesIHM.COULEUR_VERT_VALIDE_SURVOL);
-                btnValide.setForeground(Color.WHITE); // Pour que le texte reste lisible
-            }
 
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnValide.setBackground(ConstantesIHM.COULEUR_VERT_VALIDE);
-                btnValide.setForeground(Color.WHITE);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) 
-            {
-                btnValide.setBackground(ConstantesIHM.COULEUR_VERT_VALIDE_SURVOL);
-                btnValide.setForeground(Color.WHITE);
-            }
-        });
-        
-        this.btnReset   .addActionListener(this);
-        this.btnReset      .addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnReset.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnReset.setForeground(Color.BLACK); // Pour que le texte reste lisible
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnReset.setBackground(Color.WHITE);
-                btnReset.setForeground(Color.BLACK);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) 
-            {
-                btnReset.setBackground(Color.WHITE);
-                btnReset.setForeground(Color.BLACK);
-            }
-        });
-        
-        this.btnRestart.addActionListener(this);
-        this.btnRestart.addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnRestart.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnRestart.setForeground(Color.BLACK); // Pour que le texte reste lisible
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnRestart.setBackground(Color.WHITE);
-                btnRestart.setForeground(Color.BLACK);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) 
-            {
-                btnRestart.setBackground(Color.WHITE);
-                btnRestart.setForeground(Color.BLACK);
-            }
-        });
-        
         this.btnAnnuler.addActionListener(this);
-        this.btnAnnuler.addMouseListener(new MouseAdapter() 
+        this.btnAnnuler.addMouseListener(new MouseAdapter()
         {
             @Override
-            public void mouseEntered(MouseEvent e) 
+            public void mouseEntered(MouseEvent e)
             {
-                btnAnnuler.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnAnnuler.setForeground(Color.BLACK); // Pour que le texte reste lisible
+                btnAnnuler.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                if (!PanelJeu.this.btnAnnuler.isEnabled())
+                    btnAnnuler.setCursor(java.awt.dnd.DragSource.DefaultCopyNoDrop);
             }
 
             @Override
-            public void mouseExited(MouseEvent e) 
+            public void mouseExited(MouseEvent e)
             {
-                btnAnnuler.setBackground(Color.WHITE);
-                btnAnnuler.setForeground(Color.BLACK);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) 
-            {
-                btnAnnuler.setBackground(Color.WHITE);
-                btnAnnuler.setForeground(Color.BLACK);
-            }
-        });
-        
-        this.btnAccueil.addActionListener(this);
-        this.btnAccueil.addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnAccueil.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnAccueil.setForeground(Color.BLACK); // Pour que le texte reste lisible
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnAccueil.setBackground(Color.WHITE);
-                btnAccueil.setForeground(Color.BLACK);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) 
-            {
-                btnAccueil.setBackground(Color.WHITE);
-                btnAccueil.setForeground(Color.BLACK);
+                btnAnnuler.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }
         });
         
@@ -760,31 +647,133 @@ public class PanelJeu extends JPanel implements ActionListener
         });
     }
 
+    private void configurerSurvolBouton(JButton bouton, Color couleurBase, Color couleurSurvol, Color couleurTexte)
+    {
+        bouton.addActionListener(this);
+        bouton.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                if (bouton.isEnabled())
+                {
+                    bouton.setBackground(couleurSurvol);
+                    bouton.setForeground(couleurTexte);
+                    bouton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                }
+                else
+                {
+                    bouton.setCursor(java.awt.dnd.DragSource.DefaultCopyNoDrop);
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                bouton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                if (bouton.isEnabled())
+                {
+                    bouton.setBackground(couleurBase);
+                    bouton.setForeground(couleurTexte);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                if (bouton.isEnabled())
+                {
+                    bouton.setBackground(bouton == btnValide ? couleurSurvol : couleurBase);
+                    bouton.setForeground(couleurTexte);
+                }
+            }
+        });
+    }
+
     // Permet de créer la barre de menu et ses sous-menus
     private void creerMenuBar()
     {
-        UIManager.put("Menu.selectionBackground", ConstantesIHM.COULEUR_GRIS_SURVOL);
+        UIManager.put("Menu.selectionBackground", ConstantesIHM.COULEUR_ROSE_SURVOL);
         UIManager.put("Menu.selectionForeground", Color.BLACK);
         UIManager.put("MenuItem.selectionBackground", ConstantesIHM.COULEUR_GRIS_SURVOL);
         UIManager.put("MenuItem.selectionForeground", Color.BLACK);
         UIManager.put("MenuItem.background", Color.WHITE);
         
         // Création de la barre de menu principale
-        this.barreMenu      = new JMenuBar();
-        this.barreMenu               .setOpaque(true);
-        this.barreMenu               .setBackground(ConstantesIHM.COULEUR_FOND_MENUBAR);
-        this.barreMenu               .setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ConstantesIHM.COULEUR_SEPARATEUR));
+        this.barreMenu = new JMenuBar();
+        this.barreMenu.setOpaque(true);
+        this.barreMenu.setBackground(Color.WHITE);
+        this.barreMenu.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, ConstantesIHM.COULEUR_SEPARATEUR));
 
-        // Création de l'onglet "Aide"
-        JMenu menuAide          = new JMenu("Aide");
-        menuAide                .setFont(new Font("Sans-Serif", Font.BOLD, 18));            // Change la police de l'onglet "Aide"
-        menuAide                .setForeground(Color.BLACK);                                // Change la couleur du texte de l'onglet "Aide"
-        menuAide                .setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));    // Ajoute un peu d'espace autour du texte de l'onglet "Aide"
+        JMenu menuAide = new JMenu("Aide");
+        menuAide.setFont(new Font("Sans-Serif", Font.BOLD, 16));
+        menuAide.setForeground(Color.BLACK);
+        menuAide.setIcon(new ImageIcon(this.frame.creerImages("./images/icones/aide.png", 20, 20)));
+        menuAide.setIconTextGap(8);
+        menuAide.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
+        menuAide.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        this.barreMenu.add(Box.createHorizontalGlue());
+        this.barreMenu.add(menuAide);
+
+        // Styliser la boîte déroulante
+        JPopupMenu popup = menuAide.getPopupMenu();
+        popup.setBackground(Color.WHITE);
+        popup.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(ConstantesIHM.COULEUR_SEPARATEUR, 1),
+            BorderFactory.createEmptyBorder(6, 6, 6, 6)
+        ));
+
+        // Couleur de survol assortie au thème
+        UIManager.put("MenuItem.selectionBackground", ConstantesIHM.COULEUR_ROSE_SURVOL);
+        UIManager.put("MenuItem.selectionForeground", Color.BLACK);
+
+        JButton btnCompris = new JButton("Compris !");
+        btnCompris.setFont(new Font("Sans-Serif", Font.BOLD, 15));
+        btnCompris.setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
+        btnCompris.setForeground(Color.WHITE);
+        btnCompris.setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
+        btnCompris.setFocusPainted(false);
+        btnCompris.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnCompris.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent ae) 
+            {
+                Window w = SwingUtilities.getWindowAncestor(btnCompris);
+                if (w != null) w.dispose();
+            }
+        });
+
+        btnCompris.addMouseListener(new MouseAdapter() 
+        {
+            public void mouseEntered(MouseEvent e)
+            {
+                btnCompris.setBackground(ConstantesIHM.COULEUR_ROSE_SURVOL);
+            }
+
+            public void mouseExited(MouseEvent e)
+            {
+                btnCompris.setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
+            }
+
+            public void mousePressed(MouseEvent e)
+            {
+                btnCompris.setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU_FONCE);
+            }
+
+            public void mouseReleased(MouseEvent e)
+            {
+                btnCompris.setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
+            }
+        });
 
         // Création du sous-bouton "Règles du jeu"
         JMenuItem itemRegles    = new JMenuItem("Règles du jeu");
         itemRegles              .setFont(new Font("Sans-Serif", Font.PLAIN, 16));           
         itemRegles              .setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        itemRegles              .setIconTextGap(12);
 
         // On ajoute l'action quand on clique sur "Règles du jeu"
         itemRegles.addActionListener(new java.awt.event.ActionListener() 
@@ -799,7 +788,7 @@ public class PanelJeu extends JPanel implements ActionListener
                                + "  •  La somme des lignes et des colonnes doit correspondre aux totaux indiqués.\n\n"
                                + "Utilisez le clic simple ou le glisser-déposer pour jouer.";
 
-                ImageIcon iconeRegle = new ImageIcon(frame.creerImages("./images/icones/regles.png", 50, 50));
+                ImageIcon iconeRegle = new ImageIcon(frame.creerDessins("./images/icones/regles.png"));
 
                 // Affichage
                 JOptionPane.showMessageDialog(frame, message, "Règles du Fubuki", JOptionPane.PLAIN_MESSAGE, iconeRegle);
@@ -810,21 +799,36 @@ public class PanelJeu extends JPanel implements ActionListener
         JMenuItem itemDifficulte    = new JMenuItem("Les Niveaux de Difficultés");
         itemDifficulte              .setFont(new Font("Sans-Serif", Font.PLAIN, 16));
         itemDifficulte              .setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        itemDifficulte              .setIconTextGap(12);
 
         itemDifficulte.addActionListener(new java.awt.event.ActionListener() 
         {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) 
             {
-                String message = "Fubuki propose 3 niveaux de difficulté :\n\n"
-                               + "  •  FACILE : 2 indices.\n"
-                               + "  •  MOYEN : 1 indice.\n"
-                               + "  •  DIFFICILE : Aucun indice.\n\n"
-                               + "Plus la difficulté est élevée, moins de chiffres seront dévoilés au départ.";
-                
-                ImageIcon iconeDifficulte = new ImageIcon(frame.creerImages("./images/icones/difficulte.png", 50, 50));
+                String html = "<html><body style='width: 340px; font-family: Sans-Serif; font-size: 13px; color: #222222;'>"
+                            + "<div style='font-size: 15px; font-weight: bold; margin-bottom: 10px;'>Fubuki propose 3 niveaux de difficulté :</div>"
+                            + "<p style='margin: 5px 0;'><b style='color: #2E8B57;'>• FACILE :</b> 2 indices disponibles.</p>"
+                            + "<p style='margin: 5px 0;'><b style='color: #D97706;'>• MOYEN :</b> 1 indice disponible.</p>"
+                            + "<p style='margin: 5px 0;'><b style='color: #DC2626;'>• DIFFICILE :</b> Aucun indice.</p>"
+                            + "<div style='margin-top: 12px; color: #555555; font-style: italic;'>"
+                            + "Plus la difficulté est élevée, moins de chiffres sont dévoilés au départ.</div>"
+                            + "</body></html>";
 
-                JOptionPane.showMessageDialog(frame, message, "Niveaux de Difficulté", JOptionPane.PLAIN_MESSAGE, iconeDifficulte);
+                JLabel lblContenu = new JLabel(html);
+                
+                ImageIcon iconeDifficulte = new ImageIcon(frame.creerDessins("./images/icones/difficulte.png"));
+
+                JOptionPane.showOptionDialog(
+                    frame,
+                    lblContenu,
+                    "Niveaux de Difficulté",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    iconeDifficulte,
+                    new Object[]{ btnCompris },
+                    btnCompris
+                );
             }
         });
 
@@ -832,6 +836,7 @@ public class PanelJeu extends JPanel implements ActionListener
         JMenuItem itemOutils    = new JMenuItem("Utilisation des Outils");
         itemOutils              .setFont(new Font("Sans-Serif", Font.PLAIN, 16));
         itemOutils              .setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        itemOutils              .setIconTextGap(12);
 
         itemOutils.addActionListener(new java.awt.event.ActionListener() 
         {
@@ -844,16 +849,17 @@ public class PanelJeu extends JPanel implements ActionListener
                                + "  •  VALIDER : Vérifie votre grille. Attention au nombre d'essais restants !\n"
                                + "  •  ANNULER : Annule votre dernier coup (chiffre placé, effacé ou échangé).";
                 
-                ImageIcon iconeOutils = new ImageIcon(frame.creerImages("./images/icones/outils.png", 50, 50));
+                ImageIcon iconeOutils = new ImageIcon(frame.creerDessins("./images/icones/outils.png"));
 
                 JOptionPane.showMessageDialog(frame, message, "Utilisation des Outils", JOptionPane.PLAIN_MESSAGE, iconeOutils);
             }
         });
 
 
-        JMenuItem itemBrouillon    = new JMenuItem("Le Mode Brouillon");
-        itemBrouillon              .setFont(new Font("Sans-Serif", Font.PLAIN, 16));
-        itemBrouillon              .setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        JMenuItem itemBrouillon     = new JMenuItem("Le Mode Brouillon");
+        itemBrouillon               .setFont(new Font("Sans-Serif", Font.PLAIN, 16));
+        itemBrouillon               .setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        itemBrouillon               .setIconTextGap(12);
 
         itemBrouillon.addActionListener(new java.awt.event.ActionListener() 
         {
@@ -866,17 +872,18 @@ public class PanelJeu extends JPanel implements ActionListener
                                + "  3.  Pour retirer une note, sélectionnez à nouveau le chiffre.\n"
                                + "  4.  Désactivez le mode pour reprendre la partie normalement.";
 
-                ImageIcon iconeBrouillon = new ImageIcon(frame.creerImages("./images/icones/brouillon.png", 50, 50));
+                ImageIcon iconeBrouillon = new ImageIcon(frame.creerDessins("./images/icones/brouillon.png"));
                 
                 // Affichage (on garde INFORMATION_MESSAGE pour l'icône)
                 JOptionPane.showMessageDialog(frame, message, "Le Mode Brouillon", JOptionPane.PLAIN_MESSAGE, iconeBrouillon);
             }
         });
 
-
+    
         JMenuItem itemAstuces   = new JMenuItem("Astuces & Raccourcis");
-        itemAstuces              .setFont(new Font("Sans-Serif", Font.PLAIN, 16));
-        itemAstuces              .setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        itemAstuces             .setFont(new Font("Sans-Serif", Font.PLAIN, 16));
+        itemAstuces             .setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        itemAstuces             .setIconTextGap(12);
 
         itemAstuces.addActionListener(new java.awt.event.ActionListener() 
         {
@@ -891,7 +898,7 @@ public class PanelJeu extends JPanel implements ActionListener
                                + "  •  ÉCHANGE : Cliquez sur deux chiffres déjà placés sur le plateau\n"
                                + "     pour échanger leurs positions instantanément.";
 
-                ImageIcon iconeAstuce = new ImageIcon(frame.creerImages("./images/icones/indice.png", 50, 50));
+                ImageIcon iconeAstuce = new ImageIcon(frame.creerDessins("./images/icones/raccourci.png"));
 
                 JOptionPane.showMessageDialog(frame, message, "Astuces & Raccourcis", JOptionPane.PLAIN_MESSAGE, iconeAstuce);
             }
@@ -901,32 +908,29 @@ public class PanelJeu extends JPanel implements ActionListener
         JMenuItem itemAPropos   = new JMenuItem("A propos");
         itemAPropos              .setFont(new Font("Sans-Serif", Font.PLAIN, 16));
         itemAPropos              .setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        itemAPropos              .setIconTextGap(12);
 
         itemAPropos.addActionListener(new java.awt.event.ActionListener() 
         {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) 
             {
-                String message = "Fubuki - Version 1.0\n\n"
+                String message = "Fubuki - Version 2.0\n\n"
                                + "Projet informatique développé par :\n"
                                + "  •  Alexis COFFARD (Interface Graphique & Ergonomie)\n"
                                + "  •  Timothé LARBI (Moteur logique & Métier)\n\n"
                                + "Merci d'avoir joué !";
 
-                ImageIcon iconeAPropos = new ImageIcon(frame.creerImages("./images/icones/a-propos.png", 50, 50));
+                ImageIcon iconeAPropos = new ImageIcon(frame.creerDessins("./images/icones/a-propos.png"));
 
                 JOptionPane.showMessageDialog(frame, message, "À propos de Fubuki", JOptionPane.PLAIN_MESSAGE, iconeAPropos);
             }
         });
 
         menuAide.add(itemRegles);
-        menuAide.addSeparator();
         menuAide.add(itemDifficulte);
-        menuAide.addSeparator();
         menuAide.add(itemOutils);
-        menuAide.addSeparator();
         menuAide.add(itemBrouillon);
-        menuAide.addSeparator();
         menuAide.add(itemAstuces);
         menuAide.addSeparator();
         menuAide.add(itemAPropos);
@@ -937,9 +941,9 @@ public class PanelJeu extends JPanel implements ActionListener
         frame.setJMenuBar(this.barreMenu);
     }
 
-    public void cacherMenuBar()
+    public void cacherMenuBar(boolean estVisible)
     {
-        this.barreMenu.setVisible(false);
+        this.barreMenu.setVisible(estVisible);
     }
 
     public void dessinerPlateau()
@@ -1092,6 +1096,26 @@ public class PanelJeu extends JPanel implements ActionListener
                     // On fabrique un colis de type texte pur contenant le chiffre du bouton
                     return new java.awt.datatransfer.StringSelection(((JToggleButton) c).getText());
                 }
+
+                @Override
+                protected void exportDone(JComponent source, java.awt.datatransfer.Transferable data, int action)
+                {
+                    ((JToggleButton) source).getModel().setArmed(false);
+                    ((JToggleButton) source).getModel().setPressed(false);
+
+                    if (!PanelJeu.this.ctrl.estPresent(Integer.parseInt(((JToggleButton) source).getText())) && ((JToggleButton) source) != PanelJeu.this.btnActif)
+                    {
+                        ((JToggleButton) source).setBackground(Color.WHITE);
+                        ((JToggleButton) source).setForeground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
+                    }
+                    else
+                    {
+                        ((JToggleButton) source).setBackground(ConstantesIHM.COULEUR_GRIS_PLACE);
+                        ((JToggleButton) source).setForeground(ConstantesIHM.COULEUR_GRIS_PLACE_LABEL);
+
+                        PanelJeu.this.grpBtn.clearSelection();
+                    }
+                }
             });
 
             // On ajoute un écouteur pour le drag & drop
@@ -1110,21 +1134,49 @@ public class PanelJeu extends JPanel implements ActionListener
                 @Override
                 public void mouseEntered(MouseEvent e) 
                 {
-                    // On n'applique le survol que si le bouton n'est pas grisé (déjà placé) et n'est pas sélectionné
-                    if (btnTmp.getBackground() != ConstantesIHM.COULEUR_GRIS_PLACE && !btnTmp.isSelected()) 
+                    int val = Integer.parseInt(btnTmp.getText());
+
+                    if (PanelJeu.this.ctrl.estPresent(val))
                     {
-                        btnTmp.setBackground(ConstantesIHM.COULEUR_ROSE_SURVOL);
+                        btnTmp.setCursor(java.awt.dnd.DragSource.DefaultCopyNoDrop);
+                    }
+                    else
+                    {
+                        btnTmp.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        if (!btnTmp.isSelected())
+                        {
+                            btnTmp.setBackground(ConstantesIHM.COULEUR_ROSE_SURVOL);
+                            btnTmp.setForeground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
+                        }
                     }
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) 
                 {
-                    // Pareil pour le retour au blanc
+                    btnTmp.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
                     if (btnTmp.getBackground() != ConstantesIHM.COULEUR_GRIS_PLACE && !btnTmp.isSelected()) 
                     {
                         btnTmp.setBackground(Color.WHITE);
                         btnTmp.setForeground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
+                    }
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e)
+                {
+                    if (btnTmp.getBackground() != ConstantesIHM.COULEUR_GRIS_PLACE)
+                        btnTmp.setForeground(Color.WHITE);
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e)
+                {
+                    if (btnTmp.getBackground() != ConstantesIHM.COULEUR_GRIS_PLACE && !btnTmp.isSelected())
+                    {
+                        btnTmp.setForeground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
+                        btnTmp.setBackground(Color.WHITE);
                     }
                 }
             });
@@ -1286,24 +1338,9 @@ public class PanelJeu extends JPanel implements ActionListener
         this.majAffichageValidation();
     }
 
-    // Méthode qui met à jour l'affichage du nombre de validations restantes et la couleur du texte
     private void majAffichageValidation()
     {
-        this.lblValidation.setText("Nombre de validations restantes : " + this.nbValidationsRestantes);
-
-        /*// Calcul du ratio pour les couleurs
-        if (this.nbValidationsRestantes > 2) 
-        {
-            this.lblValidation.setForeground(new Color(0, 150, 0)); // VERT (loin de la défaite)
-        } 
-        else if (this.nbValidationsRestantes > 1) 
-        {
-            this.lblValidation.setForeground(new Color(255, 140, 0)); // ORANGE (attention)
-        } 
-        else 
-        {
-            this.lblValidation.setForeground(Color.RED); // ROUGE (au bord de la défaite)
-        }*/
+        this.lblNbValidations.setText(String.valueOf(this.nbValidationsRestantes));
     }
 
     // Méthode qui remet le plateau dans l'état initial (efface toutes les cases modifiables)
@@ -1313,6 +1350,7 @@ public class PanelJeu extends JPanel implements ActionListener
         this.colSelectionne = -1;
         this.modeValidation = false;
         this.modeBrouillon  = false;
+        this.tempsDebut = System.currentTimeMillis();
 
         this.btnBrouillon.setBackground(Color.WHITE);
         this.btnActif = null;
@@ -1377,6 +1415,8 @@ public class PanelJeu extends JPanel implements ActionListener
         this.colSelectionne = -1;
         this.modeValidation = false;
         this.modeBrouillon  = false;
+        this.tempsDebut = System.currentTimeMillis();
+
 
         this.btnBrouillon.setBackground(Color.WHITE);
         this.initBoutonIndice();
@@ -1565,7 +1605,13 @@ public class PanelJeu extends JPanel implements ActionListener
         @Override
         public void mouseEntered(MouseEvent e)
         {
-            if (!PanelJeu.this.ctrl.getCasePlateau(this.ligSouris, this.colSouris).estModifiable()) return;
+            if (!PanelJeu.this.ctrl.getCasePlateau(this.ligSouris, this.colSouris).estModifiable())
+            {
+                PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setCursor(java.awt.dnd.DragSource.DefaultCopyNoDrop);
+                return;
+            }
+
+            PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setCursor(new Cursor(Cursor.HAND_CURSOR));
 
             if (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris)
             {
@@ -1576,6 +1622,8 @@ public class PanelJeu extends JPanel implements ActionListener
         @Override
         public void mouseExited(MouseEvent e)
         {
+            PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
             if (!PanelJeu.this.ctrl.getCasePlateau(this.ligSouris, this.colSouris).estModifiable()) return;
 
             if (PanelJeu.this.ligSelectionne != this.ligSouris || PanelJeu.this.colSelectionne != this.colSouris)

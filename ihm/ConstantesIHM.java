@@ -17,11 +17,12 @@ public class ConstantesIHM
     public static final Color COULEUR_GRIS_PLACE_LABEL  = new Color(185, 190, 195);
     public static final Color COULEUR_GRIS_PLACE        = new Color(225, 230, 235);
     public static final Color COULEUR_GRIS_SURVOL       = new Color(200, 200, 200);
-    public static final Color COULEUR_ROSE_SURVOL       = new Color(252, 228, 244);
+    public static final Color COULEUR_ROSE_SURVOL       = new Color(242, 218, 234);
     public static final Color COULEUR_BROUILLON_ACTIVE  = new Color(223, 242, 255);
     public static final Color COULEUR_GRIS_BROUILLON    = new Color(121, 128, 129);
     public static final Color COULEUR_ROSE_CERVEAU      = new Color(221, 100, 183);
     public static final Color COULEUR_ROSE_CERVEAU_FONCE= new Color(230, 94 , 187);
+    public static final Color COULEUR_SEPARATEUR_ROSE   = new Color(221, 100, 183);
     public static final Color COULEUR_VICTOIRE          = new Color(0  , 150, 0  );
     public static final Color COULEUR_DEFAITE           = new Color(255, 0  , 0  );
     public static final Color COULEUR_SEPARATEUR        = new Color(150, 150, 150);

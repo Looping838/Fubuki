@@ -38,6 +38,11 @@ public class FrameJeu extends JFrame
 
     public JPanel getPnl(int indice) {return this.tabPanel[indice];}
 
+    public String getNbValidationsRestantes() 
+    { 
+        return String.format("Nombre de validations restantes : %d ", ((PanelJeu) this.tabPanel[2]).getNbValidationsRestantes());
+    }
+
     /*-------------------------------*/
     /*            Setters            */
     /*-------------------------------*/
@@ -58,12 +63,14 @@ public class FrameJeu extends JFrame
     /*      Méthodes utilitaires     */
     /*-------------------------------*/
 
+    public void cacherMenuBar(boolean estVisible) { ((PanelJeu) this.tabPanel[2]).cacherMenuBar(estVisible); }
+    
     public void creerPanelChoixDiff()   { this.tabPanel[1] = new PanelChoixDiff     (ctrl , this, 1); }
     public void creerPanelJeu()         { this.tabPanel[2] = new PanelJeu           (ctrl , this, 2); }
     
-    public void afficherPanelResultat(boolean estVictoire)
+    public void afficherPanelResultat(boolean estVictoire, String temps)
     {
-        this.tabPanel[3] = new PanelResultat(ctrl, this, 3, estVictoire);
+        this.tabPanel[3] = new PanelResultat(ctrl, this, 3, estVictoire, temps);
         this.setPnl(this.tabPanel[3]);
     }
 

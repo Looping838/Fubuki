@@ -11,6 +11,7 @@ public class PanelResultat extends JPanel implements ActionListener
     private FrameJeu    frame;
     private int         indice;
     private boolean     estVictoire;
+    private String      temps;
 
     private JButton     btnAccueil;
     private JButton     btnQuitter;
@@ -19,8 +20,9 @@ public class PanelResultat extends JPanel implements ActionListener
     private JButton     btnChoisir;
 
     private JLabel      lblResultat;
+    private JLabel      lblStats;
 
-    public PanelResultat(Controleur ctrl, FrameJeu frame, int indice, boolean estVictoire)
+    public PanelResultat(Controleur ctrl, FrameJeu frame, int indice, boolean estVictoire, String temps)
     {
         this.setLayout(new GridBagLayout());
         this.setBackground(ConstantesIHM.COULEUR_FOND);
@@ -29,6 +31,7 @@ public class PanelResultat extends JPanel implements ActionListener
         this.frame          = frame;
         this.indice         = indice;
         this.estVictoire    = estVictoire;
+        this.temps          = temps;
 
         /*-------------------------------*/
 		/*   Création des composants     */
@@ -62,6 +65,7 @@ public class PanelResultat extends JPanel implements ActionListener
 
         else if (e.getSource() == this.btnRecommencer)
         {
+            this.frame.cacherMenuBar(true);
             this.frame.restartJeu();
             this.frame.setPnl(this.frame.getPnl(this.indice - 1));
         }
@@ -97,23 +101,22 @@ public class PanelResultat extends JPanel implements ActionListener
         this.btnQuitter     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
         this.btnQuitter     .setFocusPainted(false);
         this.btnQuitter     .setPreferredSize(new Dimension(400, 60));
-        this.btnQuitter     .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/quitter.png", 30, 30)));
 
         this.lblResultat    = new JLabel("", SwingConstants.CENTER);
+
+        this.lblStats       = new JLabel("", SwingConstants.CENTER);
+        this.lblStats       .setFont(new Font("Noto Serif Display Black", Font.PLAIN, 28));
         
         // Si victoire, on affiche "VICTOIRE !" en vert, sinon on affiche "DEFAITE .." en rouge
         if (this.estVictoire)
         {
-            this.lblResultat.setText("VICTOIRE !");
-            this.lblResultat.setForeground(ConstantesIHM.COULEUR_VICTOIRE);
+            this.lblResultat.setIcon(new ImageIcon("./images/logos/victoire.png"));
+            this.lblStats.setText(temps + " | " + frame.getNbValidationsRestantes());
         }
         else
         {
-            this.lblResultat.setText("DEFAITE ..");
-            this.lblResultat.setForeground(ConstantesIHM.COULEUR_DEFAITE);
+            this.lblResultat.setIcon(new ImageIcon("./images/logos/defaite.png"));
         }
-
-        this.lblResultat.setFont(new Font("Noto Serif Display Black", Font.BOLD, 70));
     }
 
     // Méthode qui positionne les composants de l'interface
@@ -126,26 +129,30 @@ public class PanelResultat extends JPanel implements ActionListener
         // Le Label Resultat
         gbc.gridy = 0; // Tout en haut de notre grille
         // Insets(Haut, Gauche, Bas, Droite) = grand espace sous le titre
-        gbc.insets = new Insets(130, 0, 150, 0);
+        gbc.insets = new Insets(130, 0, 80, 0);
         this.add(this.lblResultat, gbc);
 
-        // Le bouton Recommencer
         gbc.gridy = 1; // Tout en bas
+        gbc.insets = new Insets(0, 0, 40, 0); 
+        this.add(this.lblStats, gbc);
+
+        // Le bouton Recommencer
+        gbc.gridy = 2; // Tout en bas
         gbc.insets = new Insets(50, 0, 20, 0); 
         this.add(this.btnRecommencer, gbc);
         
         // Le bouton Accueil
-        gbc.gridy = 2; // En dessous du titre
+        gbc.gridy = 3; // En dessous du titre
         gbc.insets = new Insets(0, 0, 20, 0); // Petit espace de 50px au-dessus, et 20px sous ce bouton
         this.add(this.btnAccueil, gbc);
 
         // Le bouton Quitter 
-        gbc.gridy = 3; // Tout en bas
+        gbc.gridy = 4; // Tout en bas
         gbc.insets = new Insets(0, 0, 20, 0);
         this.add(this.btnQuitter, gbc);
 
         // LE RESSORT INVISIBLE
-        gbc.gridy = 4; // On le place sur une 4ème ligne
+        gbc.gridy = 5; // On le place sur une 4ème ligne
         gbc.weighty = 1.0; // Il aspire tout l'espace vertical restant
         this.add(new JLabel(""), gbc); // On ajoute un texte vide
     }
@@ -183,14 +190,14 @@ public class PanelResultat extends JPanel implements ActionListener
             @Override
             public void mouseEntered(MouseEvent e) 
             {
-                btnRecommencer.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
+                btnRecommencer.setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU_FONCE);
                 btnRecommencer.setForeground(Color.BLACK); // Pour que le texte reste lisible
             }
 
             @Override
             public void mouseExited(MouseEvent e) 
             {
-                btnRecommencer.setBackground(Color.WHITE);
+                btnRecommencer.setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
                 btnRecommencer.setForeground(Color.BLACK);
             }
         });
