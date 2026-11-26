@@ -1,28 +1,18 @@
 # Fichiers compilés Java
-*.class
-
-# Archives de build
-*.jar
-*.war
-*.ear
-
-# Dossiers de sortie de compilation standard
 bin/
-build/
-out/
-target/
+*.class
+*.jar
 
-# Configuration IDE (IntelliJ IDEA)
+# Documentation générée
+doc/
+
+# Configuration des IDE
+.vscode/
 .idea/
 *.iml
-
-# Configuration IDE (Eclipse)
-.project
 .classpath
+.project
 .settings/
-
-# Configuration IDE (VS Code)
-.vscode/
 
 # Fichiers système
 .DS_Store
