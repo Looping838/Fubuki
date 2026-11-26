@@ -1,79 +1,107 @@
 package metier;
 
-import controleur.Controleur;
 import java.util.Random;
 
-public class Plateau 
+// Classe publique Plateau : modélise la grille 3x3 de Fubuki, ses cases et ses totaux cibles
+public class Plateau
 {
-    private int      nbLigne;
-    private int      nbColonne;
-    
-    private Case[][] plateau ;
-    private int []   totauxLignes;
-    private int []   totauxColonnes;
+    /*-------------------------------*/
+    /*           Attributs           */
+    /*-------------------------------*/
 
-    private int[]   nbrPossible = { 1,2,3,4,5,6,7,8,9 };
-    
-    public Plateau (Controleur ctrl)
+    private int      nbLigne;                                       // Nb de lignes de la grille (3)
+    private int      nbColonne;                                     // Nb de colonnes de la grille (3)
+    private Case[][] plateau;                                       // Matrice des cases composant la grille
+    private int[]    totauxLignes;                                  // Tab. des sommes cibles de chaque ligne
+    private int[]    totauxColonnes;                                // Tab. des sommes cibles de chaque colonne
+    private int[]    nbrPossible = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };   // Ensemble des 9 chiffres à répartir
+    private Random   rand        = new Random();                    // Générateur aléatoire pour le mélange et la difficulté
+
+    /*-------------------------------*/
+    /*         Constructeur          */
+    /*-------------------------------*/
+
+    // Constructeur qui instancie une grille 3x3 de cases vides et ses tableaux de totaux
+    public Plateau()
     {
-        this.nbLigne = this.nbColonne = 3;
-        
-        this.plateau = new Case[this.nbLigne][this.nbColonne] ;
+        this.nbLigne   = 3;
+        this.nbColonne = 3;
+        this.plateau   = new Case[this.nbLigne][this.nbColonne];
 
-        for (int i = 0 ; i < 3 ; i++)
-        {
-            for (int j = 0 ; j < 3 ; j++)
-            {
-                this.plateau[i][j] = new Case(i,j) ;
-            }
-        }
+        // Initialise chaque cellule de la matrice avec ses coordonnées
+        for (int lig = 0; lig < this.nbLigne; lig++)
+            for (int col = 0; col < this.nbColonne; col++)
+                this.plateau[lig][col] = new Case(lig, col);
 
-        this.totauxColonnes = new int [3];
-        this.totauxLignes   = new int [3];
-
+        this.totauxLignes   = new int[this.nbLigne];
+        this.totauxColonnes = new int[this.nbColonne];
     }
 
-    public int      getNombreCase        (int x , int y )  { return getCasePlateau(x,y).get_nombre()  ;}
+    /*-------------------------------*/
+    /*      Getters & Setters        */
+    /*-------------------------------*/
 
-    public Case     getCasePlateau       (int x , int y )  { return this.plateau        [x][y] ;}
-    public Case[][] getPlateau           ()                { return this.plateau               ;}
-    public int[]    getEnsTotauxLignes   ()                { return this.totauxLignes          ;}
-    public int      getNbLigne           ()                { return this.plateau.length        ;}
-    public int      getTotauxLignes      (int x )          { return this.totauxLignes   [x]    ;}
-    public int[]    getEnsTotauxColonnes ()                { return this.totauxColonnes        ;}
-    public int      getNbColonne         ()                { return this.plateau[0].length     ;}
-    public int      getTotauxColonnes    (int y )          { return this.totauxColonnes [y]    ;}
-    public int[]    getNbrPossible       ()                { return this.nbrPossible           ;}
+    // Getter qui retourne le nombre de lignes du plateau
+    public int  getNbLigne()                    { return this.nbLigne;                    }
 
-    public void     setTotauxLignes   (int x   , int nbr)      { this.totauxLignes  [x] = nbr  ;}
-    public void     setTotauxColonnes (int y   , int nbr)      { this.totauxColonnes[y] = nbr  ;}
-    public void     setCase           (int x , int y , int nbr){ this.plateau[x][y].set_nombre(nbr) ; }
+    // Getter qui retourne le nombre de colonnes du plateau
+    public int  getNbColonne()                  { return this.nbColonne;                  }
 
-    public void     initPlateau()
+    // Getter qui retourne l'objet Case aux coordonnées (x, y)
+    public Case getCasePlateau(int x, int y)    { return this.plateau[x][y];              }
+
+    // Getter qui retourne le chiffre contenu dans la case (x, y)
+    public int  getNombreCase(int x, int y)     { return this.plateau[x][y].get_nombre(); }
+
+    // Getter qui retourne la somme cible de la ligne x
+    public int  getTotauxLignes(int x)          { return this.totauxLignes[x];            }
+
+    // Getter qui retourne la somme cible de la colonne y
+    public int  getTotauxColonnes(int y)        { return this.totauxColonnes[y];          }
+
+    // Setter qui définit la somme cible de la ligne x
+    public void setTotauxLignes(int x, int nbr)   { this.totauxLignes[x]   = nbr; }
+
+    // Setter qui définit la somme cible de la colonne y
+    public void setTotauxColonnes(int y, int nbr) { this.totauxColonnes[y] = nbr; }
+
+    // Setter qui affecte un chiffre à la case (x, y) uniquement si elle est modifiable
+    public void setCase(int x, int y, int nbr)
     {
-        melangerNombres();
+        if (!this.plateau[x][y].estModifiable()) return;
+        this.plateau[x][y].set_nombre(nbr);
+    }
 
+    /*-------------------------------*/
+    /*      Méthodes utilitaires     */
+    /*-------------------------------*/
+
+    // Méthode utilitaire qui remplit aléatoirement la grille avec les chiffres 1 à 9 et calcule les totaux
+    public void initPlateau()
+    {
+        this.melangerNombres();
+
+        // Répartit les 9 chiffres mélangés dans l'ensemble des cases de la grille
         int index = 0;
-        int taille = this.getPlateau().length;
-
-        for (int x = 0; x < taille; x++)
+        for (int lig = 0; lig < this.nbLigne; lig++)
         {
-            for (int y = 0; y < taille; y++)
+            for (int col = 0; col < this.nbColonne; col++)
             {
-                this.getCasePlateau(x, y).set_nombre(this.nbrPossible[index]);
+                this.plateau[lig][col].set_nombre(this.nbrPossible[index]);
                 index++;
             }
         }
 
-        for (int i = 0; i < taille; i++)
+        // Calcule simultanément les totaux cibles de chaque ligne et de chaque colonne
+        for (int i = 0; i < this.nbLigne; i++)
         {
-            int sommeLigne = 0;
+            int sommeLigne   = 0;
             int sommeColonne = 0;
 
-            for (int j = 0; j < taille; j++)
+            for (int j = 0; j < this.nbColonne; j++)
             {
-                sommeLigne   += this.getCasePlateau(i, j).get_nombre();
-                sommeColonne += this.getCasePlateau(j, i).get_nombre();
+                sommeLigne   += this.plateau[i][j].get_nombre();
+                sommeColonne += this.plateau[j][i].get_nombre();
             }
 
             this.setTotauxLignes(i, sommeLigne);
@@ -81,116 +109,99 @@ public class Plateau
         }
     }
 
-    public void     plateauJeu (int difficulte)
+    // Méthode utilitaire qui verrouille un nombre de cases initiales selon la difficulté choisie
+    public void plateauJeu(int difficulte)
     {
-        if ( difficulte == 0 )
+        int nbCasesRevelees = (difficulte == 0) ? 2 : (difficulte == 1 ? 1 : 0);
+        int cpt = 0;
+
+        // Sélectionne aléatoirement des cases distinctes qui resteront révélées au joueur
+        while (cpt < nbCasesRevelees)
         {
-            Random rand = new Random();
-            int x = 4 ;
-            int y = 4 ;
+            int x = this.rand.nextInt(this.nbLigne);
+            int y = this.rand.nextInt(this.nbColonne);
 
-            int cpt = 0 ;
-
-            while ( cpt < 2 )
+            if (this.plateau[x][y].estModifiable())
             {
-                x = rand.nextInt(this.getNbLigne());
-                y = rand.nextInt(this.getNbColonne());
-                
-                if (this.getCasePlateau(x , y).estModifiable() == true )
-                {
-                    this.getCasePlateau(x , y).setModifiable(false) ;
-                    cpt ++ ;
-                }
-            }
-        }
-        else 
-            if ( difficulte == 1 )
-            {
-                Random rand = new Random();
-                int x = 4 ;
-                int y = 4 ;
-
-                x = rand.nextInt(this.getNbLigne());
-                y = rand.nextInt(this.getNbColonne());
-
-                this.getCasePlateau(x , y).setModifiable(false) ; 
-            }
-    }
-
-    public void     plateauVide ()
-    {
-        for ( int cpt = 0 ; cpt < this.getNbLigne() ; cpt ++ )
-        {
-            for ( int cpt2 = 0 ; cpt2 < this.getNbColonne() ; cpt2 ++ )
-            {
-                if (this.getCasePlateau(cpt , cpt2).estModifiable() == true )
-                {
-                    this.getCasePlateau(cpt , cpt2).set_nombre(0) ;
-                }
+                this.plateau[x][y].setModifiable(false);
+                cpt++;
             }
         }
     }
 
-    public boolean  estPresent ( int nbr )
+    // Méthode utilitaire qui remet à zéro toutes les cases non verrouillées avant le début de la partie
+    public void plateauVide()
     {
-        for ( int cpt = 0 ; cpt < this.getNbLigne() ; cpt ++ )
-            for ( int cpt2 = 0 ; cpt2 < this.getNbColonne() ; cpt2 ++ )
-                if ( this.getCasePlateau(cpt, cpt2).get_nombre() == nbr )
-                    return true ;
-
-        return false ;
+        // Parcourt la grille et masque la valeur des cases modifiables
+        for (int lig = 0; lig < this.nbLigne; lig++)
+            for (int col = 0; col < this.nbColonne; col++)
+                if (this.plateau[lig][col].estModifiable())
+                    this.plateau[lig][col].set_nombre(0);
     }
 
-    public boolean  estGagne ()
+    // Méthode utilitaire qui vérifie si un chiffre donné apparaît déjà dans la grille
+    public boolean estPresent(int nbr)
     {
+        // Parcourt toutes les cases à la recherche d'une occurrence du chiffre
+        for (int lig = 0; lig < this.nbLigne; lig++)
+            for (int col = 0; col < this.nbColonne; col++)
+                if (this.plateau[lig][col].get_nombre() == nbr)
+                    return true;
 
-        for (int cpt = 0; cpt < this.getNbLigne(); cpt++)
+        return false;
+    }
+
+    // Méthode utilitaire qui contrôle si toutes les cases sont remplies et si tous les totaux sont exacts
+    public boolean estGagne()
+    {
+        // Vérifie qu'aucune case n'est vide et que la somme de chaque ligne correspond au total cible
+        for (int lig = 0; lig < this.nbLigne; lig++)
         {
             int somme = 0;
-            for (int cpt2 = 0; cpt2 < this.getNbColonne(); cpt2++)
+            for (int col = 0; col < this.nbColonne; col++)
             {
-                somme += this.getCasePlateau(cpt, cpt2).get_nombre();
+                if (this.plateau[lig][col].estVide()) return false;
+                somme += this.plateau[lig][col].get_nombre();
             }
-            if (somme != this.getTotauxLignes(cpt))
-                return false;
+            if (somme != this.totauxLignes[lig]) return false;
         }
 
-        for (int cpt = 0; cpt < this.getNbColonne(); cpt++)
+        // Vérifie que la somme de chaque colonne correspond au total cible
+        for (int col = 0; col < this.nbColonne; col++)
         {
             int somme = 0;
-            for (int cpt2 = 0; cpt2 < this.getNbLigne(); cpt2++)
-            {
-                somme += this.getCasePlateau(cpt2, cpt).get_nombre();
-            }
-            if (somme != this.getTotauxColonnes(cpt))
-                return false;
+            for (int lig = 0; lig < this.nbLigne; lig++)
+                somme += this.plateau[lig][col].get_nombre();
+
+            if (somme != this.totauxColonnes[col]) return false;
         }
 
         return true;
     }
 
-    public void     echangerNbr(int lig1, int col1, int lig2, int col2) 
+    // Méthode utilitaire qui échange les chiffres de deux cases si elles sont toutes deux modifiables
+    public void echangerNbr(int lig1, int col1, int lig2, int col2)
     {
-        // On récupère les deux objets Case via le Plateau
-        Case case1 = this.getCasePlateau(lig1, col1);
-        Case case2 = this.getCasePlateau(lig2, col2);
-        
-        // On échange physiquement leurs nombres en mémoire
+        Case case1 = this.plateau[lig1][col1];
+        Case case2 = this.plateau[lig2][col2];
+
+        if (!case1.estModifiable() || !case2.estModifiable()) return;
+
         int memoire = case1.get_nombre();
         case1.set_nombre(case2.get_nombre());
         case2.set_nombre(memoire);
     }
 
-    private void    melangerNombres()
+    // Méthode utilitaire qui mélange aléatoirement le tableau des 9 chiffres (algorithme de Fisher-Yates)
+    private void melangerNombres()
     {
-        Random rand = new Random();
+        // Parcourt le tableau à rebours en permutant chaque élément avec un indice aléatoire précédent
         for (int i = this.nbrPossible.length - 1; i > 0; i--)
         {
-            int j = rand.nextInt(i + 1);
+            int j    = this.rand.nextInt(i + 1);
             int temp = this.nbrPossible[i];
-            this.nbrPossible[i] = nbrPossible[j];
+            this.nbrPossible[i] = this.nbrPossible[j];
             this.nbrPossible[j] = temp;
         }
     }
-
 }

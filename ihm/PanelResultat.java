@@ -1,117 +1,115 @@
 package ihm;
 
 import controleur.Controleur;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
+// Classe publique PanelResultat : panneau de fin de partie affichant la victoire ou la défaite
 public class PanelResultat extends JPanel implements ActionListener
 {
-    private Controleur  ctrl;
-    private FrameJeu    frame;
-    private int         indice;
-    private boolean     estVictoire;
-    private String      temps;
+    /*-------------------------------*/
+    /*           Attributs           */
+    /*-------------------------------*/
 
-    private JButton     btnAccueil;
-    private JButton     btnQuitter;
+    private Controleur ctrl;           // Réf. vers le contrôleur du jeu
+    private FrameJeu   frame;          // Réf. vers la fenêtre principale
+    private int        indice;         // Position du panneau dans tabPanel de FrameJeu
+    private boolean    estVictoire;    // Indique si la partie s'est terminée par une victoire
+    private String     temps;          // Temps total formaté de la partie
 
-    private JButton     btnRecommencer;
-    private JButton     btnChoisir;
+    private JLabel     lblResultat;    // Visuel central Victoire ou Défaite
+    private JLabel     lblStats;       // Statistiques de fin de partie (temps et validations)
+    private JButton    btnRecommencer; // Bouton permettant de relancer une nouvelle partie
+    private JButton    btnAccueil;     // Bouton permettant de retourner à l'accueil
+    private JButton    btnQuitter;     // Bouton permettant de fermer l'application
 
-    private JLabel      lblResultat;
-    private JLabel      lblStats;
+    /*-------------------------------*/
+    /*         Constructeur          */
+    /*-------------------------------*/
 
+    // Constructeur qui initialise l'écran de résultat selon l'issue de la partie
     public PanelResultat(Controleur ctrl, FrameJeu frame, int indice, boolean estVictoire, String temps)
     {
         this.setLayout(new GridBagLayout());
         this.setBackground(ConstantesIHM.COULEUR_FOND);
 
-        this.ctrl           = ctrl;
-        this.frame          = frame;
-        this.indice         = indice;
-        this.estVictoire    = estVictoire;
-        this.temps          = temps;
-
-        /*-------------------------------*/
-		/*   Création des composants     */
-		/*-------------------------------*/       
+        this.ctrl        = ctrl;
+        this.frame       = frame;
+        this.indice      = indice;
+        this.estVictoire = estVictoire;
+        this.temps       = temps;
 
         this.creerComposants();
-
-        /*-------------------------------*/
-		/* Positionnement des composants */
-		/*-------------------------------*/        
-
-        this.positionnnerComposants();
-
-        /* ----------------------------- */
-		/* Activation des Composants     */
-		/* ----------------------------- */        
-
+        this.positionnerComposants();
         this.activerComposants();
 
         this.setVisible(true);
     }
 
+    /*-------------------------------*/
+    /*    Méthodes événementielles   */
+    /*-------------------------------*/
+
+    // Méthode événementielle qui gère les clics sur Recommencer, Accueil et Quitter
     @Override
     public void actionPerformed(ActionEvent e)
     {
+        // Retourne à l'accueil et réinitialise le moteur métier
         if (e.getSource() == this.btnAccueil)
         {
             this.frame.setPnl(this.frame.getPnl(0));
             this.ctrl.resetJeu();
         }
-
+        // Relance immédiatement une nouvelle grille sur le panneau de jeu
         else if (e.getSource() == this.btnRecommencer)
         {
             this.frame.cacherMenuBar(true);
             this.frame.restartJeu();
             this.frame.setPnl(this.frame.getPnl(this.indice - 1));
         }
-
+        // Ferme l'application
         else if (e.getSource() == this.btnQuitter)
         {
             System.exit(0);
         }
     }
 
-     // Méthode qui crée les composants de l'interface
+    /*-------------------------------*/
+    /*      Méthodes utilitaires     */
+    /*-------------------------------*/
+
+    // Méthode utilitaire qui crée les boutons d'action et configure l'affichage victoire/défaite
     private void creerComposants()
     {
-        this.btnAccueil     = new JButton("  Retourner à l'accueil");
-        this.btnAccueil     .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
-        this.btnAccueil     .setBackground(Color.WHITE);
-        this.btnAccueil     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
-        this.btnAccueil     .setFocusPainted(false);
-        this.btnAccueil     .setPreferredSize(new Dimension(400, 60));
-        this.btnAccueil     .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/accueil.png", 30, 30)));
+        this.btnRecommencer = this.creerBouton("  Recommencer une partie", ConstantesIHM.COULEUR_ROSE_CERVEAU, "./images/icones/restart.png", 35);
+        this.btnAccueil     = this.creerBouton("  Retourner à l'accueil",  Color.WHITE,                        "./images/icones/accueil.png", 30);
+        this.btnQuitter     = this.creerBouton("  Quitter",                Color.WHITE,                        null,                          0);
 
-        this.btnRecommencer = new JButton("  Recommencer une partie");
-        this.btnRecommencer .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
-        this.btnRecommencer .setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
-        this.btnRecommencer .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
-        this.btnRecommencer .setFocusPainted(false);
-        this.btnRecommencer .setPreferredSize(new Dimension(400, 60));
-        this.btnRecommencer .setIcon(new ImageIcon(this.frame.creerImages("./images/icones/restart.png", 35, 35)));
-        
-        this.btnQuitter     = new JButton("  Quitter");
-        this.btnQuitter     .setFont(new Font("Sans-Serif", Font.PLAIN, 24));
-        this.btnQuitter     .setBackground(Color.WHITE);
-        this.btnQuitter     .setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
-        this.btnQuitter     .setFocusPainted(false);
-        this.btnQuitter     .setPreferredSize(new Dimension(400, 60));
+        this.lblResultat = new JLabel("", SwingConstants.CENTER);
+        this.lblStats    = new JLabel("", SwingConstants.CENTER);
+        this.lblStats.setFont(new Font("Noto Serif Display Black", Font.PLAIN, 28));
 
-        this.lblResultat    = new JLabel("", SwingConstants.CENTER);
-
-        this.lblStats       = new JLabel("", SwingConstants.CENTER);
-        this.lblStats       .setFont(new Font("Noto Serif Display Black", Font.PLAIN, 28));
-        
-        // Si victoire, on affiche "VICTOIRE !" en vert, sinon on affiche "DEFAITE .." en rouge
+        // Adapte le logo et les statistiques affichés selon que la partie est gagnée ou perdue
         if (this.estVictoire)
         {
             this.lblResultat.setIcon(new ImageIcon("./images/logos/victoire.png"));
-            this.lblStats.setText(temps + " | " + frame.getNbValidationsRestantes());
+            this.lblStats.setText(this.temps + " | " + this.frame.getNbValidationsRestantes());
         }
         else
         {
@@ -119,104 +117,90 @@ public class PanelResultat extends JPanel implements ActionListener
         }
     }
 
-    // Méthode qui positionne les composants de l'interface
-    private void positionnnerComposants()
+    // Méthode utilitaire qui crée et stylise un bouton d'action de l'écran de résultat
+    private JButton creerBouton(String texte, Color fond, String cheminIcone, int tailleIcone)
+    {
+        JButton btn = new JButton(texte);
+        btn.setFont(new Font("Sans-Serif", Font.PLAIN, 24));
+        btn.setBackground(fond);
+        btn.setForeground(Color.BLACK);
+        btn.setBorder(BorderFactory.createCompoundBorder(ConstantesIHM.RELIEF, ConstantesIHM.MARGE));
+        btn.setFocusPainted(false);
+        btn.setPreferredSize(new Dimension(400, 60));
+
+        if (cheminIcone != null)
+            btn.setIcon(new ImageIcon(this.frame.creerImages(cheminIcone, tailleIcone, tailleIcone)));
+
+        return btn;
+    }
+
+    // Méthode utilitaire qui place le visuel de résultat, les statistiques et les boutons
+    private void positionnerComposants()
     {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0; // Tout sera empilé dans la même colonne
-        gbc.anchor = GridBagConstraints.CENTER; // Centré horizontalement
+        gbc.gridx  = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
 
-        // Le Label Resultat
-        gbc.gridy = 0; // Tout en haut de notre grille
-        // Insets(Haut, Gauche, Bas, Droite) = grand espace sous le titre
+        gbc.gridy  = 0;
         gbc.insets = new Insets(130, 0, 80, 0);
         this.add(this.lblResultat, gbc);
 
-        gbc.gridy = 1; // Tout en bas
-        gbc.insets = new Insets(0, 0, 40, 0); 
+        gbc.gridy  = 1;
+        gbc.insets = new Insets(0, 0, 40, 0);
         this.add(this.lblStats, gbc);
 
-        // Le bouton Recommencer
-        gbc.gridy = 2; // Tout en bas
-        gbc.insets = new Insets(50, 0, 20, 0); 
+        gbc.gridy  = 2;
+        gbc.insets = new Insets(50, 0, 20, 0);
         this.add(this.btnRecommencer, gbc);
-        
-        // Le bouton Accueil
-        gbc.gridy = 3; // En dessous du titre
-        gbc.insets = new Insets(0, 0, 20, 0); // Petit espace de 50px au-dessus, et 20px sous ce bouton
+
+        gbc.gridy  = 3;
+        gbc.insets = new Insets(0, 0, 20, 0);
         this.add(this.btnAccueil, gbc);
 
-        // Le bouton Quitter 
-        gbc.gridy = 4; // Tout en bas
+        gbc.gridy  = 4;
         gbc.insets = new Insets(0, 0, 20, 0);
         this.add(this.btnQuitter, gbc);
 
-        // LE RESSORT INVISIBLE
-        gbc.gridy = 5; // On le place sur une 4ème ligne
-        gbc.weighty = 1.0; // Il aspire tout l'espace vertical restant
-        this.add(new JLabel(""), gbc); // On ajoute un texte vide
+        gbc.gridy   = 5;
+        gbc.weighty = 1.0;
+        this.add(Box.createVerticalGlue(), gbc);
     }
 
-    // Méthode qui active les composants de l'interface
+    // Méthode utilitaire qui active les écouteurs d'action et de survol sur les boutons
     private void activerComposants()
     {
-        this.btnAccueil     .addActionListener(this);
-        this.btnAccueil      .addMouseListener(new MouseAdapter() 
+        this.configurerSurvolBouton(this.btnRecommencer, ConstantesIHM.COULEUR_ROSE_CERVEAU, ConstantesIHM.COULEUR_ROSE_CERVEAU_FONCE);
+        this.configurerSurvolBouton(this.btnAccueil,     Color.WHITE,                        ConstantesIHM.COULEUR_GRIS_SURVOL);
+        this.configurerSurvolBouton(this.btnQuitter,     Color.WHITE,                        ConstantesIHM.COULEUR_GRIS_SURVOL);
+    }
+
+    // Méthode utilitaire qui applique les effets de survol et de clic sur un bouton
+    private void configurerSurvolBouton(JButton bouton, Color couleurBase, Color couleurSurvol)
+    {
+        bouton.addActionListener(this);
+        bouton.addMouseListener(new MouseAdapter()
         {
+            // Méthode événementielle qui applique la couleur de survol et le curseur main
             @Override
-            public void mouseEntered(MouseEvent e) 
+            public void mouseEntered(MouseEvent e)
             {
-                btnAccueil.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnAccueil.setForeground(Color.BLACK); // Pour que le texte reste lisible
+                bouton.setBackground(couleurSurvol);
+                bouton.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
 
+            // Méthode événementielle qui rétablit la couleur et le curseur par défaut
             @Override
-            public void mouseExited(MouseEvent e) 
+            public void mouseExited(MouseEvent e)
             {
-                btnAccueil.setBackground(Color.WHITE);
+                bouton.setBackground(couleurBase);
+                bouton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }
 
+            // Méthode événementielle qui réinitialise le fond lors de l'appui
             @Override
-            public void mousePressed(MouseEvent e) 
+            public void mousePressed(MouseEvent e)
             {
-                btnAccueil.setBackground(Color.WHITE);
-                btnAccueil.setForeground(Color.BLACK);
-            }
-        });
-
-        this.btnRecommencer .addActionListener(this);
-        this.btnRecommencer      .addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnRecommencer.setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU_FONCE);
-                btnRecommencer.setForeground(Color.BLACK); // Pour que le texte reste lisible
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnRecommencer.setBackground(ConstantesIHM.COULEUR_ROSE_CERVEAU);
-                btnRecommencer.setForeground(Color.BLACK);
-            }
-        });
-
-        this.btnQuitter     .addActionListener(this);
-        this.btnQuitter      .addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseEntered(MouseEvent e) 
-            {
-                btnQuitter.setBackground(ConstantesIHM.COULEUR_GRIS_SURVOL);
-                btnQuitter.setForeground(Color.BLACK); // Pour que le texte reste lisible
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) 
-            {
-                btnQuitter.setBackground(Color.WHITE);
-                btnQuitter.setForeground(Color.BLACK);
+                bouton.setBackground(couleurBase);
             }
         });
     }
