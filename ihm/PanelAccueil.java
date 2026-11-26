@@ -110,7 +110,7 @@ public class PanelAccueil extends JPanel implements ActionListener
      */
     private void creerComposants()
     {
-        this.lblTitre     = new JLabel(new ImageIcon("./images/logos/Fubuki.png"));
+        this.lblTitre     = new JLabel(new ImageIcon("./images/logos/Fubuki.gif"));
         this.lblSousTitre = new JLabel("- Le casse-tête des additions -");
         this.lblSousTitre.setFont(new Font("Noto Serif Display Black", Font.PLAIN, 32));
 
