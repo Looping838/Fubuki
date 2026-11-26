@@ -2,26 +2,47 @@ package metier;
 
 import java.util.Random;
 
-// Classe publique Plateau : modélise la grille 3x3 de Fubuki, ses cases et ses totaux cibles
+/**
+ * Modélise la grille 3x3 de Fubuki, ses cases et ses totaux cibles.
+ *
+ * @author Alexis COFFARD
+ * @author Timothé LARBI
+ * @version 2.0
+ */
 public class Plateau
 {
     /*-------------------------------*/
     /*           Attributs           */
     /*-------------------------------*/
 
-    private int      nbLigne;                                       // Nb de lignes de la grille (3)
-    private int      nbColonne;                                     // Nb de colonnes de la grille (3)
-    private Case[][] plateau;                                       // Matrice des cases composant la grille
-    private int[]    totauxLignes;                                  // Tab. des sommes cibles de chaque ligne
-    private int[]    totauxColonnes;                                // Tab. des sommes cibles de chaque colonne
-    private int[]    nbrPossible = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };   // Ensemble des 9 chiffres à répartir
-    private Random   rand        = new Random();                    // Générateur aléatoire pour le mélange et la difficulté
+    /** Nombre de lignes de la grille (3) */
+    private int      nbLigne;
+
+    /** Nombre de colonnes de la grille (3) */
+    private int      nbColonne;
+
+    /** Matrice des cases composant la grille */
+    private Case[][] plateau;
+
+    /** Tableau des sommes cibles de chaque ligne */
+    private int[]    totauxLignes;
+
+    /** Tableau des sommes cibles de chaque colonne */
+    private int[]    totauxColonnes;
+
+    /** Ensemble des 9 chiffres à répartir dans la grille */
+    private int[]    nbrPossible = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+    /** Générateur aléatoire pour le mélange et le choix des indices initiaux */
+    private Random   rand        = new Random();
 
     /*-------------------------------*/
     /*         Constructeur          */
     /*-------------------------------*/
 
-    // Constructeur qui instancie une grille 3x3 de cases vides et ses tableaux de totaux
+    /**
+     * Constructeur qui instancie une grille 3x3 de cases vides et ses tableaux de totaux.
+     */
     public Plateau()
     {
         this.nbLigne   = 3;
@@ -41,31 +62,77 @@ public class Plateau
     /*      Getters & Setters        */
     /*-------------------------------*/
 
-    // Getter qui retourne le nombre de lignes du plateau
+    /**
+     * Getter qui retourne le nombre de lignes du plateau.
+     *
+     * @return Nombre de lignes
+     */
     public int  getNbLigne()                    { return this.nbLigne;                    }
 
-    // Getter qui retourne le nombre de colonnes du plateau
+    /**
+     * Getter qui retourne le nombre de colonnes du plateau.
+     *
+     * @return Nombre de colonnes
+     */
     public int  getNbColonne()                  { return this.nbColonne;                  }
 
-    // Getter qui retourne l'objet Case aux coordonnées (x, y)
+    /**
+     * Getter qui retourne l'objet Case aux coordonnées (x, y).
+     *
+     * @param x Indice de ligne
+     * @param y Indice de colonne
+     * @return Instance de {@link Case} correspondante
+     */
     public Case getCasePlateau(int x, int y)    { return this.plateau[x][y];              }
 
-    // Getter qui retourne le chiffre contenu dans la case (x, y)
+    /**
+     * Getter qui retourne le chiffre contenu dans la case (x, y).
+     *
+     * @param x Indice de ligne
+     * @param y Indice de colonne
+     * @return Chiffre placé dans la case (0 si vide)
+     */
     public int  getNombreCase(int x, int y)     { return this.plateau[x][y].get_nombre(); }
 
-    // Getter qui retourne la somme cible de la ligne x
+    /**
+     * Getter qui retourne la somme cible de la ligne x.
+     *
+     * @param x Indice de ligne
+     * @return Somme cible de la ligne
+     */
     public int  getTotauxLignes(int x)          { return this.totauxLignes[x];            }
 
-    // Getter qui retourne la somme cible de la colonne y
+    /**
+     * Getter qui retourne la somme cible de la colonne y.
+     *
+     * @param y Indice de colonne
+     * @return Somme cible de la colonne
+     */
     public int  getTotauxColonnes(int y)        { return this.totauxColonnes[y];          }
 
-    // Setter qui définit la somme cible de la ligne x
+    /**
+     * Setter qui définit la somme cible de la ligne x.
+     *
+     * @param x Indice de ligne
+     * @param nbr Somme cible à affecter
+     */
     public void setTotauxLignes(int x, int nbr)   { this.totauxLignes[x]   = nbr; }
 
-    // Setter qui définit la somme cible de la colonne y
+    /**
+     * Setter qui définit la somme cible de la colonne y.
+     *
+     * @param y Indice de colonne
+     * @param nbr Somme cible à affecter
+     */
     public void setTotauxColonnes(int y, int nbr) { this.totauxColonnes[y] = nbr; }
 
-    // Setter qui affecte un chiffre à la case (x, y) uniquement si elle est modifiable
+    /**
+     * Setter qui affecte un chiffre à la case (x, y) uniquement si elle est modifiable.
+     *
+     * @param x Indice de ligne
+     * @param y Indice de colonne
+     * @param nbr Chiffre à placer dans la case
+     */
     public void setCase(int x, int y, int nbr)
     {
         if (!this.plateau[x][y].estModifiable()) return;
@@ -76,7 +143,9 @@ public class Plateau
     /*      Méthodes utilitaires     */
     /*-------------------------------*/
 
-    // Méthode utilitaire qui remplit aléatoirement la grille avec les chiffres 1 à 9 et calcule les totaux
+    /**
+     * Méthode utilitaire qui remplit aléatoirement la grille avec les chiffres 1 à 9 et calcule les totaux.
+     */
     public void initPlateau()
     {
         this.melangerNombres();
@@ -109,7 +178,11 @@ public class Plateau
         }
     }
 
-    // Méthode utilitaire qui verrouille un nombre de cases initiales selon la difficulté choisie
+    /**
+     * Méthode utilitaire qui verrouille un nombre de cases initiales selon la difficulté choisie.
+     *
+     * @param difficulte Niveau de difficulté (0 : 2 cases révélées, 1 : 1 case révélée, 2 : aucune)
+     */
     public void plateauJeu(int difficulte)
     {
         int nbCasesRevelees = (difficulte == 0) ? 2 : (difficulte == 1 ? 1 : 0);
@@ -129,7 +202,9 @@ public class Plateau
         }
     }
 
-    // Méthode utilitaire qui remet à zéro toutes les cases non verrouillées avant le début de la partie
+    /**
+     * Méthode utilitaire qui remet à zéro toutes les cases non verrouillées avant le début de la partie.
+     */
     public void plateauVide()
     {
         // Parcourt la grille et masque la valeur des cases modifiables
@@ -139,7 +214,12 @@ public class Plateau
                     this.plateau[lig][col].set_nombre(0);
     }
 
-    // Méthode utilitaire qui vérifie si un chiffre donné apparaît déjà dans la grille
+    /**
+     * Méthode utilitaire qui vérifie si un chiffre donné apparaît déjà dans la grille.
+     *
+     * @param nbr Chiffre recherché (entre 1 et 9)
+     * @return {@code true} si le chiffre est présent sur au moins une case, {@code false} sinon
+     */
     public boolean estPresent(int nbr)
     {
         // Parcourt toutes les cases à la recherche d'une occurrence du chiffre
@@ -151,7 +231,11 @@ public class Plateau
         return false;
     }
 
-    // Méthode utilitaire qui contrôle si toutes les cases sont remplies et si tous les totaux sont exacts
+    /**
+     * Méthode utilitaire qui contrôle si toutes les cases sont remplies et si tous les totaux sont exacts.
+     *
+     * @return {@code true} si la grille est complète et valide, {@code false} sinon
+     */
     public boolean estGagne()
     {
         // Vérifie qu'aucune case n'est vide et que la somme de chaque ligne correspond au total cible
@@ -179,7 +263,14 @@ public class Plateau
         return true;
     }
 
-    // Méthode utilitaire qui échange les chiffres de deux cases si elles sont toutes deux modifiables
+    /**
+     * Méthode utilitaire qui échange les chiffres de deux cases si elles sont toutes deux modifiables.
+     *
+     * @param lig1 Indice de ligne de la première case
+     * @param col1 Indice de colonne de la première case
+     * @param lig2 Indice de ligne de la seconde case
+     * @param col2 Indice de colonne de la seconde case
+     */
     public void echangerNbr(int lig1, int col1, int lig2, int col2)
     {
         Case case1 = this.plateau[lig1][col1];
@@ -192,7 +283,9 @@ public class Plateau
         case2.set_nombre(memoire);
     }
 
-    // Méthode utilitaire qui mélange aléatoirement le tableau des 9 chiffres (algorithme de Fisher-Yates)
+    /**
+     * Méthode utilitaire qui mélange aléatoirement le tableau des 9 chiffres (algorithme de Fisher-Yates).
+     */
     private void melangerNombres()
     {
         // Parcourt le tableau à rebours en permutant chaque élément avec un indice aléatoire précédent

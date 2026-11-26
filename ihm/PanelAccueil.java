@@ -19,26 +19,48 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-// Classe publique PanelAccueil : panneau d'accueil permettant de lancer une partie ou quitter
+/**
+ * Panneau d'accueil permettant de lancer une partie ou quitter l'application.
+ *
+ * @author Alexis COFFARD
+ * @author Timothé LARBI
+ * @version 2.0
+ */
 public class PanelAccueil extends JPanel implements ActionListener
 {
     /*-------------------------------*/
     /*           Attributs           */
     /*-------------------------------*/
 
-    private FrameJeu frame;        // Réf. vers la fenêtre principale
-    private int      indice;       // Position du panneau dans tabPanel de FrameJeu
+    /** Réf. vers la fenêtre principale */
+    private FrameJeu frame;
 
-    private JLabel   lblTitre;     // Logo principal Fubuki
-    private JLabel   lblSousTitre; // Slogan affiché sous le logo
-    private JButton  btnJouer;     // Bouton permettant d'accéder au choix de difficulté
-    private JButton  btnQuitter;   // Bouton permettant de fermer l'application
+    /** Position du panneau dans tabPanel de FrameJeu */
+    private int      indice;
+
+    /** Logo principal Fubuki */
+    private JLabel   lblTitre;
+
+    /** Slogan affiché sous le logo */
+    private JLabel   lblSousTitre;
+
+    /** Bouton permettant d'accéder au choix de difficulté */
+    private JButton  btnJouer;
+
+    /** Bouton permettant de fermer l'application */
+    private JButton  btnQuitter;
 
     /*-------------------------------*/
     /*         Constructeur          */
     /*-------------------------------*/
 
-    // Constructeur qui initialise le panneau d'accueil et ses composants
+    /**
+     * Constructeur qui initialise le panneau d'accueil et ses composants.
+     *
+     * @param ctrl Référence vers le contrôleur de l'application
+     * @param frame Référence vers la fenêtre principale
+     * @param indice Indice du panneau dans {@link FrameJeu}
+     */
     public PanelAccueil(Controleur ctrl, FrameJeu frame, int indice)
     {
         this.setLayout(new GridBagLayout());
@@ -58,7 +80,11 @@ public class PanelAccueil extends JPanel implements ActionListener
     /*    Méthodes événementielles   */
     /*-------------------------------*/
 
-    // Méthode événementielle qui gère les clics sur les boutons Jouer et Quitter
+    /**
+     * Méthode événementielle qui gère les clics sur les boutons Jouer et Quitter.
+     *
+     * @param e Événement d'action déclenché par le bouton
+     */
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -79,7 +105,9 @@ public class PanelAccueil extends JPanel implements ActionListener
     /*      Méthodes utilitaires     */
     /*-------------------------------*/
 
-    // Méthode utilitaire qui instancie et configure les labels et boutons de l'accueil
+    /**
+     * Méthode utilitaire qui instancie et configure les labels et boutons de l'accueil.
+     */
     private void creerComposants()
     {
         this.lblTitre     = new JLabel(new ImageIcon("./images/logos/Fubuki.png"));
@@ -90,7 +118,13 @@ public class PanelAccueil extends JPanel implements ActionListener
         this.btnQuitter = this.creerBouton("Quitter", Color.WHITE);
     }
 
-    // Méthode utilitaire qui crée et stylise un bouton standard de l'accueil
+    /**
+     * Méthode utilitaire qui crée et stylise un bouton standard de l'accueil.
+     *
+     * @param texte Libellé affiché sur le bouton
+     * @param fond Couleur de fond du bouton
+     * @return Bouton configuré
+     */
     private JButton creerBouton(String texte, Color fond)
     {
         JButton btn = new JButton(texte);
@@ -103,7 +137,9 @@ public class PanelAccueil extends JPanel implements ActionListener
         return btn;
     }
 
-    // Méthode utilitaire qui place les composants sur la grille GridBagLayout
+    /**
+     * Méthode utilitaire qui place les composants sur la grille GridBagLayout.
+     */
     private void positionnerComposants()
     {
         GridBagConstraints gbc = new GridBagConstraints();
@@ -131,14 +167,22 @@ public class PanelAccueil extends JPanel implements ActionListener
         this.add(Box.createVerticalGlue(), gbc);
     }
 
-    // Méthode utilitaire qui associe les écouteurs d'action et de survol aux boutons
+    /**
+     * Méthode utilitaire qui associe les écouteurs d'action et de survol aux boutons.
+     */
     private void activerComposants()
     {
         this.configurerSurvolBouton(this.btnJouer,   ConstantesIHM.COULEUR_ROSE_CERVEAU, ConstantesIHM.COULEUR_ROSE_CERVEAU_FONCE);
         this.configurerSurvolBouton(this.btnQuitter, Color.WHITE,                        ConstantesIHM.COULEUR_GRIS_SURVOL);
     }
 
-    // Méthode utilitaire qui applique les effets visuels de survol et de clic sur un bouton
+    /**
+     * Méthode utilitaire qui applique les effets visuels de survol et de clic sur un bouton.
+     *
+     * @param bouton Bouton à configurer
+     * @param couleurBase Couleur au repos
+     * @param couleurSurvol Couleur au survol de la souris
+     */
     private void configurerSurvolBouton(JButton bouton, Color couleurBase, Color couleurSurvol)
     {
         bouton.addActionListener(this);

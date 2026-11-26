@@ -22,29 +22,57 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
-// Classe publique PanelChoixDiff : panneau permettant au joueur de choisir le niveau de difficulté
+/**
+ * Panneau permettant au joueur de choisir le niveau de difficulté avant de démarrer une partie.
+ *
+ * @author Alexis COFFARD
+ * @author Timothé LARBI
+ * @version 2.0
+ */
 public class PanelChoixDiff extends JPanel implements ActionListener
 {
     /*-------------------------------*/
     /*           Attributs           */
     /*-------------------------------*/
 
-    private Controleur ctrl;          // Réf. vers le contrôleur pour initialiser la partie
-    private FrameJeu   frame;         // Réf. vers la fenêtre principale
-    private int        indice;        // Position du panneau dans tabPanel de FrameJeu
+    /** Réf. vers le contrôleur pour initialiser la partie */
+    private Controleur ctrl;
 
-    private JLabel     lblTitre;      // Titre invitant à choisir une difficulté
-    private JPanel     pnlDifficulte; // Conteneur alignant horizontalement les 3 cartes de difficulté
-    private JButton    btnFacile;     // Carte de sélection du mode Facile (2 indices)
-    private JButton    btnMoyen;      // Carte de sélection du mode Moyen (1 indice)
-    private JButton    btnDifficile;  // Carte de sélection du mode Difficile (0 indice)
-    private JButton    btnRetour;     // Bouton de retour vers l'écran d'accueil
+    /** Réf. vers la fenêtre principale */
+    private FrameJeu   frame;
+
+    /** Position du panneau dans tabPanel de FrameJeu */
+    private int        indice;
+
+    /** Titre invitant à choisir une difficulté */
+    private JLabel     lblTitre;
+
+    /** Conteneur alignant horizontalement les 3 cartes de difficulté */
+    private JPanel     pnlDifficulte;
+
+    /** Carte de sélection du mode Facile (2 indices) */
+    private JButton    btnFacile;
+
+    /** Carte de sélection du mode Moyen (1 indice) */
+    private JButton    btnMoyen;
+
+    /** Carte de sélection du mode Difficile (0 indice) */
+    private JButton    btnDifficile;
+
+    /** Bouton de retour vers l'écran d'accueil */
+    private JButton    btnRetour;
 
     /*-------------------------------*/
     /*         Constructeur          */
     /*-------------------------------*/
 
-    // Constructeur qui initialise le panneau de choix de difficulté
+    /**
+     * Constructeur qui initialise le panneau de choix de difficulté.
+     *
+     * @param ctrl Référence vers le contrôleur de l'application
+     * @param frame Référence vers la fenêtre principale
+     * @param indice Indice du panneau dans {@link FrameJeu}
+     */
     public PanelChoixDiff(Controleur ctrl, FrameJeu frame, int indice)
     {
         this.setLayout(new GridBagLayout());
@@ -65,7 +93,11 @@ public class PanelChoixDiff extends JPanel implements ActionListener
     /*    Méthodes événementielles   */
     /*-------------------------------*/
 
-    // Méthode événementielle qui traite le retour à l'accueil ou le lancement d'une partie
+    /**
+     * Méthode événementielle qui traite le retour à l'accueil ou le lancement d'une partie.
+     *
+     * @param e Événement d'action déclenché par le bouton cliqué
+     */
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -95,7 +127,9 @@ public class PanelChoixDiff extends JPanel implements ActionListener
     /*      Méthodes utilitaires     */
     /*-------------------------------*/
 
-    // Méthode utilitaire qui instancie le titre, les trois boutons de difficulté et le bouton retour
+    /**
+     * Méthode utilitaire qui instancie le titre, les trois boutons de difficulté et le bouton retour.
+     */
     private void creerComposants()
     {
         this.lblTitre = new JLabel("Choisissez une difficulté :");
@@ -117,7 +151,14 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.pnlDifficulte.setOpaque(false);
     }
 
-    // Méthode utilitaire qui crée et met en forme un bouton de sélection de difficulté
+    /**
+     * Méthode utilitaire qui crée et met en forme un bouton de sélection de difficulté.
+     *
+     * @param libelle Nom du niveau de difficulté
+     * @param cheminIcone Chemin vers l'icône d'étoiles associée
+     * @param fond Couleur de fond de la carte
+     * @return Carte de difficulté stylisée
+     */
     private JButton creerBoutonDifficulte(String libelle, String cheminIcone, Color fond)
     {
         JButton btn = new JButton(libelle);
@@ -133,7 +174,9 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         return btn;
     }
 
-    // Méthode utilitaire qui dispose les boutons de difficulté et le bouton retour dans le panneau
+    /**
+     * Méthode utilitaire qui dispose les boutons de difficulté et le bouton retour dans le panneau.
+     */
     private void positionnerComposants()
     {
         this.pnlDifficulte.add(this.btnFacile);
@@ -161,7 +204,9 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         this.add(Box.createVerticalGlue(), gbc);
     }
 
-    // Méthode utilitaire qui active les écouteurs sur les boutons de difficulté et de retour
+    /**
+     * Méthode utilitaire qui active les écouteurs sur les boutons de difficulté et de retour.
+     */
     private void activerComposants()
     {
         this.activerBoutonDifficulte(this.btnFacile,    ConstantesIHM.COULEUR_FOND_BOUTON_FACILE, ConstantesIHM.VERT_DIFFICULTE,   ConstantesIHM.OMBRE_FACILE);
@@ -196,7 +241,14 @@ public class PanelChoixDiff extends JPanel implements ActionListener
         });
     }
 
-    // Méthode utilitaire qui configure les bordures 3D et le survol d'un bouton de difficulté
+    /**
+     * Méthode utilitaire qui configure les bordures 3D et le survol d'un bouton de difficulté.
+     *
+     * @param btn Bouton de difficulté à configurer
+     * @param fondBase Couleur au repos
+     * @param fondSurvol Couleur au survol
+     * @param couleurOmbre Couleur de la bordure d'ombre portée
+     */
     private void activerBoutonDifficulte(JButton btn, Color fondBase, Color fondSurvol, Color couleurOmbre)
     {
         Border ombre          = BorderFactory.createMatteBorder(0, 0, 3, 3, couleurOmbre);

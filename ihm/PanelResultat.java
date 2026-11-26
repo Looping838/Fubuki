@@ -20,30 +20,62 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-// Classe publique PanelResultat : panneau de fin de partie affichant la victoire ou la défaite
+/**
+ * Panneau de fin de partie affichant la victoire ou la défaite ainsi que les statistiques.
+ *
+ * @author Alexis COFFARD
+ * @author Timothé LARBI
+ * @version 2.0
+ */
 public class PanelResultat extends JPanel implements ActionListener
 {
     /*-------------------------------*/
     /*           Attributs           */
     /*-------------------------------*/
 
-    private Controleur ctrl;           // Réf. vers le contrôleur du jeu
-    private FrameJeu   frame;          // Réf. vers la fenêtre principale
-    private int        indice;         // Position du panneau dans tabPanel de FrameJeu
-    private boolean    estVictoire;    // Indique si la partie s'est terminée par une victoire
-    private String     temps;          // Temps total formaté de la partie
+    /** Réf. vers le contrôleur du jeu */
+    private Controleur ctrl;
 
-    private JLabel     lblResultat;    // Visuel central Victoire ou Défaite
-    private JLabel     lblStats;       // Statistiques de fin de partie (temps et validations)
-    private JButton    btnRecommencer; // Bouton permettant de relancer une nouvelle partie
-    private JButton    btnAccueil;     // Bouton permettant de retourner à l'accueil
-    private JButton    btnQuitter;     // Bouton permettant de fermer l'application
+    /** Réf. vers la fenêtre principale */
+    private FrameJeu   frame;
+
+    /** Position du panneau dans tabPanel de FrameJeu */
+    private int        indice;
+
+    /** Indique si la partie s'est terminée par une victoire */
+    private boolean    estVictoire;
+
+    /** Temps total formaté de la partie */
+    private String     temps;
+
+    /** Visuel central Victoire ou Défaite */
+    private JLabel     lblResultat;
+
+    /** Statistiques de fin de partie (temps et validations) */
+    private JLabel     lblStats;
+
+    /** Bouton permettant de relancer une nouvelle partie */
+    private JButton    btnRecommencer;
+
+    /** Bouton permettant de retourner à l'accueil */
+    private JButton    btnAccueil;
+
+    /** Bouton permettant de fermer l'application */
+    private JButton    btnQuitter;
 
     /*-------------------------------*/
     /*         Constructeur          */
     /*-------------------------------*/
 
-    // Constructeur qui initialise l'écran de résultat selon l'issue de la partie
+    /**
+     * Constructeur qui initialise l'écran de résultat selon l'issue de la partie.
+     *
+     * @param ctrl Référence vers le contrôleur de l'application
+     * @param frame Référence vers la fenêtre principale
+     * @param indice Indice du panneau dans {@link FrameJeu}
+     * @param estVictoire {@code true} en cas de victoire, {@code false} en cas de défaite
+     * @param temps Temps total formaté de la partie
+     */
     public PanelResultat(Controleur ctrl, FrameJeu frame, int indice, boolean estVictoire, String temps)
     {
         this.setLayout(new GridBagLayout());
@@ -66,7 +98,11 @@ public class PanelResultat extends JPanel implements ActionListener
     /*    Méthodes événementielles   */
     /*-------------------------------*/
 
-    // Méthode événementielle qui gère les clics sur Recommencer, Accueil et Quitter
+    /**
+     * Méthode événementielle qui gère les clics sur Recommencer, Accueil et Quitter.
+     *
+     * @param e Événement d'action déclenché par le bouton
+     */
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -94,7 +130,9 @@ public class PanelResultat extends JPanel implements ActionListener
     /*      Méthodes utilitaires     */
     /*-------------------------------*/
 
-    // Méthode utilitaire qui crée les boutons d'action et configure l'affichage victoire/défaite
+    /**
+     * Méthode utilitaire qui crée les boutons d'action et configure l'affichage victoire/défaite.
+     */
     private void creerComposants()
     {
         this.btnRecommencer = this.creerBouton("  Recommencer une partie", ConstantesIHM.COULEUR_ROSE_CERVEAU, "./images/icones/restart.png", 35);
@@ -117,7 +155,15 @@ public class PanelResultat extends JPanel implements ActionListener
         }
     }
 
-    // Méthode utilitaire qui crée et stylise un bouton d'action de l'écran de résultat
+    /**
+     * Méthode utilitaire qui crée et stylise un bouton d'action de l'écran de résultat.
+     *
+     * @param texte Libellé du bouton
+     * @param fond Couleur de fond du bouton
+     * @param cheminIcone Chemin vers l'icône (ou {@code null} si aucune icône)
+     * @param tailleIcone Dimension carrée de l'icône en pixels
+     * @return Bouton configuré
+     */
     private JButton creerBouton(String texte, Color fond, String cheminIcone, int tailleIcone)
     {
         JButton btn = new JButton(texte);
@@ -134,7 +180,9 @@ public class PanelResultat extends JPanel implements ActionListener
         return btn;
     }
 
-    // Méthode utilitaire qui place le visuel de résultat, les statistiques et les boutons
+    /**
+     * Méthode utilitaire qui place le visuel de résultat, les statistiques et les boutons.
+     */
     private void positionnerComposants()
     {
         GridBagConstraints gbc = new GridBagConstraints();
@@ -166,7 +214,9 @@ public class PanelResultat extends JPanel implements ActionListener
         this.add(Box.createVerticalGlue(), gbc);
     }
 
-    // Méthode utilitaire qui active les écouteurs d'action et de survol sur les boutons
+    /**
+     * Méthode utilitaire qui active les écouteurs d'action et de survol sur les boutons.
+     */
     private void activerComposants()
     {
         this.configurerSurvolBouton(this.btnRecommencer, ConstantesIHM.COULEUR_ROSE_CERVEAU, ConstantesIHM.COULEUR_ROSE_CERVEAU_FONCE);
@@ -174,7 +224,13 @@ public class PanelResultat extends JPanel implements ActionListener
         this.configurerSurvolBouton(this.btnQuitter,     Color.WHITE,                        ConstantesIHM.COULEUR_GRIS_SURVOL);
     }
 
-    // Méthode utilitaire qui applique les effets de survol et de clic sur un bouton
+    /**
+     * Méthode utilitaire qui applique les effets de survol et de clic sur un bouton.
+     *
+     * @param bouton Bouton à configurer
+     * @param couleurBase Couleur au repos
+     * @param couleurSurvol Couleur au survol de la souris
+     */
     private void configurerSurvolBouton(JButton bouton, Color couleurBase, Color couleurSurvol)
     {
         bouton.addActionListener(this);

@@ -48,72 +48,162 @@ import javax.swing.TransferHandler;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 
-// Classe publique PanelJeu : panneau principal gérant l'affichage du plateau, des outils et des interactions de jeu
+/**
+ * Panneau principal gérant l'affichage du plateau, des outils et des interactions de jeu.
+ *
+ * @author Alexis COFFARD
+ * @author Timothé LARBI
+ * @version 2.0
+ */
 public class PanelJeu extends JPanel implements ActionListener
 {
     /*-------------------------------*/
     /*           Attributs           */
     /*-------------------------------*/
 
-    private static final int NB_VALIDATIONS_MAX = 3; // Nb max. d'essais de validation par partie
+    /** Nombre maximal d'essais de validation autorisés par partie */
+    private static final int NB_VALIDATIONS_MAX = 3;
 
-    private Controleur    ctrl;                 // Réf. vers le contrôleur du jeu
-    private FrameJeu      frame;                // Réf. vers la fenêtre principale
-    private int           indice;               // Position du panneau dans tabPanel de FrameJeu
+    /** Réf. vers le contrôleur du jeu */
+    private Controleur    ctrl;
 
-    private int           taillePlateau;        // Taille en pixels du plateau carré
-    private int           tailleBoutonPave;     // Taille en pixels d'une touche du pavé numérique
-    private int           tailleBoutonOutil;    // Largeur totale alignée des boutons d'outils
+    /** Réf. vers la fenêtre principale */
+    private FrameJeu      frame;
 
-    private int           nbLigne;              // Nb de lignes de la grille jouable
-    private int           nbColonne;            // Nb de colonnes de la grille jouable
-    private int           ligSelectionne;       // Indice de ligne de la case sélectionnée (-1 si aucune)
-    private int           colSelectionne;       // Indice de colonne de la case sélectionnée (-1 si aucune)
+    /** Position du panneau dans tabPanel de FrameJeu */
+    private int           indice;
 
-    private JPanel[][]    tabPnlCases;          // Matrice des panneaux graphiques des cases jouables
-    private Border[][]    tabBorduresNormales;  // Matrice des bordures par défaut de chaque case
-    private Border[][]    tabBorduresSelection; // Matrice des bordures roses de sélection de chaque case
-    private JLabel[]      tabLblTotauxLignes;   // Tab. des labels affichant les sommes cibles des lignes
-    private JLabel[]      tabLblTotauxColonnes; // Tab. des labels affichant les sommes cibles des colonnes
+    /** Taille en pixels du plateau carré */
+    private int           taillePlateau;
 
-    private JPanel        pnlHaut;              // Conteneur supérieur hébergeant le bandeau de validations
-    private JPanel        pnlCentre;            // Conteneur central regroupant le plateau et la colonne droite
-    private JPanel        pnlBas;               // Conteneur inférieur regroupant le séparateur et les boutons
-    private JPanel        pnlBandeau;           // Bandeau affichant le compteur de validations restantes
-    private JPanel        pnlPlateau;           // Grille visuelle contenant les cases et les totaux
-    private JPanel        pnlNbres;             // Grille 3x3 du pavé numérique (chiffres 1 à 9)
-    private JPanel        pnlBoutons;           // Barre inférieure des boutons d'action généraux
-    private JPanel        pnlOutils;            // Panneau regroupant Gomme, Indice et Mode Brouillon
-    private JPanel        pnlColonneDroite;     // Colonne droite superposant le pavé numérique et les outils
-    private JSeparator    separateurBas;        // Ligne horizontale séparant le plateau de la barre du bas
-    private JMenuBar      barreMenu;            // Barre de menu supérieure contenant l'aide
+    /** Taille en pixels d'une touche du pavé numérique */
+    private int           tailleBoutonPave;
 
-    private JLabel        lblValidation;        // Texte descriptif du compteur de validations
-    private JLabel        lblNbValidations;     // Label affichant le cœur et le nb de validations restantes
+    /** Largeur totale alignée des boutons d'outils */
+    private int           tailleBoutonOutil;
 
-    private JButton       btnValide;            // Bouton permettant de vérifier si la grille est gagnante
-    private JButton       btnReset;             // Bouton vidant toutes les cases modifiables de la grille
-    private JButton       btnRestart;           // Bouton générant une nouvelle grille de même difficulté
-    private JButton       btnAccueil;           // Bouton permettant de revenir à l'accueil
-    private JButton       btnAnnuler;           // Bouton annulant le dernier coup via la pile d'historique
-    private JButton       btnGomme;             // Outil effaçant le chiffre de la case sélectionnée
-    private JButton       btnIndice;            // Outil révélant et verrouillant une case correcte au hasard
-    private JButton       btnBrouillon;         // Bouton basculant entre placement définitif et notes brouillon
+    /** Nombre de lignes de la grille jouable */
+    private int           nbLigne;
 
-    private ButtonGroup   grpBtn;               // Groupe assurant l'exclusivité des 9 touches du pavé
-    private JToggleButton btnActif;             // Touche du pavé numérique actuellement sélectionnée
+    /** Nombre de colonnes de la grille jouable */
+    private int           nbColonne;
 
-    private boolean       modeValidation = false; // Indique si les totaux doivent être colorés en vert/rouge
-    private boolean       modeBrouillon  = false; // Indique si le mode saisie de candidats est activé
-    private int           nbIndicesRestants;      // Compteur d'indices encore disponibles dans la partie
-    private int           nbValidationsRestantes; // Compteur d'essais de validation restants
-    private long          tempsDebut;             // Horodatage (en ms) du début de la partie
+    /** Indice de ligne de la case sélectionnée (-1 si aucune) */
+    private int           ligSelectionne;
+
+    /** Indice de colonne de la case sélectionnée (-1 si aucune) */
+    private int           colSelectionne;
+
+    /** Matrice des panneaux graphiques des cases jouables */
+    private JPanel[][]    tabPnlCases;
+
+    /** Matrice des bordures par défaut de chaque case */
+    private Border[][]    tabBorduresNormales;
+
+    /** Matrice des bordures roses de sélection de chaque case */
+    private Border[][]    tabBorduresSelection;
+
+    /** Tableau des labels affichant les sommes cibles des lignes */
+    private JLabel[]      tabLblTotauxLignes;
+
+    /** Tableau des labels affichant les sommes cibles des colonnes */
+    private JLabel[]      tabLblTotauxColonnes;
+
+    /** Conteneur supérieur hébergeant le bandeau de validations */
+    private JPanel        pnlHaut;
+
+    /** Conteneur central regroupant le plateau et la colonne droite */
+    private JPanel        pnlCentre;
+
+    /** Conteneur inférieur regroupant le séparateur et les boutons */
+    private JPanel        pnlBas;
+
+    /** Bandeau affichant le compteur de validations restantes */
+    private JPanel        pnlBandeau;
+
+    /** Grille visuelle contenant les cases et les totaux */
+    private JPanel        pnlPlateau;
+
+    /** Grille 3x3 du pavé numérique (chiffres 1 à 9) */
+    private JPanel        pnlNbres;
+
+    /** Barre inférieure des boutons d'action généraux */
+    private JPanel        pnlBoutons;
+
+    /** Panneau regroupant Gomme, Indice et Mode Brouillon */
+    private JPanel        pnlOutils;
+
+    /** Colonne droite superposant le pavé numérique et les outils */
+    private JPanel        pnlColonneDroite;
+
+    /** Ligne horizontale séparant le plateau de la barre du bas */
+    private JSeparator    separateurBas;
+
+    /** Barre de menu supérieure contenant l'aide */
+    private JMenuBar      barreMenu;
+
+    /** Texte descriptif du compteur de validations */
+    private JLabel        lblValidation;
+
+    /** Label affichant le cœur et le nombre de validations restantes */
+    private JLabel        lblNbValidations;
+
+    /** Bouton permettant de vérifier si la grille est gagnante */
+    private JButton       btnValide;
+
+    /** Bouton vidant toutes les cases modifiables de la grille */
+    private JButton       btnReset;
+
+    /** Bouton générant une nouvelle grille de même difficulté */
+    private JButton       btnRestart;
+
+    /** Bouton permettant de revenir à l'accueil */
+    private JButton       btnAccueil;
+
+    /** Bouton annulant le dernier coup via la pile d'historique */
+    private JButton       btnAnnuler;
+
+    /** Outil effaçant le chiffre de la case sélectionnée */
+    private JButton       btnGomme;
+
+    /** Outil révélant et verrouillant une case correcte au hasard */
+    private JButton       btnIndice;
+
+    /** Bouton basculant entre placement définitif et notes brouillon */
+    private JButton       btnBrouillon;
+
+    /** Groupe assurant l'exclusivité des 9 touches du pavé */
+    private ButtonGroup   grpBtn;
+
+    /** Touche du pavé numérique actuellement sélectionnée */
+    private JToggleButton btnActif;
+
+    /** Indique si les totaux doivent être colorés en vert/rouge */
+    private boolean       modeValidation = false;
+
+    /** Indique si le mode saisie de candidats est activé */
+    private boolean       modeBrouillon  = false;
+
+    /** Compteur d'indices encore disponibles dans la partie */
+    private int           nbIndicesRestants;
+
+    /** Compteur d'essais de validation restants */
+    private int           nbValidationsRestantes;
+
+    /** Horodatage (en ms) du début de la partie */
+    private long          tempsDebut;
 
     /*-------------------------------*/
     /*         Constructeur          */
     /*-------------------------------*/
 
-    // Constructeur qui initialise l'interface complète de jeu et affiche le plateau
+    /**
+     * Constructeur qui initialise l'interface complète de jeu et affiche le plateau.
+     *
+     * @param ctrl Référence vers le contrôleur de l'application
+     * @param frame Référence vers la fenêtre principale
+     * @param indice Indice du panneau dans {@link FrameJeu}
+     */
     public PanelJeu(Controleur ctrl, FrameJeu frame, int indice)
     {
         UIManager.put("ToggleButton.select", ConstantesIHM.COULEUR_ROSE_CERVEAU);
@@ -138,7 +228,11 @@ public class PanelJeu extends JPanel implements ActionListener
     /*    Méthodes événementielles   */
     /*-------------------------------*/
 
-    // Méthode événementielle qui gère les clics sur le pavé numérique, les outils et les boutons d'action
+    /**
+     * Méthode événementielle qui gère les clics sur le pavé numérique, les outils et les boutons d'action.
+     *
+     * @param e Événement d'action déclenché par le composant sélectionné
+     */
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -285,13 +379,21 @@ public class PanelJeu extends JPanel implements ActionListener
     /*            Getters            */
     /*-------------------------------*/
 
-    // Getter qui retourne le nombre d'essais de validation restants
+    /**
+     * Getter qui retourne le nombre d'essais de validation restants.
+     *
+     * @return Nombre de validations restantes
+     */
     public int getNbValidationsRestantes()
     {
         return this.nbValidationsRestantes;
     }
 
-    // Getter qui calcule et formate le temps écoulé depuis le début de la partie
+    /**
+     * Getter qui calcule et formate le temps écoulé depuis le début de la partie.
+     *
+     * @return Temps écoulé formaté au format {@code MM:SS}
+     */
     public String getTempsEcoule()
     {
         long tempsTotalSecondes = (System.currentTimeMillis() - this.tempsDebut) / 1000;
@@ -302,13 +404,19 @@ public class PanelJeu extends JPanel implements ActionListener
     /*      Méthodes utilitaires     */
     /*-------------------------------*/
 
-    // Méthode utilitaire qui affiche ou masque la barre de menu supérieure
+    /**
+     * Méthode utilitaire qui affiche ou masque la barre de menu supérieure.
+     *
+     * @param estVisible {@code true} pour rendre la barre visible, {@code false} pour la cacher
+     */
     public void cacherMenuBar(boolean estVisible)
     {
         this.barreMenu.setVisible(estVisible);
     }
 
-    // Méthode utilitaire qui dimensionne et instancie tous les panneaux, labels et boutons du jeu
+    /**
+     * Méthode utilitaire qui dimensionne et instancie tous les panneaux, labels et boutons du jeu.
+     */
     private void creerComposants()
     {
         Dimension tailleEcran  = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
@@ -403,7 +511,19 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnBrouillon.setToolTipText("Passer au mode Brouillon pour placer vos candidats");
     }
 
-    // Méthode utilitaire qui crée et stylise un bouton de la barre d'actions inférieure
+    /**
+     * Méthode utilitaire qui crée et stylise un bouton de la barre d'actions inférieure.
+     *
+     * @param texte Libellé du bouton
+     * @param fond Couleur d'arrière-plan
+     * @param texteCoul Couleur du texte
+     * @param icone Chemin vers l'icône du bouton
+     * @param l Largeur de l'icône en pixels
+     * @param h Hauteur de l'icône en pixels
+     * @param largeur Largeur préférée du bouton en pixels
+     * @param bulle Texte de l'infobulle au survol
+     * @return Bouton stylisé
+     */
     private JButton creerBoutonBarre(String texte, Color fond, Color texteCoul, String icone, int l, int h, int largeur, String bulle)
     {
         JButton btn = new JButton(texte);
@@ -418,7 +538,9 @@ public class PanelJeu extends JPanel implements ActionListener
         return btn;
     }
 
-    // Méthode utilitaire qui assemble et positionne les différents panneaux dans la fenêtre
+    /**
+     * Méthode utilitaire qui assemble et positionne les différents panneaux dans la fenêtre.
+     */
     private void positionnerComposants()
     {
         this.creerMenuBar();
@@ -475,7 +597,9 @@ public class PanelJeu extends JPanel implements ActionListener
         this.add(this.pnlBas,    BorderLayout.SOUTH);
     }
 
-    // Méthode utilitaire qui attache les écouteurs d'événements et le raccourci clavier Ctrl+Z
+    /**
+     * Méthode utilitaire qui attache les écouteurs d'événements et le raccourci clavier Ctrl+Z.
+     */
     private void activerComposants()
     {
         this.configurerSurvolBouton(this.btnGomme,   Color.WHITE, ConstantesIHM.COULEUR_GRIS_SURVOL, Color.BLACK);
@@ -543,7 +667,14 @@ public class PanelJeu extends JPanel implements ActionListener
         });
     }
 
-    // Méthode utilitaire qui gère l'apparence et le curseur d'un bouton lors du survol et du clic
+    /**
+     * Méthode utilitaire qui gère l'apparence et le curseur d'un bouton lors du survol et du clic.
+     *
+     * @param bouton Bouton à configurer
+     * @param couleurBase Couleur d'arrière-plan au repos
+     * @param couleurSurvol Couleur d'arrière-plan au survol
+     * @param couleurTexte Couleur du texte
+     */
     private void configurerSurvolBouton(JButton bouton, Color couleurBase, Color couleurSurvol, Color couleurTexte)
     {
         bouton.addActionListener(this);
@@ -593,7 +724,9 @@ public class PanelJeu extends JPanel implements ActionListener
         });
     }
 
-    // Méthode utilitaire qui construit la barre de menu supérieure et ses rubriques d'aide
+    /**
+     * Méthode utilitaire qui construit la barre de menu supérieure et ses rubriques d'aide.
+     */
     private void creerMenuBar()
     {
         UIManager.put("Menu.selectionBackground",     ConstantesIHM.COULEUR_ROSE_SURVOL);
@@ -718,7 +851,16 @@ public class PanelJeu extends JPanel implements ActionListener
         this.frame.setJMenuBar(this.barreMenu);
     }
 
-    // Méthode utilitaire qui crée un élément de menu ouvrant une boîte de dialogue d'aide
+    /**
+     * Méthode utilitaire qui crée un élément de menu ouvrant une boîte de dialogue d'aide.
+     *
+     * @param libelleMenu Libellé affiché dans le menu déroulant
+     * @param titreFenetre Titre de la fenêtre de dialogue ouverte
+     * @param cheminIcone Chemin vers l'icône de la boîte de dialogue
+     * @param btnCompris Bouton de fermeture personnalisé
+     * @param html Contenu HTML formaté affiché dans le message
+     * @return Élément de menu configuré
+     */
     private JMenuItem creerItemAide(String libelleMenu, String titreFenetre, String cheminIcone, JButton btnCompris, String html)
     {
         JMenuItem item = new JMenuItem(libelleMenu);
@@ -738,7 +880,9 @@ public class PanelJeu extends JPanel implements ActionListener
         return item;
     }
 
-    // Méthode utilitaire qui génère graphiquement les cases de la grille et les totaux périphériques
+    /**
+     * Méthode utilitaire qui génère graphiquement les cases de la grille et les totaux périphériques.
+     */
     public void dessinerPlateau()
     {
         this.pnlPlateau.removeAll();
@@ -832,7 +976,9 @@ public class PanelJeu extends JPanel implements ActionListener
         }
     }
 
-    // Méthode utilitaire qui génère les 9 boutons du pavé numérique et configure leur glisser-déposer
+    /**
+     * Méthode utilitaire qui génère les 9 boutons du pavé numérique et configure leur glisser-déposer.
+     */
     public void dessinerBoutons()
     {
         this.pnlNbres.removeAll();
@@ -983,7 +1129,9 @@ public class PanelJeu extends JPanel implements ActionListener
         this.pnlNbres.repaint();
     }
 
-    // Méthode utilitaire qui actualise l'affichage des cases, des totaux et du bouton Annuler
+    /**
+     * Méthode utilitaire qui actualise l'affichage des cases, des totaux et du bouton Annuler.
+     */
     public void majPlateau()
     {
         // Met à jour le fond, la bordure et le calque affiché (VALEUR ou BROUILLON) de chaque case
@@ -1044,7 +1192,9 @@ public class PanelJeu extends JPanel implements ActionListener
         this.repaint();
     }
 
-    // Méthode utilitaire qui met à jour l'état visuel des 9 boutons du pavé selon les chiffres placés
+    /**
+     * Méthode utilitaire qui met à jour l'état visuel des 9 boutons du pavé selon les chiffres placés.
+     */
     public void majBoutons()
     {
         for (AbstractButton btn : Collections.list(this.grpBtn.getElements()))
@@ -1065,7 +1215,9 @@ public class PanelJeu extends JPanel implements ActionListener
         }
     }
 
-    // Méthode utilitaire qui initialise le compteur d'indices selon la difficulté choisie
+    /**
+     * Méthode utilitaire qui initialise le compteur d'indices selon la difficulté choisie.
+     */
     private void initBoutonIndice()
     {
         int difficulte = this.ctrl.getDifficulte();
@@ -1074,20 +1226,26 @@ public class PanelJeu extends JPanel implements ActionListener
         this.btnIndice.setEnabled(this.nbIndicesRestants > 0);
     }
 
-    // Méthode utilitaire qui réinitialise le nombre maximal de validations autorisées
+    /**
+     * Méthode utilitaire qui réinitialise le nombre maximal de validations autorisées.
+     */
     private void initNbValidations()
     {
         this.nbValidationsRestantes = NB_VALIDATIONS_MAX;
         this.majAffichageValidation();
     }
 
-    // Méthode utilitaire qui met à jour le texte du compteur de validations restantes
+    /**
+     * Méthode utilitaire qui met à jour le texte du compteur de validations restantes.
+     */
     private void majAffichageValidation()
     {
         this.lblNbValidations.setText(String.valueOf(this.nbValidationsRestantes));
     }
 
-    // Méthode utilitaire qui désélectionne le chiffre actif sur le pavé numérique
+    /**
+     * Méthode utilitaire qui désélectionne le chiffre actif sur le pavé numérique.
+     */
     private void reinitialiserSelectionPave()
     {
         this.btnActif = null;
@@ -1095,7 +1253,9 @@ public class PanelJeu extends JPanel implements ActionListener
             this.grpBtn.clearSelection();
     }
 
-    // Méthode utilitaire qui efface tous les chiffres et brouillons saisis pour recommencer la grille actuelle
+    /**
+     * Méthode utilitaire qui efface tous les chiffres et brouillons saisis pour recommencer la grille actuelle.
+     */
     public void reset()
     {
         this.ligSelectionne = -1;
@@ -1135,7 +1295,9 @@ public class PanelJeu extends JPanel implements ActionListener
         this.majPlateau();
     }
 
-    // Méthode utilitaire qui génère une nouvelle grille de même difficulté et réinitialise l'interface
+    /**
+     * Méthode utilitaire qui génère une nouvelle grille de même difficulté et réinitialise l'interface.
+     */
     public void restart()
     {
         this.ctrl.resetJeu();
@@ -1157,7 +1319,12 @@ public class PanelJeu extends JPanel implements ActionListener
         this.majPlateau();
     }
 
-    // Méthode utilitaire qui supprime le chiffre d'une case modifiable et réactive son bouton
+    /**
+     * Méthode utilitaire qui supprime le chiffre d'une case modifiable et réactive son bouton.
+     *
+     * @param lig Indice de ligne de la case à effacer
+     * @param col Indice de colonne de la case à effacer
+     */
     private void effacerCase(int lig, int col)
     {
         if (lig == -1 || col == -1) return;
@@ -1189,7 +1356,13 @@ public class PanelJeu extends JPanel implements ActionListener
         }
     }
 
-    // Méthode utilitaire qui inscrit un chiffre dans une case et grise le bouton correspondant
+    /**
+     * Méthode utilitaire qui inscrit un chiffre dans une case et grise le bouton correspondant.
+     *
+     * @param lig Indice de ligne de la case cible
+     * @param col Indice de colonne de la case cible
+     * @param valeur Chiffre à inscrire (entre 1 et 9)
+     */
     private void placerChiffre(int lig, int col, int valeur)
     {
         JLabel lblContenu = (JLabel) this.tabPnlCases[lig][col].getComponent(0);
@@ -1218,7 +1391,13 @@ public class PanelJeu extends JPanel implements ActionListener
         this.modeValidation = false;
     }
 
-    // Méthode utilitaire qui ajoute ou retire un chiffre candidat dans la grille de brouillon
+    /**
+     * Méthode utilitaire qui ajoute ou retire un chiffre candidat dans la grille de brouillon.
+     *
+     * @param lig Indice de ligne de la case concernée
+     * @param col Indice de colonne de la case concernée
+     * @param valeur Chiffre candidat à basculer (entre 1 et 9)
+     */
     private void basculerNoteBrouillon(int lig, int col, int valeur)
     {
         JPanel pnlBrouillon = (JPanel) this.tabPnlCases[lig][col].getComponent(1);
@@ -1230,20 +1409,34 @@ public class PanelJeu extends JPanel implements ActionListener
     /*       Classes internes        */
     /*-------------------------------*/
 
-    // Classe privée interne GereSouris : gère les clics et le survol de la souris sur une case du plateau
+    /**
+     * Gère les clics et le survol de la souris sur une case du plateau.
+     */
     private class GereSouris extends MouseAdapter
     {
-        private int ligSouris; // Indice de ligne de la case écoutée
-        private int colSouris; // Indice de colonne de la case écoutée
+        /** Indice de ligne de la case écoutée */
+        private int ligSouris;
 
-        // Constructeur qui mémorise les coordonnées de la case associée à l'écouteur
+        /** Indice de colonne de la case écoutée */
+        private int colSouris;
+
+        /**
+         * Constructeur qui mémorise les coordonnées de la case associée à l'écouteur.
+         *
+         * @param lig Indice de ligne de la case
+         * @param col Indice de colonne de la case
+         */
         public GereSouris(int lig, int col)
         {
             this.ligSouris = lig;
             this.colSouris = col;
         }
 
-        // Méthode événementielle qui traite le clic droit (effacement) et le clic gauche (sélection, échange, placement ou brouillon)
+        /**
+         * Méthode événementielle qui traite le clic droit (effacement) et le clic gauche (sélection, échange, placement ou brouillon).
+         *
+         * @param e Événement souris déclenché au clic
+         */
         @Override
         public void mousePressed(MouseEvent e)
         {
@@ -1329,7 +1522,11 @@ public class PanelJeu extends JPanel implements ActionListener
             }
         }
 
-        // Méthode événementielle qui met en surbrillance la case survolée si elle est modifiable
+        /**
+         * Méthode événementielle qui met en surbrillance la case survolée si elle est modifiable.
+         *
+         * @param e Événement souris à l'entrée dans la case
+         */
         @Override
         public void mouseEntered(MouseEvent e)
         {
@@ -1346,7 +1543,11 @@ public class PanelJeu extends JPanel implements ActionListener
                 PanelJeu.this.tabPnlCases[this.ligSouris][this.colSouris].setBackground(ConstantesIHM.COULEUR_ROSE_SURVOL);
         }
 
-        // Méthode événementielle qui restaure la couleur de fond initiale lorsque la souris quitte la case
+        /**
+         * Méthode événementielle qui restaure la couleur de fond initiale lorsque la souris quitte la case.
+         *
+         * @param e Événement souris à la sortie de la case
+         */
         @Override
         public void mouseExited(MouseEvent e)
         {
@@ -1360,20 +1561,35 @@ public class PanelJeu extends JPanel implements ActionListener
         }
     }
 
-    // Classe privée interne GereDepot : gère la réception d'un chiffre par glisser-déposer sur une case
+    /**
+     * Gère la réception d'un chiffre par glisser-déposer sur une case.
+     */
     private class GereDepot extends TransferHandler
     {
-        private int ligCible; // Indice de ligne de la case cible du dépôt
-        private int colCible; // Indice de colonne de la case cible du dépôt
+        /** Indice de ligne de la case cible du dépôt */
+        private int ligCible;
 
-        // Constructeur qui mémorise les coordonnées de la case cible du dépôt
+        /** Indice de colonne de la case cible du dépôt */
+        private int colCible;
+
+        /**
+         * Constructeur qui mémorise les coordonnées de la case cible du dépôt.
+         *
+         * @param lig Indice de ligne de la case cible
+         * @param col Indice de colonne de la case cible
+         */
         public GereDepot(int lig, int col)
         {
             this.ligCible = lig;
             this.colCible = col;
         }
 
-        // Méthode de transfert qui vérifie si la case cible peut recevoir le chiffre glissé
+        /**
+         * Méthode de transfert qui vérifie si la case cible peut recevoir le chiffre glissé.
+         *
+         * @param support Contexte de transfert en cours
+         * @return {@code true} si le dépôt est autorisé sur cette case, {@code false} sinon
+         */
         @Override
         public boolean canImport(TransferSupport support)
         {
@@ -1383,7 +1599,12 @@ public class PanelJeu extends JPanel implements ActionListener
             return PanelJeu.this.ctrl.getCasePlateau(this.ligCible, this.colCible).estModifiable();
         }
 
-        // Méthode de transfert qui dépose le chiffre glissé en valeur définitive ou en note de brouillon
+        /**
+         * Méthode de transfert qui dépose le chiffre glissé en valeur définitive ou en note de brouillon.
+         *
+         * @param support Contexte de transfert contenant la donnée déposée
+         * @return {@code true} si l'importation a réussi, {@code false} sinon
+         */
         @Override
         public boolean importData(TransferSupport support)
         {

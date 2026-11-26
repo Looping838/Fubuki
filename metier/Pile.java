@@ -3,25 +3,44 @@ package metier;
 import controleur.Controleur;
 import java.util.Arrays;
 
-// Classe publique Pile : gère l'historique des coups joués et leur annulation (LIFO)
+/**
+ * Gère l'historique des coups joués et leur annulation selon un principe LIFO.
+ *
+ * @author Alexis COFFARD
+ * @author Timothé LARBI
+ * @version 2.0
+ */
 public class Pile
 {
     /*-------------------------------*/
     /*           Attributs           */
     /*-------------------------------*/
 
-    private static final int TAILLE_MAX = 50; // Capacité maximale de la pile d'historique
+    /** Capacité maximale de la pile d'historique */
+    private static final int TAILLE_MAX = 50;
 
-    private String[]   pile;      // Tab. circulaire mémorisant les commandes textuelles jouées
-    private int        numAction; // Indice du prochain emplacement libre au sommet de la pile
-    private Controleur ctrl;      // Réf. vers le contrôleur pour exécuter les actions inverses
-    private Plateau    plateau;   // Réf. vers le plateau actif pour valider la cohérence d'un coup
+    /** Tableau circulaire mémorisant les commandes textuelles jouées */
+    private String[]   pile;
+
+    /** Indice du prochain emplacement libre au sommet de la pile */
+    private int        numAction;
+
+    /** Réf. vers le contrôleur pour exécuter les actions inverses */
+    private Controleur ctrl;
+
+    /** Réf. vers le plateau actif pour valider la cohérence d'un coup */
+    private Plateau    plateau;
 
     /*-------------------------------*/
     /*         Constructeur          */
     /*-------------------------------*/
 
-    // Constructeur qui initialise une pile d'historique vide liée au contrôleur et au plateau
+    /**
+     * Constructeur qui initialise une pile d'historique vide liée au contrôleur et au plateau.
+     *
+     * @param ctrl Référence vers le contrôleur de l'application
+     * @param plateau Référence vers le plateau de jeu actif
+     */
     public Pile(Controleur ctrl, Plateau plateau)
     {
         this.pile      = new String[TAILLE_MAX];
@@ -34,7 +53,11 @@ public class Pile
     /*            Setter             */
     /*-------------------------------*/
 
-    // Setter qui met à jour la référence vers le plateau de jeu actif
+    /**
+     * Setter qui met à jour la référence vers le plateau de jeu actif.
+     *
+     * @param plateau Nouveau plateau actif
+     */
     public void setPlateau(Plateau plateau)
     {
         this.plateau = plateau;
@@ -44,7 +67,11 @@ public class Pile
     /*      Méthodes utilitaires     */
     /*-------------------------------*/
 
-    // Méthode utilitaire qui enregistre une nouvelle action au sommet de la pile
+    /**
+     * Méthode utilitaire qui enregistre une nouvelle action au sommet de la pile.
+     *
+     * @param action Représentation textuelle du coup joué
+     */
     public void empiler(String action)
     {
         if (this.numAction == TAILLE_MAX) this.numAction = 1;
@@ -52,7 +79,9 @@ public class Pile
         this.numAction++;
     }
 
-    // Méthode utilitaire qui dépile et annule la dernière action encore valide
+    /**
+     * Méthode utilitaire qui dépile et annule la dernière action encore valide.
+     */
     public void depiler()
     {
         // Remonte la pile jusqu'à trouver une action toujours applicable sur l'état actuel de la grille
@@ -71,14 +100,20 @@ public class Pile
         }
     }
 
-    // Méthode utilitaire qui efface tout l'historique et réinitialise le pointeur de sommet
+    /**
+     * Méthode utilitaire qui efface tout l'historique et réinitialise le pointeur de sommet.
+     */
     public void vider()
     {
         Arrays.fill(this.pile, null);
         this.numAction = 1;
     }
 
-    // Méthode utilitaire qui vérifie s'il existe au moins une action annulable dans la pile
+    /**
+     * Méthode utilitaire qui vérifie s'il existe au moins une action annulable dans la pile.
+     *
+     * @return {@code true} si aucune action valide ne peut être annulée, {@code false} sinon
+     */
     public boolean estVide()
     {
         // Parcourt la pile du sommet vers la base à la recherche d'au moins une action valide
@@ -89,7 +124,12 @@ public class Pile
         return true;
     }
 
-    // Méthode utilitaire qui contrôle si une action enregistrée peut encore être annulée sans conflit
+    /**
+     * Méthode utilitaire qui contrôle si une action enregistrée peut encore être annulée sans conflit.
+     *
+     * @param res Commande textuelle mémorisée dans la pile
+     * @return {@code true} si l'opération inverse est cohérente avec l'état actuel du plateau
+     */
     private boolean estActionValide(String res)
     {
         if (res == null || res.isBlank()) return false;
@@ -128,7 +168,11 @@ public class Pile
         };
     }
 
-    // Méthode utilitaire qui analyse la chaîne d'action et exécute l'opération inverse via le contrôleur
+    /**
+     * Méthode utilitaire qui analyse la chaîne d'action et exécute l'opération inverse via le contrôleur.
+     *
+     * @param res Commande textuelle à inverser
+     */
     private void decomposeur(String res)
     {
         if (res == null || res.isBlank()) return;
