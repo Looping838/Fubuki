@@ -67,6 +67,8 @@ docker build -t fubuki . && docker run --rm -e DISPLAY=$DISPLAY -e XCURSOR_THEME
 
 ## Documentation et architecture
 
+Pour plus de détails sur l'architecture MVC, la pile d'annulation et le mode brouillon, consultez la [fiche de conception](CONCEPTION.md).
+  
   - Diagramme de classes UML : disponible dans `images/Fubuki_UML.png`.
 
   - Javadoc : générable via `javadoc -d doc -encoding UTF-8 -docencoding UTF-8 -charset UTF-8 -author -version @compile.list`.
